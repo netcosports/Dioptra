@@ -1,0 +1,87 @@
+PODS:
+  - Astrolabe/Core (3.1.0):
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
+  - Astrolabe/Loaders (3.1.0):
+    - Astrolabe/Core
+    - Gnomon/Core (~> 3.0)
+  - DailymotionPlayerSDK (3.7.4)
+  - Dioptra/AV (0.1):
+    - Dioptra/Core
+  - Dioptra/Core (0.1):
+    - RxCocoa (~> 4.0)
+    - RxGesture (~> 1.2)
+    - RxSwift (~> 4.0)
+    - SnapKit
+  - Dioptra/DM (0.1):
+    - DailymotionPlayerSDK
+    - Dioptra/Core
+  - FormatterKit/Resources (1.8.2)
+  - FormatterKit/URLRequestFormatter (1.8.2):
+    - FormatterKit/Resources
+  - Gnomon/Core (3.1.1):
+    - FormatterKit/URLRequestFormatter (>= 1.8.2)
+    - RxSwift (~> 4.0)
+  - Nimble (7.1.1)
+  - RxBlocking (4.1.2):
+    - RxSwift (~> 4.0)
+  - RxCocoa (4.1.2):
+    - RxSwift (~> 4.0)
+  - RxGesture (1.2.1):
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
+  - RxSwift (4.1.2)
+  - RxTest (4.1.2):
+    - RxSwift (~> 4.0)
+  - SnapKit (4.0.0)
+
+DEPENDENCIES:
+  - Astrolabe/Loaders (from `https://github.com/netcosports/Astrolabe`, branch `evolution`)
+  - Dioptra/AV (from `.`)
+  - Dioptra/DM (from `.`)
+  - Nimble (~> 7.0)
+  - RxBlocking
+  - RxTest
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - DailymotionPlayerSDK
+    - FormatterKit
+    - Gnomon
+    - Nimble
+    - RxBlocking
+    - RxCocoa
+    - RxGesture
+    - RxSwift
+    - RxTest
+    - SnapKit
+
+EXTERNAL SOURCES:
+  Astrolabe:
+    :branch: evolution
+    :git: https://github.com/netcosports/Astrolabe
+  Dioptra:
+    :path: "."
+
+CHECKOUT OPTIONS:
+  Astrolabe:
+    :commit: e5a81843b877d22e2a79b463a51f959b11dbdff2
+    :git: https://github.com/netcosports/Astrolabe
+
+SPEC CHECKSUMS:
+  Astrolabe: 99ddbb8c5b2ec38ff5406c01b76464878e83a47a
+  DailymotionPlayerSDK: afd14da75f14625c0b37dcb6c6db514a73075002
+  Dioptra: 70bda266ece56bba59cc59cfbac451cb26b97b90
+  FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
+  Gnomon: 05a0b538c8043f149c798a78605461ee5583c38d
+  Nimble: 391f07782af4b37914f9bd7b2ffbb952731b8202
+  RxBlocking: f6054985901412fc8c02daa84e92d4ba68c61389
+  RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
+  RxGesture: c278eb05b187abd47e11e65464ae4de53ab71d95
+  RxSwift: e49536837d9901277638493ea537394d4b55f570
+  RxTest: e634f15fd2c2cd0e0120132ef7a4f7be69ad0393
+  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
+
+PODFILE CHECKSUM: 85867f406bc9ce487402489e5484b6cb0f8a19c3
+
+COCOAPODS: 1.5.2
