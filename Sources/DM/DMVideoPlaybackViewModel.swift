@@ -7,14 +7,12 @@
 //
 
 import UIKit
-import SafariServices
 import RxSwift
 import RxCocoa
 import DailymotionPlayerSDK
 
 open class DMVideoPlaybackViewModel: VideoPlayback {
 
-  let streamSubject = PublishSubject<Stream?>()
   public let seek = PublishSubject<TimeInSeconds>()
   public let state = PublishSubject<PlaybackState>()
 
@@ -26,28 +24,11 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     return durationVariable.asDriver()
   }
 
-  public var progress: Driver<Progress> {
-    return Driver.combineLatest(time, duration).map { Progress(value: $0, total: $1) }
-  }
-
   public var loadedRange: Driver<LoadedTimeRange> {
     return Driver.combineLatest(progressVariable.asDriver(), duration).map { [weak self] progress, duration in
       guard let `self` = self else { return [] }
       return [0...duration * progress / 100.0]
     }
-  }
-
-  public var started: Driver<String> {
-    return streamSubject.asDriver(onErrorJustReturn: nil).flatMap {
-      if let stream = $0 {
-        return .just(stream)
-      }
-      return .empty()
-    }
-  }
-
-  public var finished: Driver<String> {
-    return finishedSubject.asDriver(onErrorJustReturn: "")
   }
 
   public var playerState: Driver<PlayerState> {
@@ -57,6 +38,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   fileprivate var startCount: Int = 0
   fileprivate let disposeBag = DisposeBag()
 
+  let streamSubject = PublishSubject<Stream?>()
   let mutedRelay = BehaviorRelay<Bool>(value: true)
   let openUrlSubject = PublishSubject<URL>()
 
@@ -64,18 +46,18 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   fileprivate let durationVariable    = BehaviorRelay<TimeInSeconds>(value: 0)
   fileprivate let progressVariable    = BehaviorRelay<TimeInSeconds>(value: 0.0)
   fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
-  fileprivate let finishedSubject     = PublishSubject<Stream>()
 
   public typealias Stream = String
-  open var stream: String? {
+  open var input: Input<Stream> = .cleanup {
 
-    willSet(newStream) {
-      if let newStream = newStream {
-        if newStream != stream {
-          startCount = 0
-          streamSubject.onNext(newStream)
-        }
-      } else {
+    willSet(newInput) {
+      switch newInput {
+      case .content(let stream):
+        startCount = 0
+        streamSubject.onNext(stream)
+      case .ad:
+        assertionFailure("External Ad is not supported by DM")
+      default:
         streamSubject.onNext(nil)
       }
     }
@@ -125,9 +107,7 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
       case "pause":
         playerStateRelay.accept(PlayerState.active(state: PlaybackState.paused))
       case "video_end":
-        if let stream = stream {
-          finishedSubject.onNext(stream)
-        }
+        playerStateRelay.accept(PlayerState.finished)
       case "ad_start":
         playerStateRelay.accept(.ad(state: .started))
       case "ad_end":

@@ -26,9 +26,21 @@ Pod::Spec.new do |s|
     sub.dependency 'Dioptra/Core'
   end
 
+  s.subspec 'BC' do |sub|
+    sub.source_files = 'Sources/BC/*.swift'
+    sub.dependency 'Brightcove-Player-SDK/dynamic'
+    sub.dependency 'Dioptra/Core'
+  end
+
   s.subspec 'DM' do |sub|
     sub.source_files = 'Sources/DM/*.swift'
     sub.dependency 'DailymotionPlayerSDK'
+    sub.dependency 'Dioptra/Core'
+  end
+
+  s.subspec 'YT' do |sub|
+    sub.source_files = 'Sources/YT/*.swift'
+    sub.dependency 'youtube-ios-player-helper'
     sub.dependency 'Dioptra/Core'
   end
 end

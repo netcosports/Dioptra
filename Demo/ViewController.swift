@@ -12,8 +12,10 @@ import Dioptra
 
 class ViewController: UIViewController {
 
+  typealias Player = VideoPlayerView<BCVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
-  typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
+  //typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
+
   let player = Player()
 
   override func viewDidLoad() {
@@ -23,8 +25,9 @@ class ViewController: UIViewController {
       $0.top.leading.trailing.equalToSuperview()
       $0.height.equalTo(view.snp.width).multipliedBy(9.0 / 16.0)
     }
-//    player.playbackView.viewModel.stream = "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    player.playbackView.viewModel.stream = "x6k8h19"
+    player.playbackView.viewModel.input = .content(stream: "3666678807001")
+//    player.playbackView.viewModel.input = .content(stream: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
+//    player.playbackView.viewModel.stream = .content(stream: "x6k8h19")
 
     player.playbackView.viewModel.muted = true
   }

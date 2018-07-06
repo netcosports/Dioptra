@@ -14,12 +14,21 @@ public typealias TimeInSeconds         = Double
 public typealias TimeInSecondsRange    = ClosedRange<TimeInSeconds>
 public typealias LoadedTimeRange       = [TimeInSecondsRange]
 
-public struct Progress {
-  let value: TimeInSeconds
-  let total: TimeInSeconds
+public struct Progress: Equatable {
+  public let value: TimeInSeconds
+  public let total: TimeInSeconds
+
+  public init(value: TimeInSeconds, total: TimeInSeconds) {
+    self.value = value
+    self.total = total
+  }
 
   static func empty() -> Progress {
     return Progress(value: 0.0, total: 0.0)
+  }
+
+  public static func == (lhs: Progress, rhs: Progress) -> Bool {
+    return lhs.total == rhs.total && lhs.value == rhs.value
   }
 }
 
@@ -36,13 +45,27 @@ public enum AdState {
   case error
 }
 
+// NOTE: input enum is necessary for advertisement engines
+// which uses same stream type with content stream
+// current idea is to support 3 types of AD
+// - Embeded AD in playback(DM and youtube for example)
+// - Internal playback AD (setup different inputs)
+// - Overlay playback AD
+public enum Input<T> {
+  case ad(stream: T)
+  case content(stream: T)
+  case cleanup
+}
+
 public enum PlayerState: Equatable {
+
   case active(state: PlaybackState)
   case ad(state: AdState)
   case idle
   case loading
   case stuck
   case error(error: Error?)
+  case finished
 
   public static func == (lhs: PlayerState, rhs: PlayerState) -> Bool {
     switch (lhs, rhs) {
@@ -59,9 +82,11 @@ public enum PlayerState: Equatable {
 
 public protocol VideoPlayback: class {
 
-  // params:
+  // input:
   associatedtype Stream: Equatable
-  var stream: Stream? { get set }
+  var input: Input<Stream> { get set }
+
+  // params:
   var muted: Bool { get set }
 
   // RX input:
@@ -71,11 +96,15 @@ public protocol VideoPlayback: class {
   // RX output:
   var time: Driver<TimeInSeconds> { get }
   var duration: Driver<TimeInSeconds> { get }
-  var progress: Driver<Progress> { get }
   var loadedRange: Driver<LoadedTimeRange> { get }
-  var started: Driver<Stream> { get }
-  var finished: Driver<Stream> { get }
   var playerState: Driver<PlayerState> { get }
+}
+
+extension VideoPlayback {
+
+  public var progress: Driver<Progress> {
+    return Driver.combineLatest(time, duration).map { Progress(value: $0, total:$1) }
+  }
 }
 
 public protocol PlaybackViewModable {

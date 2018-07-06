@@ -30,15 +30,27 @@ public enum SeekEvent {
 
 public enum Visibility {
   case force(visible: Bool)
-  case acceptSoft
   case soft(visible: Bool)
+
+  var visible: Bool {
+    switch self {
+    case .force(let visible), .soft(let visible):
+      return visible
+    }
+  }
+}
+
+public enum VisibilityChangeEvent {
+  case force(visible: Bool)
+  case soft(visible: Bool)
+  case acceptSoft
   case softToggle
 }
 
 public protocol VideoControls: class {
 
   // RX inputs/outputs
-  var visibilityChange: BehaviorRelay<Visibility> { get }
+  var visibilityChange: BehaviorRelay<VisibilityChangeEvent> { get }
 
   // RX inputs
   var buffer: PublishSubject<Float> { get }

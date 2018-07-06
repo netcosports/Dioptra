@@ -9,13 +9,13 @@
 import RxSwift
 import RxCocoa
 
-class VideoPlayerViewModel<P: VideoPlayback, C: VideoControls> {
+open class VideoPlayerViewModel<P: VideoPlayback, C: VideoControls> {
 
   let disposeBag = DisposeBag()
-  let playback: P
-  let controls: C
+  public let playback: P
+  public let controls: C
 
-  init(playback: P, controls: C) {
+  public init(playback: P, controls: C) {
     self.playback = playback
     self.controls = controls
     bind()
@@ -23,7 +23,7 @@ class VideoPlayerViewModel<P: VideoPlayback, C: VideoControls> {
 
   func bind() {
     playback.playerState
-      .flatMap { state -> Driver<Visibility> in
+      .flatMap { state -> Driver<VisibilityChangeEvent> in
         switch state {
         case .ad(let adState):
           switch adState {

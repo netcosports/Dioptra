@@ -43,13 +43,13 @@ open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModab
     super.updateConstraints()
   }
 
-  var stream: Stream? {
+  var input: Input<Stream> = .cleanup {
     didSet {
-      if let stream = stream {
-        playbackView.viewModel.stream = stream
-        controlsView.viewModel.visibilityChange.accept(Visibility.soft(visible: true))
-      } else {
-        playbackView.viewModel.stream = nil
+      playbackView.viewModel.input = input
+      switch input {
+      case .content:
+        controlsView.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
+      default: break
       }
     }
   }

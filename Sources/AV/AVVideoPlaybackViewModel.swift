@@ -10,40 +10,57 @@ import AVKit
 import RxSwift
 import RxCocoa
 
-open class AVVideoPlaybackViewModel: VideoPlayback {
+open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
+
+  override init() {
+    super.init()
+    bind(to: AVPlayer())
+  }
+
+  override func startPlayback(with stream: String) {
+    let item: AVPlayerItem
+    if stream.hasPrefix("http") {
+      guard let url = URL(string: stream) else { return }
+      item = AVPlayerItem(url: url)
+    } else {
+      let url = URL(fileURLWithPath: stream)
+      item = AVPlayerItem(url: url)
+    }
+    bind(to: item)
+    player?.replaceCurrentItem(with: item)
+    player?.play()
+  }
+}
+
+open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
 
   fileprivate static var interval       = CMTime(value: 1, timescale: 60)
-  fileprivate let disposeBag            = DisposeBag()
+  fileprivate var disposeBag: DisposeBag?
   fileprivate let itemRelay             = BehaviorRelay<AVPlayerItem?>(value: nil)
-  fileprivate let streamPublishSubject  = PublishSubject<Stream>()
   fileprivate let currentTimeRelay      = BehaviorRelay<TimeInSeconds>(value: 0)
   fileprivate let stateRelay            = BehaviorRelay<PlayerState>(value: .idle)
 
-  let player = AVPlayer()
-
-  public init() {
-    bind(to: player)
-  }
+  var player: AVPlayer?
 
   public typealias Stream = String
-  public var stream: Stream? {
-    willSet(newStreamUrl) {
-      if let newStreamUrl = newStreamUrl {
-        if newStreamUrl != stream {
-          startPlayback(with: newStreamUrl)
-          streamPublishSubject.onNext(newStreamUrl)
-          stateRelay.accept(.loading)
-        }
-      } else {
-        stop()
+  public var input: Input<Stream> = .cleanup {
+    willSet(newInput) {
+      switch newInput {
+      case .content(let stream):
+        startPlayback(with: stream)
+        stateRelay.accept(.loading)
+      case .ad(let stream):
+        startPlayback(with: stream)
+        stateRelay.accept(.loading)
+      default: stop()
       }
     }
   }
 
   public var muted: Bool = false {
     didSet {
-      player.isMuted = muted
-      player.currentItem?.audioMix = nil
+      player?.isMuted = muted
+      player?.currentItem?.audioMix = nil
     }
   }
 
@@ -65,10 +82,6 @@ open class AVVideoPlaybackViewModel: VideoPlayback {
     }
   }
 
-  public var progress: Driver<Progress> {
-    return Driver.combineLatest(time, duration).map { Progress(value: $0, total:$1) }
-  }
-
   public var loadedRange: Driver<LoadedTimeRange> {
     return itemRelay.asDriver().flatMapLatest { item -> Driver<LoadedTimeRange> in
       if let item = item {
@@ -85,31 +98,13 @@ open class AVVideoPlaybackViewModel: VideoPlayback {
     }
   }
 
-  public var started: Driver<Stream> {
-    return streamPublishSubject.asDriver(onErrorJustReturn: "")
-  }
-
-  public var finished: Driver<Stream> {
-    return itemRelay.asDriver().flatMapLatest { item -> Driver<Stream> in
-      if let item = item {
-        return item.rx.didPlayToEnd.flatMap { [weak self] _ -> Observable<Stream> in
-          return .just(self?.stream ?? "")
-          }.asDriver(onErrorJustReturn: "")
-      } else {
-        return .empty()
-      }
-    }
-  }
-
   public var playerState: Driver<PlayerState> {
     return stateRelay.asDriver()
   }
-}
 
-
-extension AVVideoPlaybackViewModel {
-
-  fileprivate func bind(to player: AVPlayer) {
+  public func bind(to player: AVPlayer) {
+    self.player = player
+    let disposeBag = DisposeBag()
     player.rx.periodicTimeObserver(interval: AVVideoPlaybackViewModel.interval)
       .map { CMTimeGetSeconds($0) }
       .bind(to: currentTimeRelay)
@@ -146,57 +141,59 @@ extension AVVideoPlaybackViewModel {
       .drive(stateRelay)
       .disposed(by: disposeBag)
 
+    itemRelay.flatMapFirst { item -> Observable<PlayerState> in
+      if let item = item {
+        return item.rx.didPlayToEnd.map { _ in PlayerState.finished }
+      } else {
+        return .empty()
+      }
+      }.bind(to: stateRelay)
+      .disposed(by: disposeBag)
+
     itemRelay.asDriver().flatMapLatest { item -> Driver<Error?> in
       if let item = item {
         return item.rx.error.asDriver(onErrorJustReturn: nil).map { error -> Error? in return error }
       } else {
         return .empty()
       }
-    }.map { error in PlayerState.error(error: error) }
-    .drive(stateRelay)
-    .disposed(by: disposeBag)
+      }.map { error in PlayerState.error(error: error) }
+      .drive(stateRelay)
+      .disposed(by: disposeBag)
+    self.disposeBag = disposeBag
   }
 
-  fileprivate func bind(to item: AVPlayerItem) {
+  func startPlayback(with stream: String) { }
+}
+
+
+extension AVVideoPlaybackManagableViewModel {
+
+  func bind(to item: AVPlayerItem) {
     itemRelay.accept(item)
   }
 }
 
-extension AVVideoPlaybackViewModel {
+extension AVVideoPlaybackManagableViewModel {
 
   fileprivate func play() {
-    player.play()
+    player?.play()
   }
 
   fileprivate func pause() {
-    player.pause()
+    player?.pause()
   }
 
   fileprivate func stop() {
-    player.pause()
-    player.replaceCurrentItem(with: nil)
+    player?.pause()
+    player?.replaceCurrentItem(with: nil)
   }
 
   fileprivate func seek(to seconds: TimeInSeconds) {
-    if let duration = player.currentItem?.duration {
+    if let duration = player?.currentItem?.duration {
       if duration.isIndefinite { return }
       let progress = seconds / CMTimeGetSeconds(duration)
       let time = CMTime(value: CMTimeValue(Double(duration.value) * progress), timescale: duration.timescale)
-      player.seek(to: time)
+      player?.seek(to: time)
     }
-  }
-
-  fileprivate func startPlayback(with url: String) {
-    let item: AVPlayerItem
-    if url.hasPrefix("http") {
-      guard let url = URL(string: url) else { return }
-      item = AVPlayerItem(url: url)
-    } else {
-      let url = URL(fileURLWithPath: url)
-      item = AVPlayerItem(url: url)
-    }
-    bind(to: item)
-    player.replaceCurrentItem(with: item)
-    player.play()
   }
 }

@@ -11,17 +11,17 @@ import RxCocoa
 
 open class VideoPlayerControlsViewModel: VideoControls {
 
-  init() {
+  public init() {
     bind()
   }
 
-  fileprivate var currentVisibility = Visibility.soft(visible: false)
+  fileprivate var currentVisibility = VisibilityChangeEvent.soft(visible: false)
   fileprivate let disposeBag = DisposeBag()
   fileprivate let currentTimeRelay = PublishRelay<String>()
   fileprivate let durationRelay = PublishRelay<String>()
   fileprivate let screenModeSubject = PublishRelay<ScreenModeEvent>()
 
-  public var visibilityChange = BehaviorRelay<Visibility>(value: .soft(visible: false))
+  public var visibilityChange = BehaviorRelay<VisibilityChangeEvent>(value: .soft(visible: false))
   public let buffer = PublishSubject<Float>()
   public let progress = PublishSubject<Progress>()
   public let state = PublishSubject<PlayerState>()
@@ -37,7 +37,8 @@ open class VideoPlayerControlsViewModel: VideoControls {
 
   let seekSubject = PublishRelay<SeekEvent>()
   let stateSubject = PublishRelay<PlaybackState>()
-  let visible = BehaviorRelay<Bool>(value: true)
+  let visible = BehaviorRelay<Visibility>(value: Visibility.soft(visible: true))
+
   var currentTime: Driver<String> {
     return currentTimeRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
   }
@@ -77,41 +78,43 @@ extension VideoPlayerControlsViewModel {
       }
     }.bind(to: stateSubject).disposed(by: disposeBag)
 
-    screenMode.map { _ in Visibility.soft(visible: true) }.drive(visibilityChange).disposed(by: disposeBag)
+    screenMode.map { _ in VisibilityChangeEvent.soft(visible: true) }.drive(visibilityChange).disposed(by: disposeBag)
 
     visibilityChange.asDriver()
-      .debounce(3.0)
       .filter { [weak self] in
         switch $0 {
         case .soft(let visible): return visible
-        case .softToggle: return self?.visible.value ?? false
+        case .softToggle: return self?.visible.value.visible ?? false
         default: return false
         }
       }
-      .map { _ in false }
+      .debounce(3.0)
+      .map { _ in Visibility.soft(visible: false) }
       .drive(visible)
       .disposed(by: disposeBag)
 
     visibilityChange.asDriver().drive(onNext: { [weak self] visibility in
       guard let `self` = self else { return }
-      let controlsVisible: Bool
+      let controlsVisible: Visibility
       switch visibility {
       case .force(let visible):
-        controlsVisible = visible
+        controlsVisible = Visibility.force(visible: visible)
       case .soft(let visible):
         switch self.currentVisibility {
         case .force: return
-        case .acceptSoft, .soft, .softToggle: controlsVisible = visible
+        case .acceptSoft, .soft, .softToggle:
+          controlsVisible = Visibility.soft(visible: visible)
         }
       case .softToggle:
         switch self.currentVisibility {
         case .force: return
-        case .soft(let previousVisibility): controlsVisible = previousVisibility
-        case .acceptSoft, .softToggle: controlsVisible = !self.visible.value
+        case .soft(let previousVisibility):
+          controlsVisible = Visibility.soft(visible: previousVisibility)
+        case .acceptSoft, .softToggle:
+          controlsVisible = Visibility.soft(visible: !self.visible.value.visible)
         }
       case .acceptSoft:
-        self.currentVisibility = visibility
-        return
+        controlsVisible = Visibility.force(visible: true)
       }
       self.currentVisibility = visibility
       self.visible.accept(controlsVisible)

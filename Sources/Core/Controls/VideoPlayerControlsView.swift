@@ -88,7 +88,7 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     viewModel.duration.drive(endTimeLabel.rx.text).disposed(by: disposeBag)
     viewModel.buffer.bind(to: slider.rx.buffer).disposed(by: disposeBag)
     viewModel.bufferedValue.drive(slider.rx.bufferedValue).disposed(by: disposeBag)
-    self.rx.tapGesture().when(.recognized).map { _ -> Visibility in return .softToggle }
+    self.rx.tapGesture().when(.recognized).map { _ -> VisibilityChangeEvent in return .softToggle }
       .bind(to: viewModel.visibilityChange).disposed(by: disposeBag)
 
     viewModel.state.map {
@@ -102,9 +102,15 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
       }
     }.bind(to: playButton.rx.state).disposed(by: disposeBag)
 
-    viewModel.visible.asDriver().drive(onNext: { [weak self] visible in
+    viewModel.visible.asDriver().drive(onNext: { [weak self] visibility in
+        switch visibility {
+        case .force(let visible):
+          self?.isHidden = !visible
+        case .soft(let visible):
+          self?.isHidden = false
+      }
       UIView.animate(withDuration: 0.33) {
-        self?.subviews.forEach { $0.alpha = (visible ? 1.0 : 0.0) }
+        self?.subviews.forEach { $0.alpha = (visibility.visible ? 1.0 : 0.0) }
         self?.setNeedsUpdateConstraints()
         self?.layoutIfNeeded()
       }
@@ -123,18 +129,19 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
       } else {
         return PlaybackState.playing
       }
+      self?.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
     }.bind(to: viewModel.stateSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchDown).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      self.viewModel.visibilityChange.accept(Visibility.force(visible: true))
+      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.force(visible: true))
       return Observable<SeekEvent>.just(SeekEvent.started(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchUpInside).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      self.viewModel.visibilityChange.accept(Visibility.acceptSoft)
-      self.viewModel.visibilityChange.accept(Visibility.soft(visible: true))
+      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.acceptSoft)
+      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
       return Observable<SeekEvent>.just(SeekEvent.finished(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 

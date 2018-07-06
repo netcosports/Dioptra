@@ -1,12 +1,16 @@
 PODS:
-  - Astrolabe/Core (3.1.0):
+  - Astrolabe/Core (3.1.1):
     - RxCocoa (~> 4.0)
     - RxSwift (~> 4.0)
-  - Astrolabe/Loaders (3.1.0):
+  - Astrolabe/Loaders (3.1.1):
     - Astrolabe/Core
     - Gnomon/Core (~> 3.0)
+  - Brightcove-Player-SDK/dynamic (5.3.4)
   - DailymotionPlayerSDK (3.7.4)
   - Dioptra/AV (0.1):
+    - Dioptra/Core
+  - Dioptra/BC (0.1):
+    - Brightcove-Player-SDK/dynamic
     - Dioptra/Core
   - Dioptra/Core (0.1):
     - RxCocoa (~> 4.0)
@@ -19,7 +23,7 @@ PODS:
   - FormatterKit/Resources (1.8.2)
   - FormatterKit/URLRequestFormatter (1.8.2):
     - FormatterKit/Resources
-  - Gnomon/Core (3.1.1):
+  - Gnomon/Core (3.1.2):
     - FormatterKit/URLRequestFormatter (>= 1.8.2)
     - RxSwift (~> 4.0)
   - Nimble (7.1.1)
@@ -36,8 +40,9 @@ PODS:
   - SnapKit (4.0.0)
 
 DEPENDENCIES:
-  - Astrolabe/Loaders (from `https://github.com/netcosports/Astrolabe`, branch `evolution`)
+  - Astrolabe/Loaders (from `https://github.com/netcosports/Astrolabe`)
   - Dioptra/AV (from `.`)
+  - Dioptra/BC (from `.`)
   - Dioptra/DM (from `.`)
   - Nimble (~> 7.0)
   - RxBlocking
@@ -45,6 +50,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - Brightcove-Player-SDK
     - DailymotionPlayerSDK
     - FormatterKit
     - Gnomon
@@ -58,22 +64,22 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   Astrolabe:
-    :branch: evolution
     :git: https://github.com/netcosports/Astrolabe
   Dioptra:
     :path: "."
 
 CHECKOUT OPTIONS:
   Astrolabe:
-    :commit: e5a81843b877d22e2a79b463a51f959b11dbdff2
+    :commit: 36096b406d917d085e0f61671e8dfae7332168c5
     :git: https://github.com/netcosports/Astrolabe
 
 SPEC CHECKSUMS:
-  Astrolabe: 99ddbb8c5b2ec38ff5406c01b76464878e83a47a
+  Astrolabe: 8bc4f77a84065c0d4ebda0bed72b69e9f5a7f2bd
+  Brightcove-Player-SDK: 797417ba9ca513d079df6844515a05498e3639d8
   DailymotionPlayerSDK: afd14da75f14625c0b37dcb6c6db514a73075002
-  Dioptra: 70bda266ece56bba59cc59cfbac451cb26b97b90
+  Dioptra: 1fab4508d4f153759e348bddd65f500d7b388919
   FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
-  Gnomon: 05a0b538c8043f149c798a78605461ee5583c38d
+  Gnomon: e82d177b4a806e846c3a862738886046ec106ffb
   Nimble: 391f07782af4b37914f9bd7b2ffbb952731b8202
   RxBlocking: f6054985901412fc8c02daa84e92d4ba68c61389
   RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
@@ -82,6 +88,6 @@ SPEC CHECKSUMS:
   RxTest: e634f15fd2c2cd0e0120132ef7a4f7be69ad0393
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
-PODFILE CHECKSUM: 85867f406bc9ce487402489e5484b6cb0f8a19c3
+PODFILE CHECKSUM: a9de9e0e97aafb9df2ecd2a83206e50ce8ac5e78
 
-COCOAPODS: 1.5.2
+COCOAPODS: 1.5.3

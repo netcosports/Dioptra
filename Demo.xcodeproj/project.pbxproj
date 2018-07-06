@@ -7,14 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		342836C29E91458E9D8AE14F /* libPods-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BF67D7DE4608F90F0454FC8 /* libPods-Demo.a */; };
-		93EC9EBDD4A14189E0FE1FD1 /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65BAB17923FD367D4C316C67 /* Pods_Tests.framework */; };
+		228C109A6F49C9AEC783B125 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */; };
+		678299E8789D7DCEB4E26327 /* Pods_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40FA1278A9862C2FC74BBB93 /* Pods_iOSTests.framework */; };
+		AA52599120B835660089ECD2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA52598F20B835660089ECD2 /* Info.plist */; };
+		AA52599220B835860089ECD2 /* VideoPlayerViewModelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA52598E20B835660089ECD2 /* VideoPlayerViewModelSpec.swift */; };
+		AA53982D20BEDCC2003329FB /* TestControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982C20BEDCC2003329FB /* TestControls.swift */; };
+		AA53982F20BEDD10003329FB /* TestPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982E20BEDD10003329FB /* TestPlayback.swift */; };
 		AA925F5420B59F09002523D4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA925F4C20B59F09002523D4 /* ViewController.swift */; };
 		AA925F5520B59F09002523D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA925F4D20B59F09002523D4 /* Assets.xcassets */; };
 		AA925F5620B59F09002523D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA925F4E20B59F09002523D4 /* LaunchScreen.storyboard */; };
 		AA925F5720B59F09002523D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA925F5020B59F09002523D4 /* Main.storyboard */; };
 		AA925F5820B59F09002523D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA925F5220B59F09002523D4 /* AppDelegate.swift */; };
-		E8C4F4581C7E85857DF74611 /* libPods-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B76BD26ED00BBBB83E29CB2 /* libPods-iOSTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,14 +31,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0B76BD26ED00BBBB83E29CB2 /* libPods-iOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-iOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		0BF67D7DE4608F90F0454FC8 /* libPods-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F70DA7DC3AE2DE97FF3AC7F /* Pods-Dioptra.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dioptra.release.xcconfig"; path = "Pods/Target Support Files/Pods-Dioptra/Pods-Dioptra.release.xcconfig"; sourceTree = "<group>"; };
 		3125A1464CA122B499B1D2D4 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
+		40FA1278A9862C2FC74BBB93 /* Pods_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F74BD0648D1CA48F722F5BE /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		65BAB17923FD367D4C316C67 /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E08A3FBF55A20320043B01E /* Pods-Dioptra.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dioptra.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dioptra/Pods-Dioptra.debug.xcconfig"; sourceTree = "<group>"; };
 		762B345634DBE50325A567A5 /* Pods-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOSTests/Pods-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA52598E20B835660089ECD2 /* VideoPlayerViewModelSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewModelSpec.swift; sourceTree = "<group>"; };
+		AA52598F20B835660089ECD2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA53982A20BEDC77003329FB /* AVPlaybackSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlaybackSpec.swift; sourceTree = "<group>"; };
+		AA53982C20BEDCC2003329FB /* TestControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestControls.swift; sourceTree = "<group>"; };
+		AA53982E20BEDD10003329FB /* TestPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPlayback.swift; sourceTree = "<group>"; };
 		AA7188E5207375FE002597F5 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA925F4C20B59F09002523D4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		AA925F4D20B59F09002523D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -55,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				342836C29E91458E9D8AE14F /* libPods-Demo.a in Frameworks */,
+				228C109A6F49C9AEC783B125 /* Pods_Demo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,8 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93EC9EBDD4A14189E0FE1FD1 /* Pods_Tests.framework in Frameworks */,
-				E8C4F4581C7E85857DF74611 /* libPods-iOSTests.a in Frameworks */,
+				678299E8789D7DCEB4E26327 /* Pods_iOSTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,8 +83,8 @@
 			children = (
 				B9B019FCFCEA1448001C70CA /* Pods_Dioptra.framework */,
 				65BAB17923FD367D4C316C67 /* Pods_Tests.framework */,
-				0BF67D7DE4608F90F0454FC8 /* libPods-Demo.a */,
-				0B76BD26ED00BBBB83E29CB2 /* libPods-iOSTests.a */,
+				A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */,
+				40FA1278A9862C2FC74BBB93 /* Pods_iOSTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -97,9 +104,22 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		AA52598D20B835660089ECD2 /* iOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				AA52598F20B835660089ECD2 /* Info.plist */,
+				AA53982A20BEDC77003329FB /* AVPlaybackSpec.swift */,
+				AA52598E20B835660089ECD2 /* VideoPlayerViewModelSpec.swift */,
+				AA53982C20BEDCC2003329FB /* TestControls.swift */,
+				AA53982E20BEDD10003329FB /* TestPlayback.swift */,
+			);
+			path = iOSTests;
+			sourceTree = "<group>";
+		};
 		AA7188DC207375FE002597F5 = {
 			isa = PBXGroup;
 			children = (
+				AA52598D20B835660089ECD2 /* iOSTests */,
 				AA925F4B20B59F09002523D4 /* Demo */,
 				AA7188E6207375FE002597F5 /* Products */,
 				3CAB1D3EE4491F26CFD3A81A /* Pods */,
@@ -141,6 +161,7 @@
 				AA7188E2207375FE002597F5 /* Frameworks */,
 				AA7188E3207375FE002597F5 /* Resources */,
 				354C1792715EEAA3356BF8DC /* [CP] Copy Pods Resources */,
+				E15D9581477B3D825F96F848 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -159,6 +180,7 @@
 				AAF311D420A7458600825F8E /* Sources */,
 				AAF311D520A7458600825F8E /* Frameworks */,
 				AAF311D620A7458600825F8E /* Resources */,
+				E248DDA403CE38A2F1C44F14 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -187,7 +209,6 @@
 					AAF311D720A7458600825F8E = {
 						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
-						TestTargetID = AA7188E4207375FE002597F5;
 					};
 				};
 			};
@@ -215,6 +236,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA52599120B835660089ECD2 /* Info.plist in Resources */,
 				AA925F5720B59F09002523D4 /* Main.storyboard in Resources */,
 				AA925F5520B59F09002523D4 /* Assets.xcassets in Resources */,
 				AA925F5620B59F09002523D4 /* LaunchScreen.storyboard in Resources */,
@@ -256,11 +278,11 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-resources.sh",
-				"${PODS_ROOT}/FormatterKit/FormatterKit/FormatterKit.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Brightcove-Player-SDK/BCOVPUIResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FormatterKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BCOVPUIResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -285,6 +307,74 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		E15D9581477B3D825F96F848 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Astrolabe/Astrolabe.framework",
+				"${PODS_ROOT}/Brightcove-Player-SDK/ios/dynamic/BrightcovePlayerSDK.framework",
+				"${BUILT_PRODUCTS_DIR}/DailymotionPlayerSDK/DailymotionPlayerSDK.framework",
+				"${BUILT_PRODUCTS_DIR}/Dioptra-AV-BC-Core-DM/Dioptra.framework",
+				"${BUILT_PRODUCTS_DIR}/FormatterKit/FormatterKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Gnomon/Gnomon.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxGesture/RxGesture.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Astrolabe.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DailymotionPlayerSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Dioptra.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FormatterKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gnomon.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGesture.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E248DDA403CE38A2F1C44F14 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-iOSTests/Pods-iOSTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Dioptra-AV-Core/Dioptra.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxGesture/RxGesture.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
+				"${BUILT_PRODUCTS_DIR}/RxBlocking/RxBlocking.framework",
+				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Dioptra.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGesture.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxBlocking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxTest.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOSTests/Pods-iOSTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -301,6 +391,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA53982F20BEDD10003329FB /* TestPlayback.swift in Sources */,
+				AA53982D20BEDCC2003329FB /* TestControls.swift in Sources */,
+				AA52599220B835860089ECD2 /* VideoPlayerViewModelSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,20 +571,18 @@
 			baseConfigurationReference = 762B345634DBE50325A567A5 /* Pods-iOSTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JPS45PPV79;
-				INFOPLIST_FILE = DioptraTests/Info.plist;
+				INFOPLIST_FILE = iOSTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dev.dioptra.DioptraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Dioptra.app/Dioptra";
 			};
 			name = Debug;
 		};
@@ -500,20 +591,18 @@
 			baseConfigurationReference = EE9EA8D1CB5C7F9A92761B87 /* Pods-iOSTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JPS45PPV79;
-				INFOPLIST_FILE = DioptraTests/Info.plist;
+				INFOPLIST_FILE = iOSTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dev.dioptra.DioptraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Dioptra.app/Dioptra";
 			};
 			name = Release;
 		};
