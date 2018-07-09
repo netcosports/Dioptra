@@ -59,6 +59,7 @@ public enum Input<T> {
 
 public enum PlayerState: Equatable {
 
+  case ready
   case active(state: PlaybackState)
   case ad(state: AdState)
   case idle
@@ -69,6 +70,7 @@ public enum PlayerState: Equatable {
 
   public static func == (lhs: PlayerState, rhs: PlayerState) -> Bool {
     switch (lhs, rhs) {
+      case (.ready, .ready): return true
       case (.active(let lhsState), .active(let rhsState)): return lhsState == rhsState
       case (.ad(let lhsState), .ad(let rhsState)): return lhsState == rhsState
       case (.idle, .idle): return true
@@ -105,6 +107,23 @@ extension VideoPlayback {
   public var progress: Driver<Progress> {
     return Driver.combineLatest(time, duration).map { Progress(value: $0, total:$1) }
   }
+}
+
+public enum AdPluginEvent<T> {
+  case resumeContent
+  case pauseContent
+
+  case start(ad: T)
+  case stopAd
+}
+
+public protocol AdPlugin: class {
+  associatedtype Stream
+
+  func startSession(with stream: Stream)
+  func stopSession()
+
+  var eventQueue: PublishSubject<AdPluginEvent<Stream>> { get }
 }
 
 public protocol PlaybackViewModable {

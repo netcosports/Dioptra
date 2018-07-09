@@ -145,6 +145,13 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
       return Observable<SeekEvent>.just(SeekEvent.finished(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
+    slider.rx.controlEvent(.touchUpOutside).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
+      guard let `self` = self else { return .empty() }
+      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.acceptSoft)
+      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
+      return Observable<SeekEvent>.just(SeekEvent.finished(progress: self.slider.value))
+    }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
+
     slider.rx.controlEvent(.valueChanged).asObservable().flatMap { [weak self] event -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
       return Observable<SeekEvent>.just(SeekEvent.value(progress: self.slider.value))

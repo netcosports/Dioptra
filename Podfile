@@ -6,7 +6,9 @@ use_frameworks!
 inhibit_all_warnings!
 
 target 'Demo' do
+
   pod 'Astrolabe/Loaders', :git => 'https://github.com/netcosports/Astrolabe'
+
   pod 'Dioptra/AV', :path => '.'
   pod 'Dioptra/DM', :path => '.'
   pod 'Dioptra/BC', :path => '.'

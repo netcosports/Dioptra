@@ -13,8 +13,8 @@ import SnapKit
 
 open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModable & UIView>: UIView {
 
-  typealias ViewModel = VideoPlayerViewModel<P.ViewModel, C.ViewModel>
-  typealias Stream = P.ViewModel.Stream
+  public typealias ViewModel = VideoPlayerViewModel<P.ViewModel, C.ViewModel>
+  public typealias Stream = P.ViewModel.Stream
 
   public let playbackView = P(frame: CGRect.zero)
   public let controlsView = C(frame: CGRect.zero)
@@ -43,7 +43,7 @@ open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModab
     super.updateConstraints()
   }
 
-  var input: Input<Stream> = .cleanup {
+  open var input: Input<Stream> = .cleanup {
     didSet {
       playbackView.viewModel.input = input
       switch input {

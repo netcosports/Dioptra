@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		228C109A6F49C9AEC783B125 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */; };
 		678299E8789D7DCEB4E26327 /* Pods_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40FA1278A9862C2FC74BBB93 /* Pods_iOSTests.framework */; };
-		AA52599120B835660089ECD2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA52598F20B835660089ECD2 /* Info.plist */; };
 		AA52599220B835860089ECD2 /* VideoPlayerViewModelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA52598E20B835660089ECD2 /* VideoPlayerViewModelSpec.swift */; };
 		AA53982D20BEDCC2003329FB /* TestControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982C20BEDCC2003329FB /* TestControls.swift */; };
 		AA53982F20BEDD10003329FB /* TestPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982E20BEDD10003329FB /* TestPlayback.swift */; };
@@ -236,7 +235,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA52599120B835660089ECD2 /* Info.plist in Resources */,
 				AA925F5720B59F09002523D4 /* Main.storyboard in Resources */,
 				AA925F5520B59F09002523D4 /* Assets.xcassets in Resources */,
 				AA925F5620B59F09002523D4 /* LaunchScreen.storyboard in Resources */,

@@ -4,7 +4,6 @@ Pod::Spec.new do |s|
   s.summary = 'Video player RX based library'
 
   s.homepage = 'https://github.com/netcosports/Dioptra'
-  s.license = { :type => "MIT" }
   s.author = {
     'Sergei Mikhan' => 'sergei@netcosports.com'
   }
@@ -29,7 +28,7 @@ Pod::Spec.new do |s|
   s.subspec 'BC' do |sub|
     sub.source_files = 'Sources/BC/*.swift'
     sub.dependency 'Brightcove-Player-SDK/dynamic'
-    sub.dependency 'Dioptra/Core'
+    sub.dependency 'Dioptra/AV'
   end
 
   s.subspec 'DM' do |sub|
@@ -42,5 +41,11 @@ Pod::Spec.new do |s|
     sub.source_files = 'Sources/YT/*.swift'
     sub.dependency 'youtube-ios-player-helper'
     sub.dependency 'Dioptra/Core'
+  end
+
+  s.subspec 'PulsePlugin' do |sub|
+    sub.source_files = 'Sources/Plugins/AD/Pulse/*.swift'
+    sub.dependency 'Dioptra/Core'
+    sub.dependency 'PulseFrameworkWrapper'
   end
 end
