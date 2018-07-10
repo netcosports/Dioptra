@@ -43,9 +43,17 @@ Pod::Spec.new do |s|
     sub.dependency 'Dioptra/Core'
   end
 
-  s.subspec 'PulsePlugin' do |sub|
-    sub.source_files = 'Sources/Plugins/AD/Pulse/*.swift'
-    sub.dependency 'Dioptra/Core'
-    sub.dependency 'PulseFrameworkWrapper'
+  #FIXME: need to put this into separated spec
+  s.subspec 'Presentation' do |sub|
+    sub.source_files = 'Sources/Presentation/*.swift'
+    sub.dependency 'RxSwift', '~> 4.0'
+    sub.dependency 'RxCocoa', '~> 4.0'
+    sub.dependency 'RxGesture', '~> 1.2'
   end
+
+  #s.subspec 'PulsePlugin' do |sub|
+  #  sub.source_files = 'Sources/Plugins/AD/Pulse/*.swift'
+  #  sub.dependency 'Dioptra/Core'
+  #  sub.dependency 'PulseFrameworkWrapper'
+  #end
 end

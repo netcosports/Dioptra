@@ -21,7 +21,7 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     case button = 62.0
   }
 
-  private(set) var playButton: PlaybackButton = {
+  public private(set) var playButton: PlaybackButton = {
     let frame = CGRect(origin: CGPoint.zero, size: CGSize(width: Sizes.button.rawValue, height: Sizes.button.rawValue))
     let playButton = PlaybackButton(frame: frame)
     playButton.contentEdgeInsets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
@@ -43,13 +43,6 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     slider.isContinuous = true
     slider.tintColor = .white
     return slider
-  }()
-
-  fileprivate let fullScreenModeButton: UIButton = {
-    let fullScreenModeButton = UIButton()
-    fullScreenModeButton.contentMode = .center
-    fullScreenModeButton.backgroundColor = .orange
-    return fullScreenModeButton
   }()
 
   fileprivate let startTimeLabel: UILabel = {
@@ -156,15 +149,12 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
       guard let `self` = self else { return .empty() }
       return Observable<SeekEvent>.just(SeekEvent.value(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
-
-
   }
 
   fileprivate func setup() {
     addSubview(playButton)
     addSubview(indicatorView)
     addSubview(slider)
-    addSubview(fullScreenModeButton)
     addSubview(startTimeLabel)
     addSubview(endTimeLabel)
   }
@@ -187,13 +177,8 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     }
     endTimeLabel.snp.remakeConstraints {
       $0.width.equalTo(80.0)
-      $0.trailing.equalTo(fullScreenModeButton.snp.leading).inset(5.0)
-      $0.centerY.equalTo(slider)
-    }
-    fullScreenModeButton.snp.remakeConstraints {
       $0.trailing.equalToSuperview().inset(5.0)
-      $0.width.height.equalTo(30.0)
-      $0.bottom.equalTo(slider.snp.top)
+      $0.centerY.equalTo(slider)
     }
     indicatorView.snp.remakeConstraints {
       $0.width.height.equalTo(Sizes.button.rawValue)

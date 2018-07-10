@@ -12,6 +12,7 @@ target 'Demo' do
   pod 'Dioptra/AV', :path => '.'
   pod 'Dioptra/DM', :path => '.'
   pod 'Dioptra/BC', :path => '.'
+  pod 'Dioptra/Presentation', :path => '.'
   #pod 'Dioptra/YT', :path => '.'
 end
 

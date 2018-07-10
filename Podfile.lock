@@ -20,6 +20,10 @@ PODS:
   - Dioptra/DM (0.1):
     - DailymotionPlayerSDK
     - Dioptra/Core
+  - Dioptra/Presentation (0.1):
+    - RxCocoa (~> 4.0)
+    - RxGesture (~> 1.2)
+    - RxSwift (~> 4.0)
   - FormatterKit/Resources (1.8.2)
   - FormatterKit/URLRequestFormatter (1.8.2):
     - FormatterKit/Resources
@@ -44,6 +48,7 @@ DEPENDENCIES:
   - Dioptra/AV (from `.`)
   - Dioptra/BC (from `.`)
   - Dioptra/DM (from `.`)
+  - Dioptra/Presentation (from `.`)
   - Nimble (~> 7.0)
   - RxBlocking
   - RxTest
@@ -77,7 +82,7 @@ SPEC CHECKSUMS:
   Astrolabe: 8bc4f77a84065c0d4ebda0bed72b69e9f5a7f2bd
   Brightcove-Player-SDK: 797417ba9ca513d079df6844515a05498e3639d8
   DailymotionPlayerSDK: afd14da75f14625c0b37dcb6c6db514a73075002
-  Dioptra: a0141c4b1fda1eb113d76c3559ea966d0e7df689
+  Dioptra: 8cfb60b79c53ab0753d83a34990810fc4a91a64d
   FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
   Gnomon: e82d177b4a806e846c3a862738886046ec106ffb
   Nimble: 391f07782af4b37914f9bd7b2ffbb952731b8202
@@ -88,6 +93,6 @@ SPEC CHECKSUMS:
   RxTest: e634f15fd2c2cd0e0120132ef7a4f7be69ad0393
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
-PODFILE CHECKSUM: 1b6419275a79a716116c242087e3b593482453d4
+PODFILE CHECKSUM: 1d824b299471ee8fc0c2aa80c1e20f1cd768beb5
 
 COCOAPODS: 1.5.3
