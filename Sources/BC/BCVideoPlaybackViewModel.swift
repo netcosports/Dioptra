@@ -13,15 +13,13 @@ import RxCocoa
 
 open class BCVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel, BCOVPlaybackControllerDelegate {
 
-  static var AccountID = "3636334163001"
-  static var ServicePolicyKey = "BCpkADawqM1W-vUOMe6RSA3pA6Vw-VWUNn5rL0lzQabvrI63-VjS93gVUugDlmBpHIxP16X8TSe5LSKM415UHeMBmxl7pqcwVY_AZ4yKFwIpZPvXE34TpXEYYcmulxJQAOvHbv2dpfq-S_cm"
-
-  let service: BCOVPlaybackService
+  var service: BCOVPlaybackService?
   let playback: BCOVPlaybackController
 
+  open var accountID = ""
+  open var servicePolicyKey = ""
+
   override init() {
-    service = BCOVPlaybackService(accountId: BCVideoPlaybackViewModel.AccountID,
-                                  policyKey: BCVideoPlaybackViewModel.ServicePolicyKey)
     playback = BCOVPlayerSDKManager.shared().createPlaybackController()
     super.init()
 
@@ -32,10 +30,14 @@ open class BCVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel, BCOVPlay
   }
 
   override func startPlayback(with stream: String) {
+    guard let service = BCOVPlaybackService(accountId: accountID, policyKey: servicePolicyKey) else {
+      return
+    }
     service.findVideo(withVideoID: stream, parameters: [:]) { [weak self] (video, params, error) in
       guard let video = video else { return }
       self?.playback.setVideos([video] as NSFastEnumeration)
     }
+    self.service = service
   }
 
   public func playbackController(_ controller: BCOVPlaybackController!, didAdvanceTo session: BCOVPlaybackSession!) {

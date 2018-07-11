@@ -7,19 +7,12 @@
 //
 
 import UIKit
-import Dioptra
-import RxSwift
 
-class DetailsViewController: UIViewController, Transitionable {
-
-  var currentTransition: Transitionable.Transition?
-  var customTransitionMethod = TransitionMethod.none
-  var presentSubscribed = false
-  var dismissSubscribed = false
-  var disposeBag = DisposeBag()
+class DetailsViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    view.backgroundColor = .clear
   }
 
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
