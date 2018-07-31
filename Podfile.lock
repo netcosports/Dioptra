@@ -16,7 +16,6 @@ PODS:
     - RxCocoa (~> 4.0)
     - RxGesture (~> 1.2)
     - RxSwift (~> 4.0)
-    - SnapKit
   - Dioptra/DM (0.1):
     - DailymotionPlayerSDK
     - Dioptra/Core
@@ -41,7 +40,6 @@ PODS:
   - RxSwift (4.1.2)
   - RxTest (4.1.2):
     - RxSwift (~> 4.0)
-  - SnapKit (4.0.0)
 
 DEPENDENCIES:
   - Astrolabe/Loaders (from `https://github.com/netcosports/Astrolabe`)
@@ -65,7 +63,6 @@ SPEC REPOS:
     - RxGesture
     - RxSwift
     - RxTest
-    - SnapKit
 
 EXTERNAL SOURCES:
   Astrolabe:
@@ -82,7 +79,7 @@ SPEC CHECKSUMS:
   Astrolabe: 8bc4f77a84065c0d4ebda0bed72b69e9f5a7f2bd
   Brightcove-Player-SDK: 797417ba9ca513d079df6844515a05498e3639d8
   DailymotionPlayerSDK: afd14da75f14625c0b37dcb6c6db514a73075002
-  Dioptra: 8cfb60b79c53ab0753d83a34990810fc4a91a64d
+  Dioptra: f7714e4448e4030da6029650e08ea8620f4f9ffd
   FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
   Gnomon: e82d177b4a806e846c3a862738886046ec106ffb
   Nimble: 391f07782af4b37914f9bd7b2ffbb952731b8202
@@ -91,7 +88,6 @@ SPEC CHECKSUMS:
   RxGesture: c278eb05b187abd47e11e65464ae4de53ab71d95
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   RxTest: e634f15fd2c2cd0e0120132ef7a4f7be69ad0393
-  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
 PODFILE CHECKSUM: 1d824b299471ee8fc0c2aa80c1e20f1cd768beb5
 

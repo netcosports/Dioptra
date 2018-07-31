@@ -33,4 +33,8 @@ open class AVVideoPlaybackView: UIView, PlaybackViewModable {
   fileprivate var playerLayer: AVPlayerLayer? {
     return layer as? AVPlayerLayer
   }
+
+  override open class var requiresConstraintBasedLayout: Bool {
+    return false
+  }
 }

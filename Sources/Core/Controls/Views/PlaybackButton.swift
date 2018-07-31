@@ -250,6 +250,10 @@ open class PlaybackButton: UIButton {
     self.playbackLayer = playbackLayer
     self.layer.addSublayer(playbackLayer)
   }
+
+  override open class var requiresConstraintBasedLayout: Bool {
+    return false
+  }
 }
 
 public extension Reactive where Base: PlaybackButton {

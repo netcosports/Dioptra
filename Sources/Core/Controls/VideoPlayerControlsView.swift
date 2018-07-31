@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 import RxSwift
 import RxCocoa
 import RxGesture
@@ -17,8 +16,8 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
   public let viewModel = VideoPlayerControlsViewModel()
 
   enum Sizes: CGFloat {
-    case sliderHeight = 20.0
-    case button = 62.0
+    case sliderHeight = 48.0
+    case button       = 62.0
   }
 
   public private(set) var playButton: PlaybackButton = {
@@ -74,6 +73,30 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
   public required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+
+  open override func layoutSubviews() {
+    super.layoutSubviews()
+    let margin: CGFloat = 5.0
+    let labelWidth: CGFloat = 80.0
+    let width = frame.width
+    let height = frame.height
+
+    playButton.center = center
+    playButton.bounds = CGRect(origin: .zero, size: CGSize(width: Sizes.button.rawValue, height: Sizes.button.rawValue))
+
+    indicatorView.center = center
+    indicatorView.bounds = CGRect(origin: .zero, size: CGSize(width: Sizes.button.rawValue, height: Sizes.button.rawValue))
+
+    slider.frame = CGRect(x: labelWidth + margin,
+                          y: height - Sizes.sliderHeight.rawValue,
+                          width: width - 2.0 * (margin + labelWidth),
+                          height: Sizes.sliderHeight.rawValue)
+    startTimeLabel.frame = CGRect(x: 0.0, y: height - Sizes.sliderHeight.rawValue,
+                                  width: labelWidth, height: Sizes.sliderHeight.rawValue)
+    endTimeLabel.frame = CGRect(x: slider.frame.maxX + margin, y: height - Sizes.sliderHeight.rawValue,
+                                  width: labelWidth, height: Sizes.sliderHeight.rawValue)
   }
 
   fileprivate func bind() {
@@ -159,31 +182,7 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     addSubview(endTimeLabel)
   }
 
-  open override func updateConstraints() {
-    playButton.snp.remakeConstraints {
-      $0.width.height.equalTo(Sizes.button.rawValue)
-      $0.center.equalToSuperview()
-    }
-    startTimeLabel.snp.remakeConstraints {
-      $0.width.equalTo(80.0)
-      $0.leading.equalToSuperview()
-      $0.centerY.equalTo(slider)
-    }
-    slider.snp.remakeConstraints {
-      $0.leading.equalTo(startTimeLabel.snp.trailing).inset(5.0)
-      $0.trailing.equalTo(endTimeLabel.snp.leading).inset(5.0)
-      $0.bottom.equalToSuperview().inset(Sizes.sliderHeight.rawValue / 2.0)
-      $0.height.equalTo(Sizes.sliderHeight.rawValue)
-    }
-    endTimeLabel.snp.remakeConstraints {
-      $0.width.equalTo(80.0)
-      $0.trailing.equalToSuperview().inset(5.0)
-      $0.centerY.equalTo(slider)
-    }
-    indicatorView.snp.remakeConstraints {
-      $0.width.height.equalTo(Sizes.button.rawValue)
-      $0.center.equalToSuperview()
-    }
-    super.updateConstraints()
+  override open class var requiresConstraintBasedLayout: Bool {
+    return false
   }
 }

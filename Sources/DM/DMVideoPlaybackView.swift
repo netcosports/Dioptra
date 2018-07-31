@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import SnapKit
 import DailymotionPlayerSDK
 
 open class DMVideoPlaybackView: UIView, PlaybackViewModable {
@@ -31,6 +30,7 @@ open class DMVideoPlaybackView: UIView, PlaybackViewModable {
   override init(frame: CGRect) {
     super.init(frame: frame)
     backgroundColor = .black
+
     addSubview(playerViewController.view)
 
     viewModel.seek.asDriver(onErrorJustReturn: 0.0).drive(onNext: { [weak self] seconds in
@@ -66,14 +66,16 @@ open class DMVideoPlaybackView: UIView, PlaybackViewModable {
     }).disposed(by: disposeBag)
   }
 
+  open override func layoutSubviews() {
+    super.layoutSubviews()
+    playerViewController.view.frame = bounds
+  }
+
   public required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  open override func updateConstraints() {
-    playerViewController.view.snp.remakeConstraints { make in
-      make.edges.equalToSuperview()
-    }
-    super.updateConstraints()
+  override open class var requiresConstraintBasedLayout: Bool {
+    return false
   }
 }

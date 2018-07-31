@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import SnapKit
 
 open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModable & UIView>: UIView {
 
@@ -21,9 +20,10 @@ open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModab
 
   let viewModel: ViewModel
   let disposeBag = DisposeBag()
-  public init() {
+
+  public override init(frame: CGRect) {
     viewModel = ViewModel(playback: playbackView.viewModel, controls: controlsView.viewModel)
-    super.init(frame: CGRect.zero)
+    super.init(frame: frame)
 
     addSubview(playbackView)
     addSubview(controlsView)
@@ -33,14 +33,14 @@ open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModab
     fatalError("init(coder:) has not been implemented")
   }
 
-  open override func updateConstraints() {
-    playbackView.snp.remakeConstraints {
-      $0.edges.equalToSuperview()
-    }
-    controlsView.snp.remakeConstraints {
-      $0.edges.equalToSuperview()
-    }
-    super.updateConstraints()
+  open override func layoutSubviews() {
+    super.layoutSubviews()
+    playbackView.frame = bounds
+    controlsView.frame = bounds
+  }
+
+  override open class var requiresConstraintBasedLayout: Bool {
+    return false
   }
 
   open var input: Input<Stream> = .cleanup {

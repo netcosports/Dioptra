@@ -169,6 +169,10 @@ open class BufferedSlider: UISlider {
       UIBezierPath(rect: fillRect).fill()
     }
   }
+
+  override open class var requiresConstraintBasedLayout: Bool {
+    return false
+  }
 }
 
 public extension Reactive where Base: BufferedSlider {

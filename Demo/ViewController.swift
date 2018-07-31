@@ -7,9 +7,15 @@
 //
 
 import UIKit
-import SnapKit
 import RxSwift
 import Dioptra
+
+class Container: UIView {
+
+  override open class var requiresConstraintBasedLayout: Bool {
+    return false
+  }
+}
 
 class ViewController: UIViewController, Transitionable {
 
@@ -23,23 +29,24 @@ class ViewController: UIViewController, Transitionable {
   //typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
 
-  let player = Player()
-  let playerContainer = UIView()
+  let player = Player(frame: CGRect(x: 0.0, y: 0.0,
+                                    width: UIScreen.main.bounds.width,
+                                    height: UIScreen.main.bounds.width * 9.0 / 16.0))
+  let playerContainer = Container(frame: CGRect(x: 0.0, y: 44.0,
+                                                width: UIScreen.main.bounds.width,
+                                                height: UIScreen.main.bounds.width * 9.0 / 16.0))
 
   override func viewDidLoad() {
     super.viewDidLoad()
+
+    playerContainer.translatesAutoresizingMaskIntoConstraints = true
+
     view.addSubview(playerContainer)
     playerContainer.addSubview(player)
-    playerContainer.snp.remakeConstraints {
-      $0.top.equalToSuperview().offset(44.0)
-      $0.leading.equalToSuperview()
-      $0.width.equalTo(UIScreen.main.bounds.width)
-      $0.height.equalTo(playerContainer.snp.width).multipliedBy(9.0 / 16.0)
-    }
-    player.snp.remakeConstraints {
-      $0.edges.equalToSuperview()
-    }
-    player.playbackView.viewModel.input = .content(stream: "3666678807001")
+
+    player.playbackView.viewModel.accountID = "4800266849001"
+    player.playbackView.viewModel.servicePolicyKey = "BCpkADawqM3n0ImwKortQqSZCgJMcyVbb8lJVwt0z16UD0a_h8MpEYcHyKbM8CGOPxBRp0nfSVdfokXBrUu3Sso7Nujv3dnLo0JxC_lNXCl88O7NJ0PR0z2AprnJ_Lwnq7nTcy1GBUrQPr5e"
+    player.playbackView.viewModel.input = .content(stream: "5754208017001")
 //    player.playbackView.viewModel.input = .content(stream: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
 //    player.playbackView.viewModel.stream = .content(stream: "x6k8h19")
     player.playbackView.viewModel.muted = true

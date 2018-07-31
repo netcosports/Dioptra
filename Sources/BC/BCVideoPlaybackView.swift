@@ -19,15 +19,20 @@ open class BCVideoPlaybackView: UIView, PlaybackViewModable {
   public override init(frame: CGRect) {
     super.init(frame: frame)
     backgroundColor = .black
-
     // FIXME: need to setup parent view controller
     self.addSubview(viewModel.playback.view)
-    viewModel.playback.view.snp.remakeConstraints {
-      $0.edges.equalToSuperview()
-    }
+  }
+
+  open override func layoutSubviews() {
+    super.layoutSubviews()
+    viewModel.playback.view.frame = bounds
   }
 
   public required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  override open class var requiresConstraintBasedLayout: Bool {
+    return false
   }
 }

@@ -10,7 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxGesture
-import SnapKit
 
 public enum Transition {
   case left
@@ -39,6 +38,7 @@ public class PlayerTransition: NSObject, UIViewControllerAnimatedTransitioning, 
 
   fileprivate var presentingView: UIView
   fileprivate var dismissTarget: UIView?
+  fileprivate var presentingOrientation = Transition.current()
 
   public init(presentingView: UIView) {
     self.presentingView = presentingView
@@ -75,6 +75,7 @@ public class PlayerTransition: NSObject, UIViewControllerAnimatedTransitioning, 
       compactableView.compact = !presentation
     }
     if presentation {
+      presentingOrientation = Transition.current()
       targetView = toVC.view
       midY = startFrame.midX
       switch transition {
@@ -99,34 +100,29 @@ public class PlayerTransition: NSObject, UIViewControllerAnimatedTransitioning, 
       case .right:
         angle = 3.0 * CGFloat.pi * 0.5
       default:
-        angle = -3.0 * CGFloat.pi * 0.5
+        switch presentingOrientation {
+          case .left: angle = CGFloat.pi * 0.5
+          case .right: angle = -CGFloat.pi * 0.5
+          default: angle = -3.0 * CGFloat.pi * 0.5
+        }
       }
     }
 
     presentingView.bounds.size = startFrame.size
     presentingView.center = CGPoint(x: midX, y: midY)
-    toVC.view.frame = finalFrame
     presentingView.transform = CGAffineTransform(rotationAngle: angle)
-    fromVC.view.transform = CGAffineTransform(rotationAngle: angle)
+    self.presentingView.layoutIfNeeded()
+    toVC.view.frame = finalFrame
 
-    UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveEaseInOut, animations: {
-      // FIXME: need to manage frame manually
+    UIView.animate(withDuration: transitionDuration(using: transitionContext),
+                   delay: 0, options: .curveEaseInOut, animations: {
       self.presentingView.transform = CGAffineTransform.identity
-      self.presentingView.snp.remakeConstraints { make in
-        make.leading.equalToSuperview().offset(targetFrame.origin.x)
-        make.top.equalToSuperview().offset(targetFrame.origin.y)
-        make.width.equalTo(targetFrame.size.width)
-        make.height.equalTo(targetFrame.size.height)
-      }
-      containerView.layoutIfNeeded()
+      self.presentingView.frame = targetFrame
+      self.presentingView.layoutIfNeeded()
     }) { _ in
       transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-      self.presentingView.removeFromSuperview()
       targetView.insertSubview(self.presentingView, at: 0)
-      self.presentingView.snp.remakeConstraints { make in
-        make.edges.equalToSuperview()
-      }
-      fromVC.view.layoutIfNeeded()
+      self.presentingView.frame = targetView.bounds
     }
   }
 }
