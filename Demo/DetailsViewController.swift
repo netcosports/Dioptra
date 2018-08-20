@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailsViewController: UIViewController {
+class LandscapeViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -17,5 +17,25 @@ class DetailsViewController: UIViewController {
 
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
     return UIInterfaceOrientationMask.landscape
+  }
+}
+
+class FullscreenViewController: UIViewController {
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    view.backgroundColor = .clear
+  }
+
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    let frame = view.bounds
+    view.subviews.forEach {
+      $0.frame = frame
+    }
+  }
+
+  override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    return UIInterfaceOrientationMask.all
   }
 }

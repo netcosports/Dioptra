@@ -23,6 +23,7 @@ open class VideoPlayerControlsViewModel: VideoControls {
 
   public var visibilityChange = BehaviorRelay<VisibilityChangeEvent>(value: .soft(visible: false))
   public let buffer = PublishSubject<Float>()
+  public let fullscreen = PublishSubject<Void>()
   public let progress = PublishSubject<Progress>()
   public let state = PublishSubject<PlayerState>()
   public var seek: Driver<SeekEvent> {

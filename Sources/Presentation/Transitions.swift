@@ -13,7 +13,8 @@ import RxGesture
 
 public enum TransitionMethod {
   case none
-  case player(presentingView: UIView)
+  case landscape(presentingView: UIView)
+  case fullscreen(presentingView: UIView)
 }
 
 public enum InteractiveTransitionDirection {
@@ -49,6 +50,26 @@ public protocol Transitionable: UIViewControllerTransitioningDelegate, UINavigat
   var presentSubscribed: Bool { get set }
   var dismissSubscribed: Bool { get set }
   var disposeBag: DisposeBag { get }
+}
+
+public enum TransitionOrientation {
+  case left
+  case right
+  case portrait
+
+  static func current() -> TransitionOrientation {
+    if UIDevice.current.orientation == .landscapeLeft {
+      return .left
+    }
+    if UIDevice.current.orientation == .landscapeRight {
+      return .right
+    }
+    return .portrait
+  }
+}
+
+public protocol Compactable: class {
+  var compact: Bool { get set }
 }
 
 extension InteractiveTransition where Self: PresentTransition  {
@@ -163,8 +184,10 @@ extension Transitionable where Self: UIViewController {
 
   fileprivate var transition: Transition? {
     switch customTransitionMethod {
-    case .player(let presentingView):
-      return PlayerTransition(presentingView: presentingView)
+    case .landscape(let presentingView):
+      return LandscapeTransition(presentingView: presentingView)
+    case .fullscreen(let presentingView):
+      return FullscreenTransition(presentingView: presentingView)
     case .none:
       return nil
     }

@@ -61,6 +61,7 @@ public protocol VideoControls: class {
   var seek: Driver<SeekEvent> { get }
   var screenMode: Driver<ScreenModeEvent> { get }
   var play: Driver<PlaybackState> { get }
+  var fullscreen: PublishSubject<Void> { get }
 }
 
 public protocol ControlsViewModable {

@@ -24,17 +24,17 @@ class ViewController: UIViewController, Transitionable {
   var presentSubscribed = false
   var dismissSubscribed = false
   var disposeBag = DisposeBag()
-  weak var detailsViewController: DetailsViewController?
+  weak var landscapeViewController: UIViewController?
+  weak var fullscreenViewController: UIViewController?
   typealias Player = VideoPlayerView<BCVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
 
-  let player = Player(frame: CGRect(x: 0.0, y: 0.0,
-                                    width: UIScreen.main.bounds.width,
-                                    height: UIScreen.main.bounds.width * 9.0 / 16.0))
-  let playerContainer = Container(frame: CGRect(x: 0.0, y: 44.0,
-                                                width: UIScreen.main.bounds.width,
-                                                height: UIScreen.main.bounds.width * 9.0 / 16.0))
+  let player = Player(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width - 48,
+                                    height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
+  let playerContainer = Container(frame: CGRect(x: 22.0, y: 44.0,
+                                                width: UIScreen.main.bounds.width - 48,
+                                                height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -50,33 +50,45 @@ class ViewController: UIViewController, Transitionable {
 //    player.playbackView.viewModel.input = .content(stream: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
 //    player.playbackView.viewModel.stream = .content(stream: "x6k8h19")
     player.playbackView.viewModel.muted = true
+    player.controlsView.viewModel.fullscreen.subscribe(onNext: { [weak self] in
+      self?.handleFullscreen()
+    }).disposed(by: disposeBag)
 
-    NotificationCenter.default.rx.notification(.UIDeviceOrientationDidChange, object: nil).map({ _ -> UIDeviceOrientation in
-      return UIDevice.current.orientation
-    })
+    NotificationCenter.default.rx.notification(.UIDeviceOrientationDidChange, object: nil)
+    .map { _ in return UIDevice.current.orientation }
     .distinctUntilChanged()
-    .filter({ orientation in
-      return orientation != .portraitUpsideDown
-    }).filter({ [weak self] _ -> Bool in
-      guard let strongSelf = self else { return false }
-      return true//strongSelf.playerView?.videoStreamUrl != nil
-    }).filter({ [weak self] _ -> Bool in
-      guard let detailsViewController = self?.detailsViewController else { return true }
+    .filter { [weak self] _ in self?.fullscreenViewController == nil }
+    .filter { $0 != .portraitUpsideDown }
+    .filter({ [weak self] _ -> Bool in
+      guard let detailsViewController = self?.landscapeViewController else { return true }
       return !(detailsViewController.isBeingPresented || detailsViewController.isBeingDismissed)
     }).subscribe(onNext: { [weak self] orientation in
-      if self?.detailsViewController != nil && orientation.isPortrait {
-        //self?.setControlsWindowState(.window)
-        self?.detailsViewController?.dismiss(animated: true)
-      } else if orientation.isLandscape && self?.detailsViewController == nil {
-        self?.toFullscreen()
+      if self?.landscapeViewController != nil && orientation.isPortrait {
+        self?.landscapeViewController?.dismiss(animated: true)
+      } else if orientation.isLandscape && self?.landscapeViewController == nil {
+        self?.toLandscape()
       }
     }).disposed(by: disposeBag)
   }
 
-  fileprivate func toFullscreen() {
-    let detailsViewController = DetailsViewController()
-    self.detailsViewController = detailsViewController
-    present(modal: detailsViewController, method: .player(presentingView: self.player))
+  fileprivate func toLandscape() {
+    let detailsViewController = LandscapeViewController()
+    self.landscapeViewController = detailsViewController
+    present(modal: detailsViewController,
+            method: TransitionMethod.landscape(presentingView: self.player))
+  }
+
+  fileprivate func handleFullscreen() {
+    if let fullscreenViewController = fullscreenViewController {
+      fullscreenViewController.dismiss(animated: true)
+    } else if let landscapeViewController = landscapeViewController {
+      landscapeViewController.dismiss(animated: true)
+    } else {
+      let detailsViewController = FullscreenViewController()
+      self.fullscreenViewController = detailsViewController
+      present(modal: detailsViewController,
+              method: TransitionMethod.fullscreen(presentingView: self.player))
+    }
   }
 
   func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {

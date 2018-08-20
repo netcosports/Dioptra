@@ -58,6 +58,12 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     return endTimeLabel
   }()
 
+  fileprivate let fullscreenButton: UIButton = {
+    let button = UIButton()
+    button.backgroundColor = .orange
+    return button
+  }()
+
   fileprivate let indicatorView: UIActivityIndicatorView = {
     let indicatorView = UIActivityIndicatorView()
     indicatorView.color = .white
@@ -91,12 +97,15 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
     slider.frame = CGRect(x: labelWidth + margin,
                           y: height - Sizes.sliderHeight.rawValue,
-                          width: width - 2.0 * (margin + labelWidth),
+                          width: width - 2.0 * (margin + labelWidth) - (Sizes.button.rawValue + margin),
                           height: Sizes.sliderHeight.rawValue)
     startTimeLabel.frame = CGRect(x: 0.0, y: height - Sizes.sliderHeight.rawValue,
                                   width: labelWidth, height: Sizes.sliderHeight.rawValue)
     endTimeLabel.frame = CGRect(x: slider.frame.maxX + margin, y: height - Sizes.sliderHeight.rawValue,
                                   width: labelWidth, height: Sizes.sliderHeight.rawValue)
+
+    fullscreenButton.frame = CGRect(x: slider.frame.maxX + margin + labelWidth + margin, y: height - Sizes.sliderHeight.rawValue,
+                                    width: Sizes.button.rawValue, height: Sizes.button.rawValue)
   }
 
   fileprivate func bind() {
@@ -127,7 +136,6 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
       }
       UIView.animate(withDuration: 0.33) {
         self?.subviews.forEach { $0.alpha = (visibility.visible ? 1.0 : 0.0) }
-        self?.setNeedsUpdateConstraints()
         self?.layoutIfNeeded()
       }
     }).disposed(by: disposeBag)
@@ -172,6 +180,8 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
       guard let `self` = self else { return .empty() }
       return Observable<SeekEvent>.just(SeekEvent.value(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
+
+    fullscreenButton.rx.tap.bind(to: viewModel.fullscreen).disposed(by: disposeBag)
   }
 
   fileprivate func setup() {
@@ -180,6 +190,7 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     addSubview(slider)
     addSubview(startTimeLabel)
     addSubview(endTimeLabel)
+    addSubview(fullscreenButton)
   }
 
   override open class var requiresConstraintBasedLayout: Bool {

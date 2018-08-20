@@ -104,6 +104,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
 
   public func bind(to player: AVPlayer) {
     self.player = player
+    player.isMuted = self.muted
     player.actionAtItemEnd = .none
     let disposeBag = DisposeBag()
     player.rx.periodicTimeObserver(interval: AVVideoPlaybackViewModel.interval)

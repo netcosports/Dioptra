@@ -1,6 +1,6 @@
-  //
-//  PlayerTransition.swift
-//  PSGOneApp
+//
+//  LandscapeTransition.swift
+//  Dioptra
 //
 //  Created by Sergei Mikhan on 11/9/17.
 //  Copyright © 2017 Netcosports. All rights reserved.
@@ -11,34 +11,14 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
-public enum Transition {
-  case left
-  case right
-  case portrait
-
-  static func current() -> Transition {
-    if UIDevice.current.orientation == .landscapeLeft {
-      return .left
-    }
-    if UIDevice.current.orientation == .landscapeRight {
-      return .right
-    }
-    return .portrait
-  }
-}
-
-public protocol Compactable: class {
-  var compact: Bool { get set }
-}
-
-public class PlayerTransition: NSObject, UIViewControllerAnimatedTransitioning, PresentTransition {
+public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitioning, PresentTransition {
 
   public var presentation = true
   public weak var transitionContext: UIViewControllerContextTransitioning?
 
   fileprivate var presentingView: UIView
   fileprivate var dismissTarget: UIView?
-  fileprivate var presentingOrientation = Transition.current()
+  fileprivate var presentingOrientation = TransitionOrientation.current()
 
   public init(presentingView: UIView) {
     self.presentingView = presentingView
@@ -61,7 +41,7 @@ public class PlayerTransition: NSObject, UIViewControllerAnimatedTransitioning, 
     let startFrame = dismissTarget.convert(presentingView.frame, to: fromVC.view)
     let finalFrame = UIScreen.main.bounds
     var targetFrame = UIScreen.main.bounds
-    let transition = Transition.current()
+    let transition = TransitionOrientation.current()
     let midX: CGFloat
     let midY: CGFloat
     let angle: CGFloat
@@ -75,7 +55,7 @@ public class PlayerTransition: NSObject, UIViewControllerAnimatedTransitioning, 
       compactableView.compact = !presentation
     }
     if presentation {
-      presentingOrientation = Transition.current()
+      presentingOrientation = TransitionOrientation.current()
       targetView = toVC.view
       midY = startFrame.midX
       switch transition {
