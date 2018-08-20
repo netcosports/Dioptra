@@ -57,16 +57,22 @@ public class FullscreenTransition: NSObject, UIViewControllerAnimatedTransitioni
     if presentation {
       presentingOrientation = TransitionOrientation.current()
       targetView = toVC.view
-      switch transition {
-      case .left:
-        angle = -CGFloat.pi * 0.5
-        midX = startFrame.midY
-        midY = startFrame.midX
-      case .right:
-        angle = CGFloat.pi * 0.5
-        midX = UIScreen.main.bounds.width - startFrame.midY
-        midY = startFrame.midX
-      case .portrait:
+      if UIDevice.current.userInterfaceIdiom != .pad {
+        switch transition {
+        case .left:
+          angle = -CGFloat.pi * 0.5
+          midX = startFrame.midY
+          midY = startFrame.midX
+        case .right:
+          angle = CGFloat.pi * 0.5
+          midX = UIScreen.main.bounds.width - startFrame.midY
+          midY = startFrame.midX
+        case .portrait:
+          angle = 0.0
+          midX = startFrame.midX
+          midY = startFrame.midY
+        }
+      } else {
         angle = 0.0
         midX = startFrame.midX
         midY = startFrame.midY
@@ -76,12 +82,16 @@ public class FullscreenTransition: NSObject, UIViewControllerAnimatedTransitioni
       midY = UIScreen.main.bounds.height * 0.5
       targetView = dismissTarget
       targetFrame = dismissTarget.superview?.convert(dismissTarget.frame, to: toVC.view) ?? .zero
-      switch transition {
-      case .left:
-        angle = -3.0 * CGFloat.pi * 0.5
-      case .right:
-        angle = 3.0 * CGFloat.pi * 0.5
-      case .portrait:
+      if UIDevice.current.userInterfaceIdiom != .pad {
+        switch transition {
+        case .left:
+          angle = -3.0 * CGFloat.pi * 0.5
+        case .right:
+          angle = 3.0 * CGFloat.pi * 0.5
+        case .portrait:
+          angle = 0.0
+        }
+      } else {
         angle = 0.0
       }
     }
