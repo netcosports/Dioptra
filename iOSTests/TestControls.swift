@@ -13,7 +13,7 @@ import RxCocoa
 class TestControls: VideoControls {
 
   let seekRelay = PublishRelay<SeekEvent>()
-  let screenModeRelay = PublishRelay<ScreenModeEvent>()
+  let screenMode = BehaviorRelay<ScreenMode>(value: .compact)
   let playRelay = PublishRelay<PlaybackState>()
 
   var visibilityChange = BehaviorRelay<VisibilityChangeEvent>(value: VisibilityChangeEvent.soft(visible: true))
@@ -23,10 +23,6 @@ class TestControls: VideoControls {
 
   var seek: Driver<SeekEvent> {
     return seekRelay.asDriver(onErrorJustReturn: SeekEvent.started(progress: 0.0))
-  }
-
-  var screenMode: Driver<ScreenModeEvent> {
-    return screenModeRelay.asDriver(onErrorJustReturn: ScreenModeEvent.compact)
   }
 
   var play: Driver<PlaybackState> {

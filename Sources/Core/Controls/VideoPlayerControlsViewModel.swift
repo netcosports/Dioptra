@@ -19,18 +19,15 @@ open class VideoPlayerControlsViewModel: VideoControls {
   fileprivate let disposeBag = DisposeBag()
   fileprivate let currentTimeRelay = PublishRelay<String>()
   fileprivate let durationRelay = PublishRelay<String>()
-  fileprivate let screenModeSubject = PublishRelay<ScreenModeEvent>()
 
   public var visibilityChange = BehaviorRelay<VisibilityChangeEvent>(value: .soft(visible: false))
+  public let screenMode = BehaviorRelay<ScreenMode>(value: .compact)
   public let buffer = PublishSubject<Float>()
   public let fullscreen = PublishSubject<Void>()
   public let progress = PublishSubject<Progress>()
   public let state = PublishSubject<PlayerState>()
   public var seek: Driver<SeekEvent> {
     return seekSubject.asDriver(onErrorJustReturn: SeekEvent.value(progress: 0.0))
-  }
-  public var screenMode: Driver<ScreenModeEvent> {
-    return screenModeSubject.asDriver(onErrorJustReturn: ScreenModeEvent.compact)
   }
   public var play: Driver<PlaybackState> {
     return stateSubject.asDriver(onErrorJustReturn: PlaybackState.paused)
@@ -79,7 +76,7 @@ extension VideoPlayerControlsViewModel {
       }
     }.bind(to: stateSubject).disposed(by: disposeBag)
 
-    screenMode.map { _ in VisibilityChangeEvent.soft(visible: true) }.drive(visibilityChange).disposed(by: disposeBag)
+    screenMode.asDriver().map { _ in VisibilityChangeEvent.soft(visible: true) }.drive(visibilityChange).disposed(by: disposeBag)
 
     visibilityChange.asDriver()
       .filter { [weak self] in

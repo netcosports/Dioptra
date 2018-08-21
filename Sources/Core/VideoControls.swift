@@ -10,9 +10,10 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-public enum ScreenModeEvent {
+public enum ScreenMode {
   case fullscreen
   case compact
+  case minimized
 }
 
 public enum SeekEvent {
@@ -51,17 +52,18 @@ public protocol VideoControls: class {
 
   // RX inputs/outputs
   var visibilityChange: BehaviorRelay<VisibilityChangeEvent> { get }
+  var screenMode: BehaviorRelay<ScreenMode> { get }
 
   // RX inputs
   var buffer: PublishSubject<Float> { get }
   var progress: PublishSubject<Progress> { get }
   var state: PublishSubject<PlayerState> { get }
+  // FIXME: is it input?
+  var fullscreen: PublishSubject<Void> { get }
 
   // RX outputs
   var seek: Driver<SeekEvent> { get }
-  var screenMode: Driver<ScreenModeEvent> { get }
   var play: Driver<PlaybackState> { get }
-  var fullscreen: PublishSubject<Void> { get }
 }
 
 public protocol ControlsViewModable {

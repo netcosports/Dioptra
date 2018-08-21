@@ -81,7 +81,6 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     fatalError("init(coder:) has not been implemented")
   }
 
-
   open override func layoutSubviews() {
     super.layoutSubviews()
     let margin: CGFloat = 5.0
@@ -102,9 +101,8 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     startTimeLabel.frame = CGRect(x: 0.0, y: height - Sizes.sliderHeight.rawValue,
                                   width: labelWidth, height: Sizes.sliderHeight.rawValue)
     endTimeLabel.frame = CGRect(x: slider.frame.maxX + margin, y: height - Sizes.sliderHeight.rawValue,
-                                  width: labelWidth, height: Sizes.sliderHeight.rawValue)
-
-    fullscreenButton.frame = CGRect(x: slider.frame.maxX + margin + labelWidth + margin, y: height - Sizes.sliderHeight.rawValue,
+                                width: labelWidth, height: Sizes.sliderHeight.rawValue)
+    fullscreenButton.frame = CGRect(x: slider.frame.maxX + margin + labelWidth + margin, y: height - Sizes.button.rawValue,
                                     width: Sizes.button.rawValue, height: Sizes.button.rawValue)
   }
 
@@ -182,6 +180,26 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     fullscreenButton.rx.tap.bind(to: viewModel.fullscreen).disposed(by: disposeBag)
+
+    viewModel.screenMode.asDriver().drive(onNext: { [weak self] screenMode in
+      self?.update(with: screenMode)
+    }).disposed(by: disposeBag)
+  }
+
+  fileprivate func update(with screenMode: ScreenMode) {
+    switch screenMode {
+    case .minimized:
+      fullscreenButton.alpha = 0.0
+      slider.alpha = 0.0
+      startTimeLabel.alpha = 0.0
+      endTimeLabel.alpha = 0.0
+    default:
+      fullscreenButton.alpha = 1.0
+      slider.alpha = 1.0
+      startTimeLabel.alpha = 1.0
+      endTimeLabel.alpha = 1.0
+    }
+    setNeedsLayout()
   }
 
   fileprivate func setup() {

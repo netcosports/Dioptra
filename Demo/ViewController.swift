@@ -8,9 +8,10 @@
 
 import UIKit
 import RxSwift
+import Astrolabe
 import Dioptra
 
-class Container: UIView {
+class ManualLayoutView: UIView {
 
   override open class var requiresConstraintBasedLayout: Bool {
     return false
@@ -32,7 +33,7 @@ class ViewController: UIViewController, Transitionable {
 
   let player = Player(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width - 48,
                                     height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
-  let playerContainer = Container(frame: CGRect(x: 22.0, y: 44.0,
+  let playerContainer = ManualLayoutView(frame: CGRect(x: 22.0, y: 44.0,
                                                 width: UIScreen.main.bounds.width - 48,
                                                 height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
 

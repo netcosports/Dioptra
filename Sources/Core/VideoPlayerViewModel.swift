@@ -43,7 +43,9 @@ open class VideoPlayerViewModel<P: VideoPlayback, C: VideoControls> {
 
     Driver.combineLatest(playback.loadedRange, playback.duration)
       .map { range, duration -> Float in
-        guard let buffer = range.max(by: { $0.upperBound > $1.upperBound })?.upperBound else { return 0.0 }
+        guard let buffer = range.max(by: { $0.upperBound > $1.upperBound })?.upperBound else {
+          return 0.0
+        }
         return Float(buffer / duration)
       }.drive(controls.buffer)
       .disposed(by: disposeBag)

@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		228C109A6F49C9AEC783B125 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */; };
 		678299E8789D7DCEB4E26327 /* Pods_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40FA1278A9862C2FC74BBB93 /* Pods_iOSTests.framework */; };
+		AA2F346B212C14C50093212D /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2F346A212C14C50093212D /* VideoCell.swift */; };
+		AA2F346D212C187E0093212D /* PlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2F346C212C187E0093212D /* PlaceholderCell.swift */; };
+		AA2F346F212C18FF0093212D /* VideosInListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2F346E212C18FF0093212D /* VideosInListViewController.swift */; };
 		AA52599220B835860089ECD2 /* VideoPlayerViewModelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA52598E20B835660089ECD2 /* VideoPlayerViewModelSpec.swift */; };
 		AA53982D20BEDCC2003329FB /* TestControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982C20BEDCC2003329FB /* TestControls.swift */; };
 		AA53982F20BEDD10003329FB /* TestPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982E20BEDD10003329FB /* TestPlayback.swift */; };
@@ -39,6 +42,9 @@
 		6E08A3FBF55A20320043B01E /* Pods-Dioptra.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dioptra.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dioptra/Pods-Dioptra.debug.xcconfig"; sourceTree = "<group>"; };
 		762B345634DBE50325A567A5 /* Pods-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOSTests/Pods-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA2F346A212C14C50093212D /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
+		AA2F346C212C187E0093212D /* PlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderCell.swift; sourceTree = "<group>"; };
+		AA2F346E212C18FF0093212D /* VideosInListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosInListViewController.swift; sourceTree = "<group>"; };
 		AA52598E20B835660089ECD2 /* VideoPlayerViewModelSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewModelSpec.swift; sourceTree = "<group>"; };
 		AA52598F20B835660089ECD2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA53982A20BEDC77003329FB /* AVPlaybackSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlaybackSpec.swift; sourceTree = "<group>"; };
@@ -147,6 +153,9 @@
 				AA925F5020B59F09002523D4 /* Main.storyboard */,
 				AA925F5220B59F09002523D4 /* AppDelegate.swift */,
 				AA925F5320B59F09002523D4 /* Info.plist */,
+				AA2F346A212C14C50093212D /* VideoCell.swift */,
+				AA2F346C212C187E0093212D /* PlaceholderCell.swift */,
+				AA2F346E212C18FF0093212D /* VideosInListViewController.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -379,9 +388,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA2F346F212C18FF0093212D /* VideosInListViewController.swift in Sources */,
 				AA925F5820B59F09002523D4 /* AppDelegate.swift in Sources */,
+				AA2F346B212C14C50093212D /* VideoCell.swift in Sources */,
 				AA925F5420B59F09002523D4 /* ViewController.swift in Sources */,
 				AA73664C20F396F300451721 /* DetailsViewController.swift in Sources */,
+				AA2F346D212C187E0093212D /* PlaceholderCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
