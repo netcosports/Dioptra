@@ -14,6 +14,7 @@ import RxGesture
 open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
   public let viewModel = VideoPlayerControlsViewModel()
+  var screenMode = ScreenMode.fullscreen
 
   enum Sizes: CGFloat {
     case sliderHeight = 48.0
@@ -27,50 +28,58 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     return playButton
   }()
 
-  fileprivate let slider: BufferedSlider = {
+  public private(set) var slider: BufferedSlider = {
     let slider = BufferedSlider()
     slider.minimumValue = 0.0
     slider.maximumValue = 1.0
-    slider.value = 0.3
     slider.sliderPosition = .center
     slider.borderWidth = 0.0
+    slider.sliderHeight = 5.0
     slider.progressColor = .white
     slider.bufferColor = .lightGray
-    slider.baseColor = .darkGray
-    slider.roundedSlider = false
+    slider.baseColor = .white
+    slider.roundedSlider = true
     slider.hollow = false
+    slider.padding = 5.0
     slider.isContinuous = true
     slider.tintColor = .white
     return slider
   }()
 
-  fileprivate let startTimeLabel: UILabel = {
+  public private(set) var overlayView: UIView = {
+    let overlayView = UIView()
+    overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.33)
+    overlayView.isUserInteractionEnabled = true
+    return overlayView
+  }()
+
+  public private(set) var startTimeLabel: UILabel = {
     let startTimeLabel = UILabel()
     startTimeLabel.textColor = .white
     startTimeLabel.textAlignment = .center
     return startTimeLabel
   }()
 
-  fileprivate let endTimeLabel: UILabel = {
+  public private(set) var endTimeLabel: UILabel = {
     let endTimeLabel = UILabel()
     endTimeLabel.textColor = .white
     endTimeLabel.textAlignment = .center
     return endTimeLabel
   }()
 
-  fileprivate let fullscreenButton: UIButton = {
+  public private(set) var fullscreenButton: UIButton = {
     let button = UIButton()
-    button.backgroundColor = .orange
     return button
   }()
 
-  fileprivate let indicatorView: UIActivityIndicatorView = {
+  public private(set) var indicatorView: UIActivityIndicatorView = {
     let indicatorView = UIActivityIndicatorView()
     indicatorView.color = .white
     return indicatorView
   }()
 
   let disposeBag = DisposeBag()
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setup()
@@ -83,27 +92,29 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
   open override func layoutSubviews() {
     super.layoutSubviews()
-    let margin: CGFloat = 5.0
+    let margin: CGFloat = 2.0
     let labelWidth: CGFloat = 80.0
     let width = frame.width
     let height = frame.height
+    let size = CGSize(width: Sizes.button.rawValue, height: Sizes.button.rawValue)
 
+    overlayView.frame = bounds
     playButton.center = center
-    playButton.bounds = CGRect(origin: .zero, size: CGSize(width: Sizes.button.rawValue, height: Sizes.button.rawValue))
-
+    playButton.bounds = CGRect(origin: .zero, size: size)
     indicatorView.center = center
-    indicatorView.bounds = CGRect(origin: .zero, size: CGSize(width: Sizes.button.rawValue, height: Sizes.button.rawValue))
+    indicatorView.bounds = CGRect(origin: .zero, size: size)
 
     slider.frame = CGRect(x: labelWidth + margin,
                           y: height - Sizes.sliderHeight.rawValue,
-                          width: width - 2.0 * (margin + labelWidth) - (Sizes.button.rawValue + margin),
+                          width: width - 2.0 * (margin + labelWidth) - (Sizes.sliderHeight.rawValue + margin),
                           height: Sizes.sliderHeight.rawValue)
     startTimeLabel.frame = CGRect(x: 0.0, y: height - Sizes.sliderHeight.rawValue,
                                   width: labelWidth, height: Sizes.sliderHeight.rawValue)
     endTimeLabel.frame = CGRect(x: slider.frame.maxX + margin, y: height - Sizes.sliderHeight.rawValue,
                                 width: labelWidth, height: Sizes.sliderHeight.rawValue)
-    fullscreenButton.frame = CGRect(x: slider.frame.maxX + margin + labelWidth + margin, y: height - Sizes.button.rawValue,
-                                    width: Sizes.button.rawValue, height: Sizes.button.rawValue)
+    fullscreenButton.frame = CGRect(x: slider.frame.maxX + margin + labelWidth + margin,
+                                    y: height - Sizes.sliderHeight.rawValue,
+                                    width: Sizes.sliderHeight.rawValue, height: Sizes.sliderHeight.rawValue)
   }
 
   fileprivate func bind() {
@@ -126,15 +137,16 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     }.bind(to: playButton.rx.state).disposed(by: disposeBag)
 
     viewModel.visible.asDriver().drive(onNext: { [weak self] visibility in
+      guard let `self` = self else { return }
         switch visibility {
         case .force(let visible):
-          self?.isHidden = !visible
+          self.isHidden = !visible
         case .soft(let visible):
-          self?.isHidden = false
+          self.isHidden = false
       }
       UIView.animate(withDuration: 0.33) {
-        self?.subviews.forEach { $0.alpha = (visibility.visible ? 1.0 : 0.0) }
-        self?.layoutIfNeeded()
+        self.update(with: visibility.visible)
+        self.layoutIfNeeded()
       }
     }).disposed(by: disposeBag)
 
@@ -187,22 +199,31 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
   }
 
   fileprivate func update(with screenMode: ScreenMode) {
-    switch screenMode {
-    case .minimized:
-      fullscreenButton.alpha = 0.0
-      slider.alpha = 0.0
-      startTimeLabel.alpha = 0.0
-      endTimeLabel.alpha = 0.0
-    default:
-      fullscreenButton.alpha = 1.0
-      slider.alpha = 1.0
-      startTimeLabel.alpha = 1.0
-      endTimeLabel.alpha = 1.0
-    }
+    self.screenMode = screenMode
+    update(with: true)
     setNeedsLayout()
   }
 
+  fileprivate func update(with visibility: Bool) {
+    self.playButton.alpha = visibility ? 1.0 : 0.0
+    switch self.screenMode {
+    case .minimized:
+      self.overlayView.alpha = 0.0
+      self.fullscreenButton.alpha = 0.0
+      self.slider.alpha = 0.0
+      self.startTimeLabel.alpha = 0.0
+      self.endTimeLabel.alpha = 0.0
+    default:
+      self.overlayView.alpha = visibility ? 1.0 : 0.0
+      self.fullscreenButton.alpha = visibility ? 1.0 : 0.0
+      self.slider.alpha = visibility ? 1.0 : 0.0
+      self.startTimeLabel.alpha = visibility ? 1.0 : 0.0
+      self.endTimeLabel.alpha = visibility ? 1.0 : 0.0
+    }
+  }
+
   fileprivate func setup() {
+    addSubview(overlayView)
     addSubview(playButton)
     addSubview(indicatorView)
     addSubview(slider)
