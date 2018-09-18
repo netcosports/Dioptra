@@ -7,8 +7,16 @@
 //
 
 import Astrolabe
+import Dioptra
+import RxSwift
 
-class VideosInListViewController: UIViewController, Accessor {
+class VideosInListViewController: UIViewController, Accessor, Transitionable {
+
+  var currentTransition: Transitionable.Transition?
+  var customTransitionMethod = TransitionMethod.none
+  var presentSubscribed = false
+  var dismissSubscribed = false
+  var disposeBag = DisposeBag()
 
   let containerView = CollectionView<CollectionViewSource>()
 
@@ -51,5 +59,24 @@ class VideosInListViewController: UIViewController, Accessor {
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     containerView.frame = view.bounds
+  }
+
+  func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+
+    return presentTransition() { [weak presented] in
+      presented?.dismiss(animated: true)
+    }
+  }
+
+  override var prefersStatusBarHidden: Bool {
+    return true
+  }
+
+  override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    return .portrait
+  }
+
+  func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    return dismissTransition
   }
 }

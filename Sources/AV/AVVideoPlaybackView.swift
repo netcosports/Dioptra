@@ -18,7 +18,7 @@ open class AVVideoPlaybackView: UIView, PlaybackViewModable {
   public override init(frame: CGRect) {
     super.init(frame: frame)
     backgroundColor = .black
-    playerLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
+    playerLayer?.videoGravity = AVLayerVideoGravity.resizeAspect
     playerLayer?.player = viewModel.player
   }
 
