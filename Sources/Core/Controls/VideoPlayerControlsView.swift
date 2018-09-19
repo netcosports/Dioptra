@@ -21,6 +21,8 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     case button       = 62.0
   }
 
+  public private(set) var contentView = UIView()
+
   public private(set) var playButton: PlaybackButton = {
     let frame = CGRect(origin: CGPoint.zero, size: CGSize(width: Sizes.button.rawValue, height: Sizes.button.rawValue))
     let playButton = PlaybackButton(frame: frame)
@@ -67,6 +69,15 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     return endTimeLabel
   }()
 
+  public private(set) var errorLabel: UILabel = {
+    let errorLabel = UILabel()
+    errorLabel.textColor = .white
+    errorLabel.textAlignment = .center
+    errorLabel.alpha = 0.0
+    errorLabel.text = "Error"
+    return errorLabel
+  }()
+
   public private(set) var fullscreenButton: UIButton = {
     let button = UIButton()
     return button
@@ -98,6 +109,8 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     let height = frame.height
     let size = CGSize(width: Sizes.button.rawValue, height: Sizes.button.rawValue)
 
+    contentView.frame = bounds
+    errorLabel.frame = bounds
     overlayView.frame = bounds
     playButton.center = center
     playButton.bounds = CGRect(origin: .zero, size: size)
@@ -140,13 +153,26 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
       guard let `self` = self else { return }
         switch visibility {
         case .force(let visible):
-          self.isHidden = !visible
+          self.contentView.isHidden = !visible
         case .soft(let visible):
-          self.isHidden = false
+          self.contentView.isHidden = false
       }
       UIView.animate(withDuration: 0.33) {
         self.update(with: visibility.visible)
         self.layoutIfNeeded()
+      }
+    }).disposed(by: disposeBag)
+
+    viewModel.state.subscribe(onNext: { state in
+      switch state {
+      case .error:
+        self.viewModel.visibilityChange.accept(VisibilityChangeEvent.force(visible: false))
+        self.errorLabel.alpha = 1.0
+      default:
+        if self.errorLabel.alpha == 1.0 {
+          self.viewModel.visibilityChange.accept(VisibilityChangeEvent.force(visible: true))
+          self.errorLabel.alpha = 0.0
+        }
       }
     }).disposed(by: disposeBag)
 
@@ -158,37 +184,38 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     }.bind(to: indicatorView.rx.isAnimating).disposed(by: disposeBag)
 
     playButton.rx.tap.asObservable().map { [weak self] () -> PlaybackState in
-      if self?.playButton.buttonState == .playing {
-        return PlaybackState.paused
+      guard let `self` = self else { return .paused }
+      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
+      if self.playButton.buttonState == .playing {
+        return .paused
       } else {
-        return PlaybackState.playing
+        return .playing
       }
-      self?.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
     }.bind(to: viewModel.stateSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchDown).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.force(visible: true))
-      return Observable<SeekEvent>.just(SeekEvent.started(progress: self.slider.value))
+      self.viewModel.visibilityChange.accept(.force(visible: true))
+      return .just(SeekEvent.started(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchUpInside).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.acceptSoft)
-      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
-      return Observable<SeekEvent>.just(SeekEvent.finished(progress: self.slider.value))
+      self.viewModel.visibilityChange.accept(.acceptSoft)
+      self.viewModel.visibilityChange.accept(.soft(visible: true))
+      return .just(SeekEvent.finished(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchUpOutside).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.acceptSoft)
-      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
-      return Observable<SeekEvent>.just(SeekEvent.finished(progress: self.slider.value))
+      self.viewModel.visibilityChange.accept(.acceptSoft)
+      self.viewModel.visibilityChange.accept(.soft(visible: true))
+      return .just(SeekEvent.finished(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.valueChanged).asObservable().flatMap { [weak self] event -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      return Observable<SeekEvent>.just(SeekEvent.value(progress: self.slider.value))
+      return .just(SeekEvent.value(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     fullscreenButton.rx.tap.bind(to: viewModel.fullscreen).disposed(by: disposeBag)
@@ -223,13 +250,15 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
   }
 
   fileprivate func setup() {
-    addSubview(overlayView)
-    addSubview(playButton)
-    addSubview(indicatorView)
-    addSubview(slider)
-    addSubview(startTimeLabel)
-    addSubview(endTimeLabel)
-    addSubview(fullscreenButton)
+    addSubview(contentView)
+    contentView.addSubview(overlayView)
+    contentView.addSubview(playButton)
+    contentView.addSubview(indicatorView)
+    contentView.addSubview(slider)
+    contentView.addSubview(startTimeLabel)
+    contentView.addSubview(endTimeLabel)
+    contentView.addSubview(fullscreenButton)
+    addSubview(errorLabel)
   }
 
   override open class var requiresConstraintBasedLayout: Bool {
