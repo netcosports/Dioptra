@@ -23,6 +23,9 @@ PODS:
     - RxCocoa (~> 4.0)
     - RxGesture (~> 1.2)
     - RxSwift (~> 4.0)
+  - Dioptra/YT (0.1):
+    - Dioptra/Core
+    - youtube-ios-player-helper
   - FormatterKit/Resources (1.8.2)
   - FormatterKit/URLRequestFormatter (1.8.2):
     - FormatterKit/Resources
@@ -40,6 +43,7 @@ PODS:
   - RxSwift (4.1.2)
   - RxTest (4.1.2):
     - RxSwift (~> 4.0)
+  - youtube-ios-player-helper (0.1.6)
 
 DEPENDENCIES:
   - Astrolabe/Loaders (from `https://github.com/netcosports/Astrolabe`)
@@ -47,6 +51,7 @@ DEPENDENCIES:
   - Dioptra/BC (from `.`)
   - Dioptra/DM (from `.`)
   - Dioptra/Presentation (from `.`)
+  - Dioptra/YT (from `.`)
   - Nimble (~> 7.0)
   - RxBlocking
   - RxTest
@@ -63,6 +68,7 @@ SPEC REPOS:
     - RxGesture
     - RxSwift
     - RxTest
+    - youtube-ios-player-helper
 
 EXTERNAL SOURCES:
   Astrolabe:
@@ -88,7 +94,8 @@ SPEC CHECKSUMS:
   RxGesture: c278eb05b187abd47e11e65464ae4de53ab71d95
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   RxTest: e634f15fd2c2cd0e0120132ef7a4f7be69ad0393
+  youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: 1d824b299471ee8fc0c2aa80c1e20f1cd768beb5
+PODFILE CHECKSUM: f2dbea5147e7f6407a864bfd5c8a342d91cf8ac9
 
 COCOAPODS: 1.5.3

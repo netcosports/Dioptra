@@ -27,7 +27,7 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   public var loadedRange: Driver<LoadedTimeRange> {
     return Driver.combineLatest(progressVariable.asDriver(), duration).map { [weak self] progress, duration in
       guard let `self` = self else { return [] }
-      return [0...duration * progress / 100.0]
+      return [0...duration * progress]
     }
   }
 
@@ -48,15 +48,16 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
 
   public typealias Stream = String
-  open var stream: String? {
+  open var input: Input<Stream> = .cleanup {
 
-    willSet(newStream) {
-      if let newStream = newStream {
-        if newStream != stream {
-          startCount = 0
-          streamSubject.onNext(newStream)
-        }
-      } else {
+    willSet(newInput) {
+      switch newInput {
+      case .content(let stream):
+        startCount = 0
+        streamSubject.onNext(stream)
+      case .ad:
+        assertionFailure("External Ad is not supported by YT")
+      default:
         streamSubject.onNext(nil)
       }
     }
@@ -77,80 +78,38 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
 extension YTVideoPlaybackViewModel: YTPlayerViewDelegate {
 
   public func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
-
+    state.onNext(.playing)
+    durationVariable.accept(TimeInSeconds(playerView.duration()))
   }
 
   public func playerView(_ playerView: YTPlayerView, didPlayTime playTime: Float) {
-
+    currentTimeVariable.accept(TimeInSeconds(playTime))
+    progressVariable.accept(TimeInSeconds(playerView.videoLoadedFraction()))
   }
 
   public func playerView(_ playerView: YTPlayerView, didChangeTo state: YTPlayerState) {
     switch state {
-    case .unstarted:
-      
-    default:
+    case .buffering:
+      if startCount > 0 {
+        playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))
+      }
+      startCount += 1
+      playerStateRelay.accept(PlayerState.loading)
+    case .ended:
+      playerStateRelay.accept(PlayerState.finished)
+    case .paused:
+      playerStateRelay.accept(PlayerState.active(state: PlaybackState.paused))
+    case .playing:
+      playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))
+    default: break
     }
   }
 
   public func playerView(_ playerView: YTPlayerView, receivedError error: YTPlayerError) {
-
+    playerStateRelay.accept(.error(error: nil))
   }
 
   public func playerViewPreferredWebViewBackgroundColor(_ playerView: YTPlayerView) -> UIColor {
     return UIColor.black
   }
-
-//  public func playerDidInitialize(_ player: DMPlayerViewController) {
-//
-//  }
-//
-//  public func player(_ player: DMPlayerViewController, didFailToInitializeWithError error: Error) {
-//
-//  }
-//
-//  public func player(_ player: DMPlayerViewController, didReceiveEvent event: PlayerEvent) {
-//    switch event {
-//    case let .timeEvent(name, time):
-//      switch name {
-//      case "durationchange":
-//        durationVariable.accept(time)
-//      case "timeupdate":
-//        currentTimeVariable.accept(time)
-//      case "progress":
-//        progressVariable.accept(time)
-//      default: break
-//      }
-//    case let .namedEvent(name, _):
-//      switch name {
-//      case "play":
-//        if startCount > 0 {
-//          playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))
-//        }
-//        startCount += 1
-//      case "pause":
-//        playerStateRelay.accept(PlayerState.active(state: PlaybackState.paused))
-//      case "video_end":
-//        playerStateRelay.accept(PlayerState.finished)
-//      case "ad_start":
-//        playerStateRelay.accept(.ad(state: .started))
-//      case "ad_end":
-//        playerStateRelay.accept(.ad(state: .finished))
-//      default: break
-//      }
-//    }
-//  }
-//
-//  public func player(_ player: DMPlayerViewController, openUrl url: URL) {
-//    openUrlSubject.onNext(url)
-//    // NOTE: go to portrait and open safari modally
-//    //    if containerViewController?.presentedViewController != nil {
-//    //      containerViewController?.presentedViewController?.dismiss(animated: true) {
-//    //        let controller = SFSafariViewController(url: url)
-//    //        self.containerViewController?.present(controller, animated: true, completion: nil)
-//    //      }
-//    //      return
-//    //    }
-//    //    let controller = SFSafariViewController(url: url)
-//    //    containerViewController?.present(controller, animated: true, completion: nil)
-//  }
 }

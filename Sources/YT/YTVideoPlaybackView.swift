@@ -9,21 +9,15 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import SnapKit
-import DailymotionPlayerSDK
+import youtube_ios_player_helper
 
 open class YTVideoPlaybackView: UIView, PlaybackViewModable {
 
   public let viewModel = YTVideoPlaybackViewModel()
-  lazy var playerViewController: DMPlayerViewController = {
-    let parameters: [String: Any] = [
-      "autoplay": true,
-      "controls": false,
-      "endscreen-enable": false
-    ]
-    let controller = DMPlayerViewController(parameters: parameters)
-    controller.delegate = viewModel
-    return controller
+  lazy var playerView: YTPlayerView = {
+    let playerView = YTPlayerView(frame: CGRect.zero)
+    playerView.delegate = viewModel
+    return playerView
   }()
 
   fileprivate let disposeBag = DisposeBag()
@@ -31,36 +25,44 @@ open class YTVideoPlaybackView: UIView, PlaybackViewModable {
   override init(frame: CGRect) {
     super.init(frame: frame)
     backgroundColor = .black
-    addSubview(playerViewController.view)
+    addSubview(playerView)
 
     viewModel.seek.asDriver(onErrorJustReturn: 0.0).drive(onNext: { [weak self] seconds in
-      self?.playerViewController.seek(to: seconds)
+      self?.playerView.seek(toSeconds: Float(seconds), allowSeekAhead: true)
     }).disposed(by: disposeBag)
 
     viewModel.streamSubject.asDriver(onErrorJustReturn: nil).drive(onNext: { [weak self] stream in
       if let stream = stream {
-        self?.playerViewController.view.isHidden = false
-        self?.playerViewController.load(videoId: stream)
+        self?.playerView.isHidden = false
+        let vars: [String: Any] = [
+           "controls": 0,
+           "autoplay": 1,
+           "showinfo": 0,
+           "rel": 0,
+           "playsinline": 1,
+           "origin": "http://www.youtube.com"
+        ]
+        self?.playerView.load(withVideoId: stream, playerVars: vars)
       } else {
-        self?.playerViewController.view.isHidden = true
-        self?.playerViewController.pause()
+        self?.playerView.isHidden = true
+        self?.playerView.pauseVideo()
       }
     }).disposed(by: disposeBag)
 
-    viewModel.mutedRelay.asDriver().drive(onNext: { [weak self] muted in
-      if muted {
-        self?.playerViewController.mute()
-      } else {
-        self?.playerViewController.unmute()
-      }
-    }).disposed(by: disposeBag)
+//    viewModel.mutedRelay.asDriver().drive(onNext: { [weak self] muted in
+//      if muted {
+//        self?.playerView.mute()
+//      } else {
+//        self?.playerViewController.unmute()
+//      }
+//    }).disposed(by: disposeBag)
 
     viewModel.state.asDriver(onErrorJustReturn: PlaybackState.paused).drive(onNext: { [weak self] state in
       switch state {
       case .playing:
-        self?.playerViewController.play()
+        self?.playerView.playVideo()
       case .paused:
-        self?.playerViewController.pause()
+        self?.playerView.pauseVideo()
       default: break
       }
     }).disposed(by: disposeBag)
@@ -70,10 +72,8 @@ open class YTVideoPlaybackView: UIView, PlaybackViewModable {
     fatalError("init(coder:) has not been implemented")
   }
 
-  open override func updateConstraints() {
-    playerViewController.view.snp.remakeConstraints { make in
-      make.edges.equalToSuperview()
-    }
-    super.updateConstraints()
+  open override func layoutSubviews() {
+    super.layoutSubviews()
+    playerView.frame = bounds
   }
 }
