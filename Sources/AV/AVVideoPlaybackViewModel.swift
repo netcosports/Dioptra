@@ -38,7 +38,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   fileprivate var disposeBag: DisposeBag?
   fileprivate let itemRelay             = BehaviorRelay<AVPlayerItem?>(value: nil)
   fileprivate let currentTimeRelay      = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let stateRelay            = BehaviorRelay<PlayerState>(value: .idle)
+  let stateRelay            = BehaviorRelay<PlayerState>(value: .idle)
 
   var player: AVPlayer?
 

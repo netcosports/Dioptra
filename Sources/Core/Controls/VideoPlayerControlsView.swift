@@ -74,7 +74,6 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     errorLabel.textColor = .white
     errorLabel.textAlignment = .center
     errorLabel.alpha = 0.0
-    errorLabel.text = "Error"
     return errorLabel
   }()
 
@@ -232,6 +231,8 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
   }
 
   fileprivate func update(with visibility: Bool) {
+    // FIXME: we need to setup correct way to manage this
+    guard self.errorLabel.alpha == 0.0 else { return }
     self.playButton.alpha = visibility ? 1.0 : 0.0
     switch self.screenMode {
     case .minimized:

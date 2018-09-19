@@ -112,6 +112,8 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
         playerStateRelay.accept(.ad(state: .started))
       case "ad_end":
         playerStateRelay.accept(.ad(state: .finished))
+      case "error":
+        playerStateRelay.accept(.error(error: nil))
       default: break
       }
     }
