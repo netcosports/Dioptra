@@ -7,7 +7,7 @@ inhibit_all_warnings!
 
 target 'Demo' do
 
-  pod 'Astrolabe/Loaders', :git => 'https://github.com/netcosports/Astrolabe'
+  pod 'Astrolabe', :git => 'https://github.com/netcosports/Astrolabe', :branch => 'swift-4.2'
 
   pod 'Dioptra/AV', :path => '.'
   pod 'Dioptra/DM', :path => '.'

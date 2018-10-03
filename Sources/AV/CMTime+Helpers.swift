@@ -11,6 +11,6 @@ import AVFoundation
 
 extension CMTime {
     public static var zero: CMTime {
-        return kCMTimeZero
+      return CMTime.zero
     }
 }

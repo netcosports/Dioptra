@@ -58,7 +58,7 @@ class VideoCell: CollectionViewCell, Reusable {
       self?.handleFullscreen()
     }).disposed(by: disposeBag)
 
-    NotificationCenter.default.rx.notification(.UIDeviceOrientationDidChange, object: nil)
+    NotificationCenter.default.rx.notification(UIDevice.orientationDidChangeNotification, object: nil)
       .map { _ in return UIDevice.current.orientation }
       .distinctUntilChanged()
       .filter { [weak self] _ in self?.fullscreenViewController == nil }
