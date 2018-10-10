@@ -214,6 +214,8 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
     slider.rx.controlEvent(.valueChanged).asObservable().flatMap { [weak self] event -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
+      self.viewModel.visibilityChange.accept(.acceptSoft)
+      self.viewModel.visibilityChange.accept(.soft(visible: true))
       return .just(SeekEvent.value(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
