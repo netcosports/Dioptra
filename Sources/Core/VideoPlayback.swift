@@ -51,10 +51,19 @@ public enum AdState {
 // - Embeded AD in playback(DM and youtube for example)
 // - Internal playback AD (setup different inputs)
 // - Overlay playback AD
-public enum Input<T> {
+public enum Input<T> where T: Equatable {
   case ad(stream: T)
   case content(stream: T)
   case cleanup
+}
+
+extension Input: Equatable {
+  public static func == (lhs: Input<T>, rhs: Input<T>) -> Bool {
+    if case let .content(lhsStream) = lhs, case let .content(rhsStream) = rhs {
+      return lhsStream == rhsStream
+    }
+    return false
+  }
 }
 
 public enum PlayerState: Equatable {
