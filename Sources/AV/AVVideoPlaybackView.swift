@@ -15,10 +15,10 @@ open class AVVideoPlaybackView: UIView, PlaybackViewModable {
 
   public let viewModel = AVVideoPlaybackViewModel()
 
-  public override init(frame: CGRect) {
-    super.init(frame: frame)
+  public convenience init(frame: CGRect, videoGravity: AVLayerVideoGravity = .resizeAspect) {
+    self.init(frame: frame)
     backgroundColor = .black
-    playerLayer?.videoGravity = AVLayerVideoGravity.resizeAspect
+    playerLayer?.videoGravity = videoGravity
     playerLayer?.player = viewModel.player
   }
 
