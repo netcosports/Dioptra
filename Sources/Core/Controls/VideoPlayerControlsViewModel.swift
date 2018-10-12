@@ -33,17 +33,17 @@ open class VideoPlayerControlsViewModel: VideoControls {
     return stateSubject.asDriver(onErrorJustReturn: PlaybackState.paused)
   }
 
-  let seekSubject = PublishRelay<SeekEvent>()
-  let stateSubject = PublishRelay<PlaybackState>()
-  let visible = BehaviorRelay<Visibility>(value: Visibility.soft(visible: true))
+  public let seekSubject = PublishRelay<SeekEvent>()
+  public let stateSubject = PublishRelay<PlaybackState>()
+  public let visible = BehaviorRelay<Visibility>(value: Visibility.soft(visible: true))
 
-  var currentTime: Driver<String> {
+  public var currentTime: Driver<String> {
     return currentTimeRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
   }
-  var duration: Driver<String> {
+  public var duration: Driver<String> {
     return durationRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
   }
-  var bufferedValue: Driver<Float> {
+  public var bufferedValue: Driver<Float> {
     let progressFilter: Driver<Bool> = seek.map {
       switch $0 {
       case .finished: return true
