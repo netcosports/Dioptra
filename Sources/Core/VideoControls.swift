@@ -21,7 +21,7 @@ public enum SeekEvent {
   case value(progress: Float)
   case finished(progress: Float)
 
-  var progress: Float {
+  public var progress: Float {
     switch self {
     case .started(let progress), .finished(let progress), .value(let progress):
       return progress
@@ -33,7 +33,7 @@ public enum Visibility {
   case force(visible: Bool)
   case soft(visible: Bool)
 
-  var visible: Bool {
+  public var visible: Bool {
     switch self {
     case .force(let visible), .soft(let visible):
       return visible
