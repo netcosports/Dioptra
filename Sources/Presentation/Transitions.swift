@@ -11,10 +11,25 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
-public enum TransitionMethod {
+public protocol TransitionableMethod {
+  var transition: Transitionable.Transition? { get }
+}
+
+public enum TransitionMethod: TransitionableMethod {
   case none
   case landscape(presentingView: UIView)
   case fullscreen(presentingView: UIView)
+
+  public var transition: Transitionable.Transition? {
+    switch self {
+    case .landscape(let presentingView):
+      return LandscapeTransition(presentingView: presentingView)
+    case .fullscreen(let presentingView):
+      return FullscreenTransition(presentingView: presentingView)
+    case .none:
+      return nil
+    }
+  }
 }
 
 public enum InteractiveTransitionDirection {
@@ -119,7 +134,6 @@ extension InteractiveTransition where Self: PresentTransition  {
 extension Transitionable where Self: UIViewController {
 
   public func presentTransition(interactionStarted: (()->(Void))? = nil) -> Transitionable.Transition? {
-    currentTransition = transition
     currentTransition?.presentation = true
 
     if let transition = currentTransition as? InteractiveTransition {
@@ -160,11 +174,11 @@ extension Transitionable where Self: UIViewController {
       return currentTransition
     }
     assertionFailure("we should have transition in this case")
-    return transition
+    return nil
   }
-
-  public func present(modal viewController: UIViewController, method: TransitionMethod) {
-    customTransitionMethod = method
+  
+  public func present(modal viewController: UIViewController, method: TransitionableMethod) {
+    currentTransition = method.transition
     viewController.transitioningDelegate = self
     if let navigationController = navigationController {
       navigationController.present(viewController, animated: true)
@@ -173,23 +187,12 @@ extension Transitionable where Self: UIViewController {
     }
   }
 
-  public func push(viewController: UIViewController, method: TransitionMethod) {
+  public func push(viewController: UIViewController, method: TransitionableMethod) {
     if let navigationController = navigationController {
-      customTransitionMethod = method
+      currentTransition = method.transition
 
       navigationController.delegate = self
       navigationController.pushViewController(viewController, animated: true)
-    }
-  }
-
-  fileprivate var transition: Transition? {
-    switch customTransitionMethod {
-    case .landscape(let presentingView):
-      return LandscapeTransition(presentingView: presentingView)
-    case .fullscreen(let presentingView):
-      return FullscreenTransition(presentingView: presentingView)
-    case .none:
-      return nil
     }
   }
 }
