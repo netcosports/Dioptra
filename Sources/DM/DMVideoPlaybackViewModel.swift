@@ -35,7 +35,6 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     return playerStateRelay.asDriver(onErrorJustReturn: .idle)
   }
 
-  fileprivate var startCount: Int = 0
   fileprivate let disposeBag = DisposeBag()
 
   let streamSubject = PublishSubject<Stream?>()
@@ -53,7 +52,6 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     willSet(newInput) {
       switch newInput {
       case .content(let stream):
-        startCount = 0
         streamSubject.onNext(stream)
       case .ad:
         assertionFailure("External Ad is not supported by DM")
@@ -100,10 +98,7 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
     case let .namedEvent(name, _):
       switch name {
       case "play":
-        if startCount > 0 {
-          playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))
-        }
-        startCount += 1
+        playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))
       case "pause":
         playerStateRelay.accept(PlayerState.active(state: PlaybackState.paused))
       case "video_end":
@@ -121,15 +116,5 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
 
   public func player(_ player: DMPlayerViewController, openUrl url: URL) {
     openUrlSubject.onNext(url)
-    // NOTE: go to portrait and open safari modally
-    //    if containerViewController?.presentedViewController != nil {
-    //      containerViewController?.presentedViewController?.dismiss(animated: true) {
-    //        let controller = SFSafariViewController(url: url)
-    //        self.containerViewController?.present(controller, animated: true, completion: nil)
-    //      }
-    //      return
-    //    }
-    //    let controller = SFSafariViewController(url: url)
-    //    containerViewController?.present(controller, animated: true, completion: nil)
   }
 }
