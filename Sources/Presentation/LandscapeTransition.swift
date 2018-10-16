@@ -92,6 +92,7 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
     presentingView.center = CGPoint(x: midX, y: midY)
     presentingView.transform = CGAffineTransform(rotationAngle: angle)
     self.presentingView.layoutIfNeeded()
+    self.presentingView.updateConstraintsIfNeeded()
     toVC.view.frame = finalFrame
 
     UIView.animate(withDuration: transitionDuration(using: transitionContext),
@@ -99,6 +100,7 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
       self.presentingView.transform = CGAffineTransform.identity
       self.presentingView.frame = targetFrame
       self.presentingView.layoutIfNeeded()
+      self.presentingView.updateConstraintsIfNeeded()
     }) { _ in
       transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
       targetView.insertSubview(self.presentingView, at: 0)

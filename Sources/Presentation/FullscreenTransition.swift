@@ -101,12 +101,15 @@ public class FullscreenTransition: NSObject, UIViewControllerAnimatedTransitioni
     presentingView.transform = CGAffineTransform(rotationAngle: angle)
 
     self.presentingView.layoutIfNeeded()
+    self.presentingView.updateConstraintsIfNeeded()
+
     toVC.view.frame = finalFrame
     UIView.animate(withDuration: transitionDuration(using: transitionContext),
                    delay: 0, options: .curveEaseInOut, animations: {
       self.presentingView.transform = CGAffineTransform.identity
       self.presentingView.frame = targetFrame
       self.presentingView.layoutIfNeeded()
+      self.presentingView.updateConstraintsIfNeeded()
     }) { _ in
       transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
       targetView.insertSubview(self.presentingView, at: 0)
