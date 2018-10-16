@@ -17,15 +17,15 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   public let state = PublishSubject<PlaybackState>()
 
   public var time: Driver<TimeInSeconds> {
-    return currentTimeVariable.asDriver()
+    return currentTimeRelay.asDriver()
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationVariable.asDriver()
+    return durationRelay.asDriver()
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return Driver.combineLatest(progressVariable.asDriver(), duration).map { [weak self] progress, duration in
+    return Driver.combineLatest(progressRelay.asDriver(), duration).map { [weak self] progress, duration in
       guard let `self` = self else { return [] }
       return [0...duration * progress / 100.0]
     }
@@ -41,9 +41,9 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   let mutedRelay = BehaviorRelay<Bool>(value: true)
   let openUrlSubject = PublishSubject<URL>()
 
-  fileprivate let currentTimeVariable = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let durationVariable    = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let progressVariable    = BehaviorRelay<TimeInSeconds>(value: 0.0)
+  fileprivate let currentTimeRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
+  fileprivate let durationRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
+  fileprivate let progressRelay    = BehaviorRelay<TimeInSeconds>(value: 0.0)
   fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
 
   public typealias Stream = String
@@ -70,6 +70,10 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
       mutedRelay.accept(muted)
     }
   }
+  
+  init() {
+    seek.bind(to: currentTimeRelay).disposed(by: disposeBag)
+  }
 }
 
 
@@ -88,11 +92,11 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
     case let .timeEvent(name, time):
       switch name {
       case "durationchange":
-        durationVariable.accept(time)
+        durationRelay.accept(time)
       case "timeupdate":
-        currentTimeVariable.accept(time)
+        currentTimeRelay.accept(time)
       case "progress":
-        progressVariable.accept(time)
+        progressRelay.accept(time)
       default: break
       }
     case let .namedEvent(name, _):
