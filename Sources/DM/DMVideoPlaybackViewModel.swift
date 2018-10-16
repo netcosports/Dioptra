@@ -17,7 +17,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   public let state = PublishSubject<PlaybackState>()
 
   public var time: Driver<TimeInSeconds> {
-    return currentTimeVariable.asDriver()
+    return currentTimeRelay.asDriver()
   }
 
   public var duration: Driver<TimeInSeconds> {
@@ -41,7 +41,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   let mutedRelay = BehaviorRelay<Bool>(value: true)
   let openUrlSubject = PublishSubject<URL>()
 
-  fileprivate let currentTimeVariable = BehaviorRelay<TimeInSeconds>(value: 0)
+  fileprivate let currentTimeRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
   fileprivate let durationVariable    = BehaviorRelay<TimeInSeconds>(value: 0)
   fileprivate let progressVariable    = BehaviorRelay<TimeInSeconds>(value: 0.0)
   fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
@@ -70,6 +70,12 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
       mutedRelay.accept(muted)
     }
   }
+  
+  init() {
+    seek.asDriver(onErrorJustReturn: 0.0).drive(onNext: { [weak self] seconds in
+      self?.currentTimeRelay.accept(seconds)
+    }).disposed(by: disposeBag)
+  }
 }
 
 
@@ -90,7 +96,7 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
       case "durationchange":
         durationVariable.accept(time)
       case "timeupdate":
-        currentTimeVariable.accept(time)
+        currentTimeRelay.accept(time)
       case "progress":
         progressVariable.accept(time)
       default: break
