@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		228C109A6F49C9AEC783B125 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */; };
 		678299E8789D7DCEB4E26327 /* Pods_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40FA1278A9862C2FC74BBB93 /* Pods_iOSTests.framework */; };
+		8B45027D2174CC5A00CA3252 /* ConstraintsVideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B45027C2174CC5A00CA3252 /* ConstraintsVideoCell.swift */; };
 		AA2F346B212C14C50093212D /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2F346A212C14C50093212D /* VideoCell.swift */; };
 		AA2F346D212C187E0093212D /* PlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2F346C212C187E0093212D /* PlaceholderCell.swift */; };
 		AA2F346F212C18FF0093212D /* VideosInListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2F346E212C18FF0093212D /* VideosInListViewController.swift */; };
@@ -40,6 +41,7 @@
 		65BAB17923FD367D4C316C67 /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E08A3FBF55A20320043B01E /* Pods-Dioptra.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dioptra.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dioptra/Pods-Dioptra.debug.xcconfig"; sourceTree = "<group>"; };
 		762B345634DBE50325A567A5 /* Pods-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOSTests/Pods-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		8B45027C2174CC5A00CA3252 /* ConstraintsVideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintsVideoCell.swift; sourceTree = "<group>"; };
 		A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA2F346A212C14C50093212D /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		AA2F346C212C187E0093212D /* PlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderCell.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				AA2F346A212C14C50093212D /* VideoCell.swift */,
 				AA2F346C212C187E0093212D /* PlaceholderCell.swift */,
 				AA2F346E212C18FF0093212D /* VideosInListViewController.swift */,
+				8B45027C2174CC5A00CA3252 /* ConstraintsVideoCell.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxGesture/RxGesture.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/youtube-ios-player-helper/youtube_ios_player_helper.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -339,6 +343,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGesture.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/youtube_ios_player_helper.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -385,6 +390,7 @@
 			files = (
 				AA2F346F212C18FF0093212D /* VideosInListViewController.swift in Sources */,
 				AA925F5820B59F09002523D4 /* AppDelegate.swift in Sources */,
+				8B45027D2174CC5A00CA3252 /* ConstraintsVideoCell.swift in Sources */,
 				AA2F346B212C14C50093212D /* VideoCell.swift in Sources */,
 				AA73664C20F396F300451721 /* DetailsViewController.swift in Sources */,
 				AA2F346D212C187E0093212D /* PlaceholderCell.swift in Sources */,

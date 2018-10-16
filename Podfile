@@ -15,6 +15,8 @@ target 'Demo' do
   pod 'Dioptra/YT', :path => '.'
 
   pod 'Dioptra/Presentation', :path => '.'
+  
+  pod 'SnapKit', '~> 4.0'
 end
 
 target 'iOSTests' do

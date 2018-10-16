@@ -36,6 +36,7 @@ PODS:
   - RxSwift (4.3.1)
   - RxTest (4.3.1):
     - RxSwift (~> 4.0)
+  - SnapKit (4.0.1)
   - youtube-ios-player-helper (0.1.6)
 
 DEPENDENCIES:
@@ -48,6 +49,7 @@ DEPENDENCIES:
   - Nimble (~> 7.0)
   - RxBlocking
   - RxTest
+  - SnapKit (~> 4.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -59,6 +61,7 @@ SPEC REPOS:
     - RxGesture
     - RxSwift
     - RxTest
+    - SnapKit
     - youtube-ios-player-helper
 
 EXTERNAL SOURCES:
@@ -84,8 +87,9 @@ SPEC CHECKSUMS:
   RxGesture: 26ede4ed13ffc6336d29dbd9a8dff229bdb72de7
   RxSwift: fe0fd770a43acdb7d0a53da411c9b892e69bb6e4
   RxTest: ea97a208826906f3904c0debdd09575ebcbfe216
+  SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: 6df96aa637b7d9be15afc9af66380d24592c8d96
+PODFILE CHECKSUM: ffa30f8b938c68e458a8b81270c2170d8dcd60fa
 
 COCOAPODS: 1.5.3
