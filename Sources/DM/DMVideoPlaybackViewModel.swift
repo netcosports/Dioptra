@@ -72,9 +72,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   }
   
   init() {
-    seek.asDriver(onErrorJustReturn: 0.0).drive(onNext: { [weak self] seconds in
-      self?.currentTimeRelay.accept(seconds)
-    }).disposed(by: disposeBag)
+    seek.bind(to: currentTimeRelay).disposed(by: disposeBag)
   }
 }
 
