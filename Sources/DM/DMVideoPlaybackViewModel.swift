@@ -21,11 +21,11 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationVariable.asDriver()
+    return durationRelay.asDriver()
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return Driver.combineLatest(progressVariable.asDriver(), duration).map { [weak self] progress, duration in
+    return Driver.combineLatest(progressRelay.asDriver(), duration).map { [weak self] progress, duration in
       guard let `self` = self else { return [] }
       return [0...duration * progress / 100.0]
     }
@@ -42,8 +42,8 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   let openUrlSubject = PublishSubject<URL>()
 
   fileprivate let currentTimeRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let durationVariable    = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let progressVariable    = BehaviorRelay<TimeInSeconds>(value: 0.0)
+  fileprivate let durationRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
+  fileprivate let progressRelay    = BehaviorRelay<TimeInSeconds>(value: 0.0)
   fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
 
   public typealias Stream = String
@@ -94,11 +94,11 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
     case let .timeEvent(name, time):
       switch name {
       case "durationchange":
-        durationVariable.accept(time)
+        durationRelay.accept(time)
       case "timeupdate":
         currentTimeRelay.accept(time)
       case "progress":
-        progressVariable.accept(time)
+        progressRelay.accept(time)
       default: break
       }
     case let .namedEvent(name, _):
