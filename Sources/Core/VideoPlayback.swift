@@ -86,6 +86,7 @@ public enum PlayerState: Equatable {
       case (.loading, .loading): return true
       case (.stuck, .stuck): return true
       case (.error, .error): return true
+      case (.finished, .finished): return true
     default: return false
     }
   }

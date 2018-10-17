@@ -14,7 +14,7 @@ import RxGesture
 open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
   public let viewModel = VideoPlayerControlsViewModel()
-  var screenMode = ScreenMode.fullscreen
+  var screenMode = ScreenMode.compact
 
   enum Sizes: CGFloat {
     case sliderHeight = 48.0

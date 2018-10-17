@@ -39,8 +39,8 @@ class VideosInListViewController: UIViewController, Accessor, Transitionable {
     view.addSubview(containerView)
     source.hostViewController = self
     let cells: [Cellable] = [
-      //Video(data: ()),
-      ConstraintsVideo(data: ()),
+      Video(data: ()),
+      //ConstraintsVideo(data: ()),
       Placeholder(data: ()),
       Placeholder(data: ()),
       Placeholder(data: ()),
