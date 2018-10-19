@@ -181,6 +181,7 @@ extension Transitionable where Self: UIViewController {
     currentTransition = method.transition
     viewController.transitioningDelegate = self
     if let navigationController = navigationController {
+      navigationController.dismiss(animated: false, completion: nil)
       navigationController.present(viewController, animated: true)
     } else {
       present(viewController, animated: true)
