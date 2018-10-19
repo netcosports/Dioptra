@@ -11,7 +11,15 @@ import RxCocoa
 
 open class VideoPlayerControlsViewModel: VideoControls {
 
-  public init() {
+  public struct Settings {
+    public init(autoHideTimer: Double = 3.0) {
+      self.autoHideTimer = autoHideTimer
+    }
+    public var autoHideTimer: Double
+  }
+
+  public init(settings: Settings = Settings()) {
+    self.settings = settings
     bind()
   }
 
@@ -20,6 +28,7 @@ open class VideoPlayerControlsViewModel: VideoControls {
   fileprivate let currentTimeRelay = PublishRelay<String>()
   fileprivate let durationRelay = PublishRelay<String>()
 
+  public var settings: Settings
   public var visibilityChange = BehaviorRelay<VisibilityChangeEvent>(value: .soft(visible: false))
   public let screenMode = BehaviorRelay<ScreenMode>(value: .compact)
   public let buffer = PublishSubject<Float>()
@@ -35,7 +44,7 @@ open class VideoPlayerControlsViewModel: VideoControls {
 
   public let seekSubject = PublishRelay<SeekEvent>()
   public let stateSubject = PublishRelay<PlaybackState>()
-  public let visible = BehaviorRelay<Visibility>(value: Visibility.soft(visible: true))
+  public let visibleRelay = BehaviorRelay<Visibility>(value: Visibility.soft(visible: true))
 
   public var currentTime: Driver<String> {
     return currentTimeRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
@@ -56,6 +65,10 @@ open class VideoPlayerControlsViewModel: VideoControls {
       .filter { progressAndSeek -> Bool in return progressAndSeek.1 }
       .map { progressAndSeek -> Progress in return progressAndSeek.0 }
       .map { $0.total == 0.0 ? 0.0 : Float($0.value / $0.total) }
+  }
+
+  public var visible: Driver<Visibility> {
+    return visibleRelay.distinctUntilChanged().asDriver(onErrorJustReturn: Visibility.soft(visible: false))
   }
 }
 
@@ -82,13 +95,15 @@ extension VideoPlayerControlsViewModel {
       .filter { [weak self] in
         switch $0 {
         case .soft(let visible): return visible
-        case .softToggle: return self?.visible.value.visible ?? false
+        case .softToggle: return self?.visibleRelay.value.visible ?? false
         default: return false
         }
       }
-      .debounce(3.0)
-      .map { _ in Visibility.soft(visible: false) }
-      .drive(visible)
+      .debounce(settings.autoHideTimer)
+      .map { _ in
+        Visibility.soft(visible: false)
+      }
+      .drive(visibleRelay)
       .disposed(by: disposeBag)
 
     visibilityChange.asDriver().drive(onNext: { [weak self] visibility in
@@ -109,13 +124,13 @@ extension VideoPlayerControlsViewModel {
         case .soft(let previousVisibility):
           controlsVisible = Visibility.soft(visible: previousVisibility)
         case .acceptSoft, .softToggle:
-          controlsVisible = Visibility.soft(visible: !self.visible.value.visible)
+          controlsVisible = Visibility.soft(visible: !self.visibleRelay.value.visible)
         }
       case .acceptSoft:
         controlsVisible = Visibility.force(visible: true)
       }
       self.currentVisibility = visibility
-      self.visible.accept(controlsVisible)
+      self.visibleRelay.accept(controlsVisible)
     }).disposed(by: disposeBag)
   }
 

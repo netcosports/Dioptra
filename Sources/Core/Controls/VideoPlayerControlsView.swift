@@ -148,7 +148,7 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
       }
     }.bind(to: playButton.rx.state).disposed(by: disposeBag)
 
-    viewModel.visible.asDriver().drive(onNext: { [weak self] visibility in
+    viewModel.visible.drive(onNext: { [weak self] visibility in
       guard let `self` = self else { return }
         switch visibility {
         case .force(let visible):

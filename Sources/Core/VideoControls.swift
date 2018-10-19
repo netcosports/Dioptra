@@ -29,7 +29,7 @@ public enum SeekEvent {
   }
 }
 
-public enum Visibility {
+public enum Visibility: Equatable {
   case force(visible: Bool)
   case soft(visible: Bool)
 
@@ -37,6 +37,16 @@ public enum Visibility {
     switch self {
     case .force(let visible), .soft(let visible):
       return visible
+    }
+  }
+
+  public static func == (lhs: Visibility, rhs: Visibility) -> Bool {
+    switch (lhs, rhs) {
+    case (.force(let lVisible), .force(let rVisible)):
+      return lVisible == rVisible
+    case (.soft(let lVisible), .soft(let rVisible)):
+      return lVisible == rVisible
+    default: return false
     }
   }
 }

@@ -17,6 +17,7 @@
 		AA53982D20BEDCC2003329FB /* TestControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982C20BEDCC2003329FB /* TestControls.swift */; };
 		AA53982F20BEDD10003329FB /* TestPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982E20BEDD10003329FB /* TestPlayback.swift */; };
 		AA73664C20F396F300451721 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA73664B20F396F300451721 /* DetailsViewController.swift */; };
+		AA88A2B3217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA88A2B2217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift */; };
 		AA925F5520B59F09002523D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA925F4D20B59F09002523D4 /* Assets.xcassets */; };
 		AA925F5620B59F09002523D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA925F4E20B59F09002523D4 /* LaunchScreen.storyboard */; };
 		AA925F5720B59F09002523D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA925F5020B59F09002523D4 /* Main.storyboard */; };
@@ -53,6 +54,7 @@
 		AA53982E20BEDD10003329FB /* TestPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPlayback.swift; sourceTree = "<group>"; };
 		AA7188E5207375FE002597F5 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA73664B20F396F300451721 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		AA88A2B2217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerControlsViewModelSpec.swift; sourceTree = "<group>"; };
 		AA925F4D20B59F09002523D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA925F4F20B59F09002523D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA925F5120B59F09002523D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				AA52598F20B835660089ECD2 /* Info.plist */,
 				AA53982A20BEDC77003329FB /* AVPlaybackSpec.swift */,
 				AA52598E20B835660089ECD2 /* VideoPlayerViewModelSpec.swift */,
+				AA88A2B2217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift */,
 				AA53982C20BEDCC2003329FB /* TestControls.swift */,
 				AA53982E20BEDD10003329FB /* TestPlayback.swift */,
 			);
@@ -220,6 +223,7 @@
 					AAF311D720A7458600825F8E = {
 						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
+						TestTargetID = AA7188E4207375FE002597F5;
 					};
 				};
 			};
@@ -403,6 +407,7 @@
 			files = (
 				AA53982F20BEDD10003329FB /* TestPlayback.swift in Sources */,
 				AA53982D20BEDCC2003329FB /* TestControls.swift in Sources */,
+				AA88A2B3217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift in Sources */,
 				AA52599220B835860089ECD2 /* VideoPlayerViewModelSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -587,6 +592,7 @@
 			baseConfigurationReference = 762B345634DBE50325A567A5 /* Pods-iOSTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -599,6 +605,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
 			};
 			name = Debug;
 		};
@@ -607,6 +614,7 @@
 			baseConfigurationReference = EE9EA8D1CB5C7F9A92761B87 /* Pods-iOSTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -619,6 +627,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
 			};
 			name = Release;
 		};
