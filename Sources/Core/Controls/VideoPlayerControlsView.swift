@@ -129,6 +129,13 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
                                     width: Sizes.sliderHeight.rawValue, height: Sizes.sliderHeight.rawValue)
   }
 
+  open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    if viewModel.visibleRelay.value.visible {
+      self.viewModel.visibilityChange.accept(.soft(visible: true))
+    }
+    return super.hitTest(point, with: event)
+  }
+
   fileprivate func bind() {
     viewModel.currentTime.drive(startTimeLabel.rx.text).disposed(by: disposeBag)
     viewModel.duration.drive(endTimeLabel.rx.text).disposed(by: disposeBag)
@@ -184,7 +191,6 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
     playButton.rx.tap.asObservable().map { [weak self] () -> PlaybackState in
       guard let `self` = self else { return .paused }
-      self.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
       if self.playButton.buttonState == .playing {
         return .paused
       } else {
@@ -194,21 +200,16 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
     slider.rx.controlEvent(.touchDown).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      self.viewModel.visibilityChange.accept(.force(visible: true))
       return .just(SeekEvent.started(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchUpInside).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      self.viewModel.visibilityChange.accept(.acceptSoft)
-      self.viewModel.visibilityChange.accept(.soft(visible: true))
       return .just(SeekEvent.finished(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchUpOutside).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      self.viewModel.visibilityChange.accept(.acceptSoft)
-      self.viewModel.visibilityChange.accept(.soft(visible: true))
       return .just(SeekEvent.finished(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 

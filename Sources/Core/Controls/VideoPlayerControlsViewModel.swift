@@ -122,7 +122,7 @@ extension VideoPlayerControlsViewModel {
         switch self.currentVisibility {
         case .force: return
         case .soft(let previousVisibility):
-          controlsVisible = Visibility.soft(visible: previousVisibility)
+          controlsVisible = Visibility.soft(visible: !previousVisibility)
         case .acceptSoft, .softToggle:
           controlsVisible = Visibility.soft(visible: !self.visibleRelay.value.visible)
         }
