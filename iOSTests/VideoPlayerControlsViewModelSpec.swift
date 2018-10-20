@@ -58,6 +58,23 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
     XCTAssertEqual(actual, expected)
   }
 
+  func testVisibilityAutohideAndToggle() {
+    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
+    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
+    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
+    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+
+    let actual = try? testViewModel.visible.asObservable().take(2).toBlocking(timeout: 0.1).toArray()
+    testViewModel.visibilityChange.accept(.softToggle)
+
+    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
+      next(0, Visibility.soft(visible: true)),
+      next(0, Visibility.soft(visible: false)),
+      next(0, Visibility.soft(visible: true)),
+    ]
+    XCTAssertEqual(testObserver.events, expectedEvents)
+  }
+
   func testVisibilitySoftToggle() {
     let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
     let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
