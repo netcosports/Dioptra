@@ -27,7 +27,7 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
 
   let disposeBag = DisposeBag()
 
-  func testVisibilityForce() {
+  func testForce() {
     let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
     let testViewModel = VideoPlayerControlsViewModel()
 
@@ -47,7 +47,7 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
     XCTAssertEqual(testObserver.events, expectedEvents)
   }
 
-  func testVisibilityAutohide() {
+  func testAutohide() {
     let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
     let testViewModel = VideoPlayerControlsViewModel(settings: settings)
     let actual = try? testViewModel.visible.asObservable().take(2).toBlocking(timeout: 0.1).toArray()
@@ -58,13 +58,13 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
     XCTAssertEqual(actual, expected)
   }
 
-  func testVisibilityAutohideAndToggle() {
+  func testAutohideAndToggle() {
     let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
     let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
     let testViewModel = VideoPlayerControlsViewModel(settings: settings)
     testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
 
-    let actual = try? testViewModel.visible.asObservable().take(2).toBlocking(timeout: 0.1).toArray()
+    let _ = try? testViewModel.visible.asObservable().skip(1).take(1).toBlocking(timeout: 0.1).toArray()
     testViewModel.visibilityChange.accept(.softToggle)
 
     let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
@@ -75,7 +75,26 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
     XCTAssertEqual(testObserver.events, expectedEvents)
   }
 
-  func testVisibilitySoftToggle() {
+  func testAutohideToggleAutohide() {
+    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
+    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
+    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
+    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+
+    let _ = try? testViewModel.visible.asObservable().skip(1).take(1).toBlocking(timeout: 0.1).toArray()
+    testViewModel.visibilityChange.accept(.softToggle)
+    let _ = try? testViewModel.visible.asObservable().skip(1).take(1).toBlocking(timeout: 0.1).toArray()
+
+    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
+      next(0, Visibility.soft(visible: true)),
+      next(0, Visibility.soft(visible: false)),
+      next(0, Visibility.soft(visible: true)),
+      next(0, Visibility.soft(visible: false))
+      ]
+    XCTAssertEqual(testObserver.events, expectedEvents)
+  }
+
+  func testSoftToggle() {
     let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
     let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
     let testViewModel = VideoPlayerControlsViewModel(settings: settings)
@@ -90,7 +109,7 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
     XCTAssertEqual(testObserver.events, expectedEvents)
   }
 
-  func testVisibilitySoftMultiple() {
+  func testSoftMultiple() {
     let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
     let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
     let testViewModel = VideoPlayerControlsViewModel(settings: settings)
@@ -106,7 +125,7 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
     XCTAssertEqual(testObserver.events, expectedEvents)
   }
 
-  func testVisibilityAcceptSoft() {
+  func testAcceptSoft() {
     let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
     let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
     let testViewModel = VideoPlayerControlsViewModel(settings: settings)

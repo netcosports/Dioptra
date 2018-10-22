@@ -94,9 +94,13 @@ extension VideoPlayerControlsViewModel {
     visibilityChange.asDriver()
       .filter { [weak self] in
         switch $0 {
-        case .soft(let visible): return visible
-        case .softToggle: return self?.visibleRelay.value.visible ?? false
-        default: return false
+        case .soft(let visible):
+          return visible
+        case .softToggle:
+          guard let visible = self?.visibleRelay.value.visible else { return false }
+          return !visible
+        default:
+          return false
         }
       }
       .debounce(settings.autoHideTimer)
