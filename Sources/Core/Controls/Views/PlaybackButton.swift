@@ -247,6 +247,8 @@ open class PlaybackButton: UIButton {
     playbackLayer.contentEdgeInsets = self.contentEdgeInsets
     playbackLayer.playbackValue = PlaybackButtonState.pausing.value
     playbackLayer.playbackAnimationDuration = self.duration
+    playbackLayer.rasterizationScale = UIScreen.main.scale
+    playbackLayer.contentsScale = UIScreen.main.scale
     self.playbackLayer = playbackLayer
     self.layer.addSublayer(playbackLayer)
   }
