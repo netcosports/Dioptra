@@ -18,15 +18,15 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
   enum Sizes: CGFloat {
     case sliderHeight = 48.0
-    case button       = 62.0
+    case button       = 88.0
   }
 
   public private(set) var contentView = UIView()
 
   public private(set) var playButton: PlaybackButton = {
-    let frame = CGRect(origin: CGPoint.zero, size: CGSize(width: Sizes.button.rawValue, height: Sizes.button.rawValue))
-    let playButton = PlaybackButton(frame: frame)
-    playButton.contentEdgeInsets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+    let playButton = PlaybackButton()
+    let inset: CGFloat = 20
+    playButton.contentEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
     return playButton
   }()
 

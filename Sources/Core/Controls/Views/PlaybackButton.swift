@@ -180,7 +180,9 @@ extension PlaybackLayer: CAAnimationDelegate {
 open class PlaybackButton: UIButton {
 
   static let kDefaultDuration: CFTimeInterval = 0.24
-  open var playbackLayer: PlaybackLayer?
+  open var playbackLayer: PlaybackLayer? {
+    return layer as? PlaybackLayer
+  }
   open var duration: CFTimeInterval = PlaybackButton.kDefaultDuration {
     didSet {
       self.playbackLayer?.playbackAnimationDuration = self.duration
@@ -205,12 +207,16 @@ open class PlaybackButton: UIButton {
 
   public override init(frame: CGRect) {
     super.init(frame: frame)
-    self.addPlaybackLayer()
+    self.setupPlaybackLayer()
   }
 
   public required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
-    self.addPlaybackLayer()
+    self.setupPlaybackLayer()
+  }
+
+  open override class var layerClass: AnyClass {
+    return PlaybackLayer.self
   }
 
   open override func awakeFromNib() {
@@ -240,17 +246,14 @@ open class PlaybackButton: UIButton {
     }
   }
 
-  fileprivate func addPlaybackLayer() {
-    let playbackLayer = PlaybackLayer()
-    playbackLayer.frame = self.bounds
+  fileprivate func setupPlaybackLayer() {
+    guard let playbackLayer = self.playbackLayer else { return }
     playbackLayer.adjustMarginValue = self.adjustMargin
     playbackLayer.contentEdgeInsets = self.contentEdgeInsets
     playbackLayer.playbackValue = PlaybackButtonState.pausing.value
     playbackLayer.playbackAnimationDuration = self.duration
     playbackLayer.rasterizationScale = UIScreen.main.scale
     playbackLayer.contentsScale = UIScreen.main.scale
-    self.playbackLayer = playbackLayer
-    self.layer.addSublayer(playbackLayer)
   }
 
   override open class var requiresConstraintBasedLayout: Bool {
@@ -269,3 +272,4 @@ public extension Reactive where Base: PlaybackButton {
   }
 
 }
+
