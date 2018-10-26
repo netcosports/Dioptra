@@ -136,7 +136,7 @@ extension VideoPlayerControlsViewModel {
     }).disposed(by: disposeBag)
   }
 
-  fileprivate static func secondsText(with time: TimeInSeconds) -> String {
+  public static func secondsText(with time: TimeInSeconds) -> String {
     let hours = Int(time / 3600)
     let minutes = Int((time.truncatingRemainder(dividingBy: 3600)) / 60)
     let seconds = Int(time.truncatingRemainder(dividingBy: 60))
