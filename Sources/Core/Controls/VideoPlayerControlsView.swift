@@ -18,14 +18,14 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
   enum Sizes: CGFloat {
     case sliderHeight = 48.0
-    case button       = 88.0
+    case button       = 44.0
   }
 
   public private(set) var contentView = UIView()
 
   public private(set) var playButton: PlaybackButton = {
     let playButton = PlaybackButton()
-    let inset: CGFloat = 20
+    let inset: CGFloat = 8
     playButton.contentEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
     return playButton
   }()
@@ -209,6 +209,11 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchUpOutside).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
+      guard let `self` = self else { return .empty() }
+      return .just(SeekEvent.finished(progress: self.slider.value))
+    }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
+    
+    slider.rx.controlEvent(.touchCancel).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
       return .just(SeekEvent.finished(progress: self.slider.value))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
