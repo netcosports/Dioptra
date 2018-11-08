@@ -35,6 +35,10 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
     return playerStateRelay.asDriver(onErrorJustReturn: .idle)
   }
 
+  public var seekCompleated: Driver<Void> {
+    return seekCompletionRelay.asDriver(onErrorJustReturn: ())
+  }
+
   fileprivate var startCount: Int = 0
   fileprivate let disposeBag = DisposeBag()
 
@@ -42,10 +46,19 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   let mutedRelay = BehaviorRelay<Bool>(value: true)
   let openUrlSubject = PublishSubject<URL>()
 
+  fileprivate let seekCompletionRelay = PublishRelay<Void>()
   fileprivate let currentTimeVariable = BehaviorRelay<TimeInSeconds>(value: 0)
   fileprivate let durationVariable    = BehaviorRelay<TimeInSeconds>(value: 0)
   fileprivate let progressVariable    = BehaviorRelay<TimeInSeconds>(value: 0.0)
   fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
+
+  public override init() {
+    super.init()
+    seekCompletionRelay.subscribe(onNext: { [weak self] _ in
+      #warning("FIXME: we need to find correct way to manage completion")
+      self?.seekCompletionRelay.accept(())
+    }).disposed(by: disposeBag)
+  }
 
   public typealias Stream = String
   open var input: Input<Stream> = .cleanup {

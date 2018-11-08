@@ -35,12 +35,17 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     return playerStateRelay.asDriver(onErrorJustReturn: .idle)
   }
 
+  public var seekCompleated: Driver<Void> {
+    return seekCompleatedRelay.asDriver(onErrorJustReturn: ())
+  }
+
   fileprivate let disposeBag = DisposeBag()
 
   let streamSubject = PublishSubject<Stream?>()
   let mutedRelay = BehaviorRelay<Bool>(value: true)
   let openUrlSubject = PublishSubject<URL>()
 
+  fileprivate let seekCompleatedRelay = PublishRelay<Void>()
   fileprivate let currentTimeRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
   fileprivate let durationRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
   fileprivate let progressRelay    = BehaviorRelay<TimeInSeconds>(value: 0.0)
@@ -90,6 +95,7 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
   public func player(_ player: DMPlayerViewController, didReceiveEvent event: PlayerEvent) {
     switch event {
     case let .timeEvent(name, time):
+      print("time" + name)
       switch name {
       case "durationchange":
         durationRelay.accept(time)
@@ -97,9 +103,12 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
         currentTimeRelay.accept(time)
       case "progress":
         progressRelay.accept(time)
+      case "seeked":
+        seekCompleatedRelay.accept(())
       default: break
       }
     case let .namedEvent(name, _):
+      print("event" + name)
       switch name {
       case "play":
         playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))

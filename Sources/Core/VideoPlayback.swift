@@ -110,6 +110,7 @@ public protocol VideoPlayback: class {
   var duration: Driver<TimeInSeconds> { get }
   var loadedRange: Driver<LoadedTimeRange> { get }
   var playerState: Driver<PlayerState> { get }
+  var seekCompleated: Driver<Void> { get }
 }
 
 extension VideoPlayback {

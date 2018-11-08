@@ -50,7 +50,8 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
   func testAutohide() {
     let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
     let testViewModel = VideoPlayerControlsViewModel(settings: settings)
-    let actual = try? testViewModel.visible.asObservable().take(2).toBlocking(timeout: 0.1).toArray()
+    let actual = try? testViewModel.visible.asObservable().take(2)
+      .toBlocking(timeout: 0.1).toArray()
     let expected: [Dioptra.Visibility] = [
       Visibility.soft(visible: true),
       Visibility.soft(visible: false)

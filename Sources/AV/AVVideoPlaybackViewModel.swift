@@ -34,6 +34,7 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
 
 open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
 
+  fileprivate let seekCompleatedRelay = PublishRelay<Void>()
   fileprivate static var interval       = CMTime(value: 1, timescale: 60)
   fileprivate var disposeBag: DisposeBag?
   fileprivate let itemRelay             = BehaviorRelay<AVPlayerItem?>(value: nil)
@@ -100,6 +101,10 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
 
   public var playerState: Driver<PlayerState> {
     return stateRelay.asDriver()
+  }
+
+  public var seekCompleated: Driver<Void> {
+    return seekCompleatedRelay.asDriver(onErrorJustReturn: ())
   }
 
   public func bind(to player: AVPlayer) {
@@ -218,7 +223,9 @@ extension AVVideoPlaybackManagableViewModel {
       if duration.isIndefinite { return }
       let progress = seconds / CMTimeGetSeconds(duration)
       let time = CMTime(value: CMTimeValue(Double(duration.value) * progress), timescale: duration.timescale)
-      player?.seek(to: time)
+      player?.seek(to: time, completionHandler: { [weak self] _ in
+        self?.seekCompleatedRelay.accept(())
+      })
     }
   }
 }
