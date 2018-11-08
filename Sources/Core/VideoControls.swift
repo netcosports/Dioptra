@@ -65,6 +65,7 @@ public protocol VideoControls: class {
   var screenMode: BehaviorRelay<ScreenMode> { get }
 
   // RX inputs
+  var seekCompleted: PublishSubject<Void> { get }
   var buffer: PublishSubject<Float> { get }
   var progress: PublishSubject<Progress> { get }
   var state: PublishSubject<PlayerState> { get }

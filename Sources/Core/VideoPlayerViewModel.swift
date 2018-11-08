@@ -63,5 +63,7 @@ open class VideoPlayerViewModel<P: VideoPlayback, C: VideoControls> {
     playback.playerState.asObservable()
       .bind(to: controls.state)
       .disposed(by: disposeBag)
+
+    playback.seekCompleated.drive(controls.seekCompleted).disposed(by: disposeBag)
   }
 }

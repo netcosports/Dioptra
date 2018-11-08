@@ -29,6 +29,7 @@ open class VideoPlayerControlsViewModel: VideoControls {
   fileprivate let durationRelay = PublishRelay<String>()
 
   public var settings: Settings
+  public var seekCompleted = PublishSubject<Void>()
   public var visibilityChange = BehaviorRelay<VisibilityChangeEvent>(value: .soft(visible: false))
   public let screenMode = BehaviorRelay<ScreenMode>(value: .compact)
   public let buffer = PublishSubject<Float>()

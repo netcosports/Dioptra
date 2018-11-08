@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 
 class TestControls: VideoControls {
+
+  var seekCompleted = PublishSubject<Void>()
   var fullscreen = PublishSubject<Void>()
   let seekRelay = PublishRelay<SeekEvent>()
   let screenMode = BehaviorRelay<ScreenMode>(value: .compact)

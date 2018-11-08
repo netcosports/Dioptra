@@ -25,6 +25,11 @@ class TestPlayback: VideoPlayback {
   let startedSubject = PublishSubject<String>()
   let finishedSubject = PublishSubject<String>()
   let playerStateRelay = BehaviorRelay<PlayerState>(value: PlayerState.idle)
+  var seekCompleatedRelay = PublishRelay<Void>()
+
+  var seekCompleated: Driver<Void> {
+    return seekCompleatedRelay.asDriver(onErrorJustReturn: ())
+  }
 
   var time: Driver<TimeInSeconds> {
     return timeRelay.asDriver()
