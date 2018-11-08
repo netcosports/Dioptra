@@ -95,7 +95,6 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
   public func player(_ player: DMPlayerViewController, didReceiveEvent event: PlayerEvent) {
     switch event {
     case let .timeEvent(name, time):
-      print("time" + name)
       switch name {
       case "durationchange":
         durationRelay.accept(time)
@@ -108,7 +107,6 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
       default: break
       }
     case let .namedEvent(name, _):
-      print("event" + name)
       switch name {
       case "play":
         playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))
