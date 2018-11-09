@@ -25,10 +25,10 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return Driver.combineLatest(progressVariable.asDriver(), duration).map { [weak self] progress, duration in
+    return progressVariable.asDriver().withLatestFrom(duration, resultSelector: { [weak self] progress, duration in
       guard let `self` = self else { return [] }
       return [0...duration * progress]
-    }
+    })
   }
 
   public var playerState: Driver<PlayerState> {

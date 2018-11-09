@@ -25,10 +25,10 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return Driver.combineLatest(progressRelay.asDriver(), duration).map { [weak self] progress, duration in
+    return progressRelay.asDriver().withLatestFrom(duration, resultSelector: { [weak self] progress, duration in
       guard let `self` = self else { return [] }
-      return [0...duration * progress / 100.0]
-    }
+      return [0...duration * progress]
+    })
   }
 
   public var playerState: Driver<PlayerState> {

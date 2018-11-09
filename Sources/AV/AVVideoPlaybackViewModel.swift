@@ -76,7 +76,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       if let item = item {
         return item.rx.seekableRange.map {
           guard let lastRange = $0.last else { return 0.0 }
-          return CMTimeGetSeconds(lastRange.start) + CMTimeGetSeconds(lastRange.duration)
+          return CMTimeGetSeconds(lastRange.end)
         }.asDriver(onErrorJustReturn: 0.0).distinctUntilChanged()
       } else {
         return .empty()
@@ -89,9 +89,8 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       if let item = item {
         return item.rx.loadedTimeRanges.asDriver(onErrorJustReturn: []).map { ranges -> LoadedTimeRange in
           return ranges.map {
-            let start = CMTimeGetSeconds($0.start)
-            let end = start + CMTimeGetSeconds($0.duration)
-            return TimeInSecondsRange(uncheckedBounds: (lower: start, upper: end))
+            let bounds = (lower: CMTimeGetSeconds($0.start), upper: CMTimeGetSeconds($0.end))
+            return TimeInSecondsRange(uncheckedBounds: bounds)
           }
         }
       } else {
