@@ -19,9 +19,9 @@ class ConstraintsVideoCell: CollectionViewCell, Reusable {
   weak var fullscreenViewController: UIViewController?
   
 //  typealias Player = VideoPlayerView<YTVideoPlaybackView, VideoPlayerControlsView>
-  typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
+  //typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<BCVideoPlaybackView, VideoPlayerControlsView>
-  //typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
+  typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
   
   let player = Player(frame: .zero)
 

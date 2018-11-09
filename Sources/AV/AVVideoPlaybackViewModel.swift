@@ -74,9 +74,10 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   public var duration: Driver<TimeInSeconds> {
     return itemRelay.asDriver().filter { $0 != nil }.flatMapLatest { item -> Driver<TimeInSeconds> in
       if let item = item {
-        return item.rx.duration.distinctUntilChanged().asDriver(onErrorJustReturn: CMTime.zero).map { duration -> TimeInSeconds in
-          return CMTimeGetSeconds(duration)
-        }
+        return item.rx.seekableRange.map {
+          guard let lastRange = $0.last else { return 0.0 }
+          return CMTimeGetSeconds(lastRange.start) + CMTimeGetSeconds(lastRange.duration)
+        }.asDriver(onErrorJustReturn: 0.0).distinctUntilChanged()
       } else {
         return .empty()
       }
@@ -223,8 +224,11 @@ extension AVVideoPlaybackManagableViewModel {
       if duration.isIndefinite { return }
       let progress = seconds / CMTimeGetSeconds(duration)
       let time = CMTime(value: CMTimeValue(Double(duration.value) * progress), timescale: duration.timescale)
-      player?.seek(to: time, completionHandler: { [weak self] _ in
-        self?.seekCompleatedRelay.accept(())
+      player?.currentItem?.cancelPendingSeeks()
+      player?.currentItem?.seek(to: time, completionHandler: { [weak self] finished in
+        if finished {
+          self?.seekCompleatedRelay.accept(())
+        }
       })
     }
   }
