@@ -41,13 +41,9 @@ open class VideoPlayerViewModel<P: VideoPlayback, C: VideoControls> {
       .drive(controls.progress)
       .disposed(by: disposeBag)
 
-    Driver.combineLatest(playback.loadedRange, playback.duration)
-      .map { range, duration -> Float in
-        guard let buffer = range.max(by: { $0.upperBound > $1.upperBound })?.upperBound else {
-          return 0.0
-        }
-        return Float(buffer / duration)
-      }.drive(controls.buffer)
+    controls.seek.withLatestFrom(playback.duration, resultSelector: { seek, duration in
+      return TimeInSeconds(seek.progress) * duration
+    }).drive(playback.seek)
       .disposed(by: disposeBag)
 
     Driver.combineLatest(controls.seek, playback.duration)

@@ -220,8 +220,8 @@ extension AVVideoPlaybackManagableViewModel {
   }
 
   fileprivate func seek(to seconds: TimeInSeconds) {
-    if let duration = player?.currentItem?.duration {
-      if duration.isIndefinite { return }
+    if let timeRange = player?.currentItem?.seekableTimeRanges.last?.timeRangeValue {
+      let duration = timeRange.end
       let progress = seconds / CMTimeGetSeconds(duration)
       let time = CMTime(value: CMTimeValue(Double(duration.value) * progress), timescale: duration.timescale)
       player?.currentItem?.cancelPendingSeeks()
