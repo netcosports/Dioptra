@@ -17,11 +17,11 @@ public enum ScreenMode {
 }
 
 public enum SeekEvent {
-  case started(progress: Float)
-  case value(progress: Float)
-  case finished(progress: Float)
+  case started(progress: Double)
+  case value(progress: Double)
+  case finished(progress: Double)
 
-  public var progress: Float {
+  public var progress: Double {
     switch self {
     case .started(let progress), .finished(let progress), .value(let progress):
       return progress

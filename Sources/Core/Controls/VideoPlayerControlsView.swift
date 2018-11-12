@@ -200,29 +200,29 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
 
     slider.rx.controlEvent(.touchDown).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      return .just(SeekEvent.started(progress: self.slider.value))
+      return .just(SeekEvent.started(progress: Double(self.slider.value)))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchUpInside).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      return .just(SeekEvent.finished(progress: self.slider.value))
+      return .just(SeekEvent.finished(progress: Double(self.slider.value)))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.touchUpOutside).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      return .just(SeekEvent.finished(progress: self.slider.value))
+      return .just(SeekEvent.finished(progress: Double(self.slider.value)))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
     
     slider.rx.controlEvent(.touchCancel).asObservable().flatMap { [weak self] _ -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
-      return .just(SeekEvent.finished(progress: self.slider.value))
+      return .just(SeekEvent.finished(progress: Double(self.slider.value)))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     slider.rx.controlEvent(.valueChanged).asObservable().flatMap { [weak self] event -> Observable<SeekEvent> in
       guard let `self` = self else { return .empty() }
       self.viewModel.visibilityChange.accept(.acceptSoft)
       self.viewModel.visibilityChange.accept(.soft(visible: true))
-      return .just(SeekEvent.value(progress: self.slider.value))
+      return .just(SeekEvent.value(progress: Double(self.slider.value)))
     }.bind(to: viewModel.seekSubject).disposed(by: disposeBag)
 
     fullscreenButton.rx.tap.bind(to: viewModel.fullscreen).disposed(by: disposeBag)
