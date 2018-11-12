@@ -16,7 +16,7 @@ public enum ScreenMode {
   case minimized
 }
 
-public enum SeekEvent {
+public enum SeekEvent: Equatable {
   case started(progress: Double)
   case value(progress: Double)
   case finished(progress: Double)
@@ -25,6 +25,18 @@ public enum SeekEvent {
     switch self {
     case .started(let progress), .finished(let progress), .value(let progress):
       return progress
+    }
+  }
+
+  public static func == (lhs: SeekEvent, rhs: SeekEvent) -> Bool {
+    switch (lhs, rhs) {
+    case (.started(let lprogress), .started(let rprogress)):
+      return lprogress == rprogress
+    case (.value(let lprogress), .value(let rprogress)):
+      return lprogress == rprogress
+    case (.finished(let lprogress), .finished(let rprogress)):
+      return lprogress == rprogress
+    default: return false
     }
   }
 }
