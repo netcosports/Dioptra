@@ -55,11 +55,6 @@ open class VideoPlayerViewModel<P: VideoPlayback, C: VideoControls> {
     }).drive(playback.seek)
       .disposed(by: disposeBag)
 
-    controls.seek.withLatestFrom(playback.duration, resultSelector: { seek, duration in
-      return TimeInSeconds(seek.progress) * duration
-    }).drive(playback.seek)
-      .disposed(by: disposeBag)
-
     controls.play
       .drive(playback.state)
       .disposed(by: disposeBag)

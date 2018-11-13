@@ -46,4 +46,24 @@ class VideoPlayerViewModelSpec: XCTestCase {
     ]
     XCTAssertEqual(testObserver.events, expectedEvents)
   }
+
+  func testSeek() {
+    let testObserver = TestScheduler(initialClock: 0).createObserver(TimeInSeconds.self)
+    let testViewModel = ViewModel(playback: TestPlayback(),
+                                  controls: VideoPlayerControlsViewModel())
+
+    testViewModel.playback.seek.bind(to: testObserver).disposed(by: disposeBag)
+
+    testViewModel.playback.durationRelay.accept(100.0)
+    testViewModel.controls.seekSubject.accept(SeekEvent.started(progress: 0.1))
+    testViewModel.controls.seekSubject.accept(SeekEvent.value(progress: 0.5))
+    testViewModel.controls.seekSubject.accept(SeekEvent.finished(progress: 0.8))
+
+    let expectedEvents: [Recorded<Event<TimeInSeconds>>] = [
+      next(0, 10.0),
+      next(0, 50.0),
+      next(0, 80.0)
+    ]
+    XCTAssertEqual(testObserver.events, expectedEvents)
+  }
 }
