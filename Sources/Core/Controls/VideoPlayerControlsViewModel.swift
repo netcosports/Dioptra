@@ -77,7 +77,6 @@ extension VideoPlayerControlsViewModel {
 
   fileprivate func bind() {
     progress.asDriver(onErrorJustReturn: Progress.empty()).drive(onNext: { [weak self] progress in
-      guard progress.value.isNaN == false && progress.total.isNaN == false else { return }
       self?.currentTimeRelay.accept(VideoPlayerControlsViewModel.secondsText(with: progress.value))
       self?.durationRelay.accept(VideoPlayerControlsViewModel.secondsText(with: progress.total))
     }).disposed(by: disposeBag)
@@ -107,6 +106,13 @@ extension VideoPlayerControlsViewModel {
       .debounce(settings.autoHideTimer)
       .map { _ in
         Visibility.soft(visible: false)
+      }
+      .filter { [weak self] _ -> Bool in
+        guard let `self` = self else { return false }
+        switch self.visibilityChange.value {
+          case .force: return false
+          default: return true
+        }
       }
       .drive(visibleRelay)
       .disposed(by: disposeBag)

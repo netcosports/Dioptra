@@ -17,16 +17,16 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   public let state = PublishSubject<PlaybackState>()
 
   public var time: Driver<TimeInSeconds> {
-    return currentTimeVariable.asDriver()
+    return currentTimeVariable.asDriver().filter { $0.isFinite }
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationVariable.asDriver()
+    return durationVariable.asDriver().filter { $0.isFinite }
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return progressVariable.asDriver().withLatestFrom(duration, resultSelector: { [weak self] progress, duration in
-      guard let `self` = self else { return [] }
+    return progressVariable.asDriver().withLatestFrom(duration, resultSelector: { progress, duration in
+      guard progress.isFinite && duration.isFinite else { return [] }
       return [0...duration * progress]
     })
   }

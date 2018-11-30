@@ -172,11 +172,11 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     viewModel.state.subscribe(onNext: { state in
       switch state {
       case .error:
-        self.viewModel.visibilityChange.accept(VisibilityChangeEvent.force(visible: false))
+        self.viewModel.visibilityChange.accept(.force(visible: false))
         self.errorLabel.alpha = 1.0
       default:
         if self.errorLabel.alpha == 1.0 {
-          self.viewModel.visibilityChange.accept(VisibilityChangeEvent.force(visible: true))
+          self.viewModel.visibilityChange.accept(.force(visible: true))
           self.errorLabel.alpha = 0.0
         }
       }

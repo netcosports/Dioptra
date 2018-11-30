@@ -65,7 +65,7 @@ open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModab
       playbackView.viewModel.input = input
       switch input {
       case .content:
-        controlsView.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
+        controlsView.viewModel.visibilityChange.accept(.soft(visible: true))
       default: break
       }
     }

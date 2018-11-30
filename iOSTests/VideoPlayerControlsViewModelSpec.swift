@@ -95,6 +95,23 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
     XCTAssertEqual(testObserver.events, expectedEvents)
   }
 
+  func testSoftForceVisible() {
+    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
+    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
+    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
+    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+
+    testViewModel.visibilityChange.accept(.soft(visible: true))
+    testViewModel.visibilityChange.accept(.force(visible: true))
+    let _ = try? testViewModel.visible.asObservable().skip(1).take(1).toBlocking(timeout: 0.1).toArray()
+
+    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
+      next(0, Visibility.soft(visible: true)),
+      next(0, Visibility.force(visible: true))
+    ]
+    XCTAssertEqual(testObserver.events, expectedEvents)
+  }
+
   func testSoftToggle() {
     let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
     let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
@@ -132,11 +149,11 @@ class VideoPlayerControlsViewModelSpec: XCTestCase {
     let testViewModel = VideoPlayerControlsViewModel(settings: settings)
     testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
 
-    testViewModel.visibilityChange.accept(VisibilityChangeEvent.force(visible: false))
-    testViewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
-    testViewModel.visibilityChange.accept(VisibilityChangeEvent.acceptSoft)
-    testViewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
-    testViewModel.visibilityChange.accept(VisibilityChangeEvent.softToggle)
+    testViewModel.visibilityChange.accept(.force(visible: false))
+    testViewModel.visibilityChange.accept(.soft(visible: true))
+    testViewModel.visibilityChange.accept(.acceptSoft)
+    testViewModel.visibilityChange.accept(.soft(visible: true))
+    testViewModel.visibilityChange.accept(.softToggle)
 
     let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
       next(0, Visibility.soft(visible: true)),

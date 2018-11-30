@@ -17,16 +17,16 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   public let state = PublishSubject<PlaybackState>()
 
   public var time: Driver<TimeInSeconds> {
-    return currentTimeRelay.asDriver()
+    return currentTimeRelay.asDriver().filter { $0.isFinite }
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationRelay.asDriver()
+    return durationRelay.asDriver().filter { $0.isFinite }
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return progressRelay.asDriver().withLatestFrom(duration, resultSelector: { [weak self] progress, duration in
-      guard let `self` = self else { return [] }
+    return progressRelay.asDriver().withLatestFrom(duration, resultSelector: { progress, duration in
+      guard progress.isFinite && duration.isFinite else { return [] }
       return [0...duration * progress]
     })
   }

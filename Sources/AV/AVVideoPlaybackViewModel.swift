@@ -76,7 +76,9 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       if let item = item {
         return item.rx.seekableRange.map {
           guard let lastRange = $0.last else { return 0.0 }
-          return CMTimeGetSeconds(lastRange.end)
+          let seconds = CMTimeGetSeconds(lastRange.end)
+          guard seconds.isFinite else { return 0.0 }
+          return seconds
         }.asDriver(onErrorJustReturn: 0.0).distinctUntilChanged()
       } else {
         return .empty()
@@ -90,6 +92,9 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
         return item.rx.loadedTimeRanges.asDriver(onErrorJustReturn: []).map { ranges -> LoadedTimeRange in
           return ranges.map {
             let bounds = (lower: CMTimeGetSeconds($0.start), upper: CMTimeGetSeconds($0.end))
+            guard bounds.lower.isFinite && bounds.upper.isFinite else {
+              return TimeInSecondsRange(uncheckedBounds: (0, 0))
+            }
             return TimeInSecondsRange(uncheckedBounds: bounds)
           }
         }
@@ -114,6 +119,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     let disposeBag = DisposeBag()
     player.rx.periodicTimeObserver(interval: AVVideoPlaybackViewModel.interval)
       .map { CMTimeGetSeconds($0) }
+      .filter { $0.isFinite }
       .bind(to: currentTimeRelay)
       .disposed(by: disposeBag)
 
