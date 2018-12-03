@@ -44,6 +44,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   let streamSubject = PublishSubject<Stream?>()
   let mutedRelay = BehaviorRelay<Bool>(value: true)
   let openUrlSubject = PublishSubject<URL>()
+  var expectedStartTime: Double?
 
   fileprivate let seekCompleatedRelay = PublishRelay<Void>()
   fileprivate let currentTimeRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
@@ -57,6 +58,10 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     willSet(newInput) {
       switch newInput {
       case .content(let stream):
+        expectedStartTime = nil
+        streamSubject.onNext(stream)
+      case .contentWithStartTime(let stream, let startTime):
+        expectedStartTime = startTime
         streamSubject.onNext(stream)
       case .ad:
         assertionFailure("External Ad is not supported by DM")

@@ -51,6 +51,7 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   fileprivate let durationVariable    = BehaviorRelay<TimeInSeconds>(value: 0)
   fileprivate let progressVariable    = BehaviorRelay<TimeInSeconds>(value: 0.0)
   fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
+  var expectedStartTime: Double?
 
   public override init() {
     super.init()
@@ -66,6 +67,11 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
     willSet(newInput) {
       switch newInput {
       case .content(let stream):
+        expectedStartTime = nil
+        startCount = 0
+        streamSubject.onNext(stream)
+      case .contentWithStartTime(let stream, let startTime):
+        expectedStartTime = startTime
         startCount = 0
         streamSubject.onNext(stream)
       case .ad:

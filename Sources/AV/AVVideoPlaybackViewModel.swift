@@ -40,6 +40,8 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   fileprivate let itemRelay             = BehaviorRelay<AVPlayerItem?>(value: nil)
   fileprivate let currentTimeRelay      = BehaviorRelay<TimeInSeconds>(value: 0)
   let stateRelay            = BehaviorRelay<PlayerState>(value: .idle)
+  var expectedStartTime: Double?
+
 
   var player: AVPlayer?
 
@@ -50,6 +52,11 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       case .content(let stream):
         startPlayback(with: stream)
         stateRelay.accept(.loading)
+        expectedStartTime = nil
+      case .contentWithStartTime(let stream, let startTime):
+        startPlayback(with: stream)
+        stateRelay.accept(.loading)
+        expectedStartTime = startTime
       case .ad(let stream):
         startPlayback(with: stream)
         stateRelay.accept(.loading)
@@ -175,9 +182,14 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       }.bind(to: stateRelay)
       .disposed(by: disposeBag)
 
-    itemRelay.filter { $0 != nil }.flatMapLatest { item -> Observable<PlayerState> in
+    itemRelay.filter { $0 != nil }.flatMapLatest { [weak self] item -> Observable<PlayerState> in
       if let item = item {
-        return item.rx.status.filter { $0 == .readyToPlay }.take(1).map { _ in PlayerState.ready }
+        return item.rx.status.filter { $0 == .readyToPlay }.take(1).map {_ in
+          if let expectedStartTime = self?.expectedStartTime {
+            self?.seek(to: expectedStartTime)
+          }
+          return PlayerState.ready
+        }
       } else {
         return .empty()
       }

@@ -54,10 +54,12 @@ public enum AdState {
 public enum Input<T> where T: Equatable {
   case ad(stream: T)
   case content(stream: T)
+  case contentWithStartTime(stream: T, startTime: TimeInterval)
   case cleanup
 }
 
 extension Input: Equatable {
+
   public static func == (lhs: Input<T>, rhs: Input<T>) -> Bool {
     if case let .content(lhsStream) = lhs, case let .content(rhsStream) = rhs {
       return lhsStream == rhsStream
