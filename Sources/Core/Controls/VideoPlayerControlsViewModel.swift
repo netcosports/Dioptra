@@ -85,6 +85,18 @@ open class VideoPlayerControlsViewModel: VideoControls {
   public var visible: Driver<Visibility> {
     return visibleRelay.distinctUntilChanged().asDriver(onErrorJustReturn: Visibility.soft(visible: false))
   }
+
+  open func secondsText(with time: TimeInSeconds) -> String {
+    let absTime = abs(time)
+    let hours = Int(absTime / 3600)
+    let minutes = Int((absTime.truncatingRemainder(dividingBy: 3600)) / 60)
+    let seconds = Int(absTime.truncatingRemainder(dividingBy: 60))
+    var result = ""
+    if hours > 0 {
+      result += "\(String(format: "%02d", hours)):"
+    }
+    return "\(time < 0.0 ? "-" : "")" + result + "\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))"
+  }
 }
 
 extension VideoPlayerControlsViewModel {
@@ -160,16 +172,5 @@ extension VideoPlayerControlsViewModel {
       self.currentVisibility = visibility
       self.visibleRelay.accept(controlsVisible)
     }).disposed(by: disposeBag)
-  }
-
-  public func secondsText(with time: TimeInSeconds) -> String {
-    let hours = Int(time / 3600)
-    let minutes = Int((time.truncatingRemainder(dividingBy: 3600)) / 60)
-    let seconds = Int(time.truncatingRemainder(dividingBy: 60))
-    var result = ""
-    if hours > 0 {
-      result += "\(String(format: "%02d", hours)):"
-    }
-    return result + "\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))"
   }
 }
