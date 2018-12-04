@@ -25,8 +25,8 @@ open class VideoPlayerControlsViewModel: VideoControls {
 
   fileprivate var currentVisibility = VisibilityChangeEvent.soft(visible: false)
   fileprivate let disposeBag = DisposeBag()
-  fileprivate let currentTimeRelay = PublishRelay<String>()
-  fileprivate let durationRelay = PublishRelay<String>()
+  fileprivate var currentTimeRelay: PublishRelay<String>?
+  fileprivate var durationRelay: PublishRelay<String>?
 
   public var settings: Settings
   public var seekCompleted = PublishSubject<Void>()
@@ -48,9 +48,23 @@ open class VideoPlayerControlsViewModel: VideoControls {
   public let visibleRelay = BehaviorRelay<Visibility>(value: Visibility.soft(visible: true))
 
   public var currentTime: Driver<String> {
-    return currentTimeRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
+    let timeRelay: PublishRelay<String>
+    if let currentTimeRelay = self.currentTimeRelay {
+      timeRelay = currentTimeRelay
+    } else {
+      timeRelay = PublishRelay<String>()
+      self.currentTimeRelay = timeRelay
+    }
+    return timeRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
   }
   public var duration: Driver<String> {
+    let durationRelay: PublishRelay<String>
+    if let currentDurationRelay = self.durationRelay {
+      durationRelay = currentDurationRelay
+    } else {
+      durationRelay = PublishRelay<String>()
+      self.durationRelay = durationRelay
+    }
     return durationRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
   }
   public var bufferedValue: Driver<Float> {
@@ -77,8 +91,13 @@ extension VideoPlayerControlsViewModel {
 
   fileprivate func bind() {
     progress.asDriver(onErrorJustReturn: Progress.empty()).drive(onNext: { [weak self] progress in
-      self?.currentTimeRelay.accept(VideoPlayerControlsViewModel.secondsText(with: progress.value))
-      self?.durationRelay.accept(VideoPlayerControlsViewModel.secondsText(with: progress.total))
+      guard let `self` = self else { return }
+      if let currentTimeRelay = self.currentTimeRelay {
+        currentTimeRelay.accept(self.secondsText(with: progress.value))
+      }
+      if let durationRelay = self.durationRelay {
+        durationRelay.accept(self.secondsText(with: progress.total))
+      }
     }).disposed(by: disposeBag)
 
     seekSubject.asObservable().flatMap { seekEvent -> Observable<PlaybackState> in
@@ -143,7 +162,7 @@ extension VideoPlayerControlsViewModel {
     }).disposed(by: disposeBag)
   }
 
-  public static func secondsText(with time: TimeInSeconds) -> String {
+  public func secondsText(with time: TimeInSeconds) -> String {
     let hours = Int(time / 3600)
     let minutes = Int((time.truncatingRemainder(dividingBy: 3600)) / 60)
     let seconds = Int(time.truncatingRemainder(dividingBy: 60))
