@@ -38,8 +38,8 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   fileprivate static var interval       = CMTime(value: 1, timescale: 60)
   fileprivate var disposeBag: DisposeBag?
   fileprivate let itemRelay             = BehaviorRelay<AVPlayerItem?>(value: nil)
-  fileprivate let currentTimeRelay      = BehaviorRelay<TimeInSeconds>(value: 0)
-  let stateRelay            = BehaviorRelay<PlayerState>(value: .idle)
+  fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
+  let stateRelay                        = PublishRelay<PlayerState>()
   var expectedStartTime: Double?
 
 
@@ -75,7 +75,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   public let seek = PublishSubject<TimeInSeconds>()
   public var state = PublishSubject<PlaybackState>()
   public var time: Driver<TimeInSeconds> {
-    return currentTimeRelay.asDriver()
+    return currentTimeRelay.asDriver(onErrorJustReturn: 0.0)
   }
 
   public var duration: Driver<TimeInSeconds> {
@@ -112,7 +112,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   }
 
   public var playerState: Driver<PlayerState> {
-    return stateRelay.asDriver()
+    return stateRelay.asDriver(onErrorJustReturn: .idle)
   }
 
   public var seekCompleated: Driver<Void> {
@@ -170,7 +170,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       }.map {
         return $0 ? PlayerState.active(state: .playing) : PlayerState.stuck
       }
-      .drive(stateRelay)
+      .asObservable().bind(to: stateRelay)
       .disposed(by: disposeBag)
 
     itemRelay.filter { $0 != nil }.flatMapLatest { item -> Observable<PlayerState> in
@@ -206,7 +206,8 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
           return .empty()
         }
       }.map { error in PlayerState.error(error: error) }
-      .drive(stateRelay)
+      .asObservable()
+      .bind(to: stateRelay)
       .disposed(by: disposeBag)
     self.disposeBag = disposeBag
   }

@@ -17,15 +17,15 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   public let state = PublishSubject<PlaybackState>()
 
   public var time: Driver<TimeInSeconds> {
-    return currentTimeRelay.asDriver().filter { $0.isFinite }
+    return currentTimeRelay.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationRelay.asDriver().filter { $0.isFinite }
+    return durationRelay.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return progressRelay.asDriver().withLatestFrom(duration, resultSelector: { progress, duration in
+    return progressRelay.asDriver(onErrorJustReturn: 0.0).withLatestFrom(duration, resultSelector: { progress, duration in
       guard progress.isFinite && duration.isFinite else { return [] }
       return [0...duration * progress]
     })
@@ -47,10 +47,10 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   var expectedStartTime: Double?
 
   fileprivate let seekCompleatedRelay = PublishRelay<Void>()
-  fileprivate let currentTimeRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let durationRelay    = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let progressRelay    = BehaviorRelay<TimeInSeconds>(value: 0.0)
-  fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
+  fileprivate let currentTimeRelay    = PublishRelay<TimeInSeconds>()
+  fileprivate let durationRelay    = PublishRelay<TimeInSeconds>()
+  fileprivate let progressRelay    = PublishRelay<TimeInSeconds>()
+  fileprivate let playerStateRelay    = PublishRelay<PlayerState>()
 
   public typealias Stream = String
   open var input: Input<Stream> = .cleanup {

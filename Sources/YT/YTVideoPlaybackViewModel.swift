@@ -17,15 +17,15 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   public let state = PublishSubject<PlaybackState>()
 
   public var time: Driver<TimeInSeconds> {
-    return currentTimeVariable.asDriver().filter { $0.isFinite }
+    return currentTimeVariable.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationVariable.asDriver().filter { $0.isFinite }
+    return durationVariable.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return progressVariable.asDriver().withLatestFrom(duration, resultSelector: { progress, duration in
+    return progressVariable.asDriver(onErrorJustReturn: 0.0).withLatestFrom(duration, resultSelector: { progress, duration in
       guard progress.isFinite && duration.isFinite else { return [] }
       return [0...duration * progress]
     })
@@ -47,10 +47,10 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   let openUrlSubject = PublishSubject<URL>()
 
   fileprivate let seekCompletionRelay = PublishRelay<Void>()
-  fileprivate let currentTimeVariable = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let durationVariable    = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let progressVariable    = BehaviorRelay<TimeInSeconds>(value: 0.0)
-  fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
+  fileprivate let currentTimeVariable = PublishRelay<TimeInSeconds>()
+  fileprivate let durationVariable    = PublishRelay<TimeInSeconds>()
+  fileprivate let progressVariable    = PublishRelay<TimeInSeconds>()
+  fileprivate let playerStateRelay    = PublishRelay<PlayerState>()
   var expectedStartTime: Double?
 
   public override init() {
