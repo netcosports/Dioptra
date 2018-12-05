@@ -37,7 +37,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   fileprivate let seekCompleatedRelay = PublishRelay<Void>()
   fileprivate static var interval       = CMTime(value: 1, timescale: 60)
   fileprivate var disposeBag: DisposeBag?
-  fileprivate let itemRelay             = BehaviorRelay<AVPlayerItem?>(value: nil)
+  fileprivate let itemRelay             = PublishRelay<AVPlayerItem?>()
   fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
   let stateRelay                        = PublishRelay<PlayerState>()
   var expectedStartTime: Double?
@@ -79,7 +79,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return itemRelay.asDriver().filter { $0 != nil }.flatMapLatest { item -> Driver<TimeInSeconds> in
+    return itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<TimeInSeconds> in
       if let item = item {
         return item.rx.seekableRange.map {
           guard let lastRange = $0.last else { return 0.0 }
@@ -94,7 +94,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return itemRelay.asDriver().filter { $0 != nil }.flatMapLatest { item -> Driver<LoadedTimeRange> in
+    return itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<LoadedTimeRange> in
       if let item = item {
         return item.rx.loadedTimeRanges.asDriver(onErrorJustReturn: []).map { ranges -> LoadedTimeRange in
           return ranges.map {
@@ -147,11 +147,14 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       }
     }).disposed(by: disposeBag)
 
-    player.rx.rate
-      .filter { [weak self] _ in
-        guard let item = self?.itemRelay.value else { return false }
+    player.rx.rate.withLatestFrom(itemRelay.asObservable(), resultSelector: { rate, item in
+      return (rate, item)
+    })
+      .filter { [weak self] rate, item in
+        guard let item = item else { return false }
         return item.duration.seconds != item.currentTime().seconds
       }
+      .map { $0.0 }
       .distinctUntilChanged()
       .map {
         return $0 != 0 ? PlayerState.active(state: .playing) : PlayerState.active(state: .paused)
@@ -159,7 +162,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       .bind(to: stateRelay)
       .disposed(by: disposeBag)
 
-    itemRelay.asDriver().filter { $0 != nil }.flatMapLatest { item -> Driver<Bool> in
+    itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<Bool> in
         if let item = item {
           return item.rx.playbackLikelyToKeepUp
             .observeOn(MainScheduler.asyncInstance)
@@ -196,7 +199,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       }.bind(to: stateRelay)
       .disposed(by: disposeBag)
 
-    itemRelay.asDriver().filter { $0 != nil }.flatMapLatest { item -> Driver<Error> in
+    itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<Error> in
         if let item = item {
           return item.rx.error.asDriver(onErrorJustReturn: nil).flatMap { error -> Driver<Error> in
             guard let error = error else { return .empty() }
