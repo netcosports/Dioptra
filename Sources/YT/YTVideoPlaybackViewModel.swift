@@ -21,7 +21,7 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationVariable.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
+    return durationVariable.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite && $0 > 0.0 }
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {

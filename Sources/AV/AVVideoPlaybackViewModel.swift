@@ -86,7 +86,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
           let seconds = CMTimeGetSeconds(lastRange.end)
           guard seconds.isFinite else { return 0.0 }
           return seconds
-        }.asDriver(onErrorJustReturn: 0.0).distinctUntilChanged()
+        }.asDriver(onErrorJustReturn: 0.0).distinctUntilChanged().filter { $0 > 0.0 }
       } else {
         return .empty()
       }

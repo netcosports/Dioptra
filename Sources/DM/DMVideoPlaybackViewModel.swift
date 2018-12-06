@@ -21,7 +21,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationRelay.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
+    return durationRelay.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite && $0 > 0.0 }
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
