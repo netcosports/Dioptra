@@ -127,6 +127,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     player.rx.periodicTimeObserver(interval: AVVideoPlaybackViewModel.interval)
       .map { CMTimeGetSeconds($0) }
       .filter { $0.isFinite }
+      .filter { [weak self] _ in self?.expectedStartTime == nil }
       .bind(to: currentTimeRelay)
       .disposed(by: disposeBag)
 
@@ -190,6 +191,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
         return item.rx.status.filter { $0 == .readyToPlay }.take(1).map {_ in
           if let expectedStartTime = self?.expectedStartTime {
             self?.seek(to: expectedStartTime)
+            self?.expectedStartTime = nil
           }
           return PlayerState.ready
         }
