@@ -32,20 +32,22 @@ open class YTVideoPlaybackView: UIView, PlaybackViewModable {
     }).disposed(by: disposeBag)
 
     viewModel.streamSubject.asDriver(onErrorJustReturn: nil).drive(onNext: { [weak self] stream in
+      guard let `self` = self else { return }
       if let stream = stream {
-        self?.playerView.isHidden = false
+        self.playerView.isHidden = false
         let vars: [String: Any] = [
            "controls": 0,
            "autoplay": 1,
            "showinfo": 0,
            "rel": 0,
            "playsinline": 1,
+           "start": self.viewModel.expectedStartTime ?? 0.0,
            "origin": "http://www.youtube.com"
         ]
-        self?.playerView.load(withVideoId: stream, playerVars: vars)
+        self.playerView.load(withVideoId: stream, playerVars: vars)
       } else {
-        self?.playerView.isHidden = true
-        self?.playerView.pauseVideo()
+        self.playerView.isHidden = true
+        self.playerView.pauseVideo()
       }
     }).disposed(by: disposeBag)
 

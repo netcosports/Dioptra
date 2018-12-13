@@ -11,15 +11,25 @@ import RxCocoa
 
 open class VideoPlayerControlsViewModel: VideoControls {
 
-  public init() {
+  public struct Settings {
+    public init(autoHideTimer: Double = 3.0) {
+      self.autoHideTimer = autoHideTimer
+    }
+    public var autoHideTimer: Double
+  }
+
+  public init(settings: Settings = Settings()) {
+    self.settings = settings
     bind()
   }
 
   fileprivate var currentVisibility = VisibilityChangeEvent.soft(visible: false)
   fileprivate let disposeBag = DisposeBag()
-  fileprivate let currentTimeRelay = PublishRelay<String>()
-  fileprivate let durationRelay = PublishRelay<String>()
+  fileprivate var currentTimeRelay: PublishRelay<String>?
+  fileprivate var durationRelay: PublishRelay<String>?
 
+  public var settings: Settings
+  public var seekCompleted = PublishSubject<Void>()
   public var visibilityChange = BehaviorRelay<VisibilityChangeEvent>(value: .soft(visible: false))
   public let screenMode = BehaviorRelay<ScreenMode>(value: .compact)
   public let buffer = PublishSubject<Float>()
@@ -33,17 +43,31 @@ open class VideoPlayerControlsViewModel: VideoControls {
     return stateSubject.asDriver(onErrorJustReturn: PlaybackState.paused)
   }
 
-  let seekSubject = PublishRelay<SeekEvent>()
-  let stateSubject = PublishRelay<PlaybackState>()
-  let visible = BehaviorRelay<Visibility>(value: Visibility.soft(visible: true))
+  public let seekSubject = PublishRelay<SeekEvent>()
+  public let stateSubject = PublishRelay<PlaybackState>()
+  public let visibleRelay = BehaviorRelay<Visibility>(value: Visibility.soft(visible: true))
 
-  var currentTime: Driver<String> {
-    return currentTimeRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
+  public var currentTime: Driver<String> {
+    let timeRelay: PublishRelay<String>
+    if let currentTimeRelay = self.currentTimeRelay {
+      timeRelay = currentTimeRelay
+    } else {
+      timeRelay = PublishRelay<String>()
+      self.currentTimeRelay = timeRelay
+    }
+    return timeRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
   }
-  var duration: Driver<String> {
+  public var duration: Driver<String> {
+    let durationRelay: PublishRelay<String>
+    if let currentDurationRelay = self.durationRelay {
+      durationRelay = currentDurationRelay
+    } else {
+      durationRelay = PublishRelay<String>()
+      self.durationRelay = durationRelay
+    }
     return durationRelay.asDriver(onErrorJustReturn: "").distinctUntilChanged()
   }
-  var bufferedValue: Driver<Float> {
+  public var bufferedValue: Driver<Float> {
     let progressFilter: Driver<Bool> = seek.map {
       switch $0 {
       case .finished: return true
@@ -57,15 +81,35 @@ open class VideoPlayerControlsViewModel: VideoControls {
       .map { progressAndSeek -> Progress in return progressAndSeek.0 }
       .map { $0.total == 0.0 ? 0.0 : Float($0.value / $0.total) }
   }
+
+  public var visible: Driver<Visibility> {
+    return visibleRelay.distinctUntilChanged().asDriver(onErrorJustReturn: Visibility.soft(visible: false))
+  }
+
+  open func secondsText(with time: TimeInSeconds) -> String {
+    let absTime = abs(time)
+    let hours = Int(absTime / 3600)
+    let minutes = Int((absTime.truncatingRemainder(dividingBy: 3600)) / 60)
+    let seconds = Int(absTime.truncatingRemainder(dividingBy: 60))
+    var result = ""
+    if hours > 0 {
+      result += "\(String(format: "%02d", hours)):"
+    }
+    return "\(time < 0.0 ? "-" : "")" + result + "\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))"
+  }
 }
 
 extension VideoPlayerControlsViewModel {
 
   fileprivate func bind() {
     progress.asDriver(onErrorJustReturn: Progress.empty()).drive(onNext: { [weak self] progress in
-      guard progress.value.isNaN == false && progress.total.isNaN == false else { return }
-      self?.currentTimeRelay.accept(VideoPlayerControlsViewModel.secondsText(with: progress.value))
-      self?.durationRelay.accept(VideoPlayerControlsViewModel.secondsText(with: progress.total))
+      guard let `self` = self else { return }
+      if let currentTimeRelay = self.currentTimeRelay {
+        currentTimeRelay.accept(self.secondsText(with: progress.value))
+      }
+      if let durationRelay = self.durationRelay {
+        durationRelay.accept(self.secondsText(with: progress.total))
+      }
     }).disposed(by: disposeBag)
 
     seekSubject.asObservable().flatMap { seekEvent -> Observable<PlaybackState> in
@@ -81,14 +125,27 @@ extension VideoPlayerControlsViewModel {
     visibilityChange.asDriver()
       .filter { [weak self] in
         switch $0 {
-        case .soft(let visible): return visible
-        case .softToggle: return self?.visible.value.visible ?? false
-        default: return false
+        case .soft(let visible):
+          return visible
+        case .softToggle:
+          guard let visible = self?.visibleRelay.value.visible else { return false }
+          return !visible
+        default:
+          return false
         }
       }
-      .debounce(3.0)
-      .map { _ in Visibility.soft(visible: false) }
-      .drive(visible)
+      .debounce(settings.autoHideTimer)
+      .map { _ in
+        Visibility.soft(visible: false)
+      }
+      .filter { [weak self] _ -> Bool in
+        guard let `self` = self else { return false }
+        switch self.visibilityChange.value {
+          case .force: return false
+          default: return true
+        }
+      }
+      .drive(visibleRelay)
       .disposed(by: disposeBag)
 
     visibilityChange.asDriver().drive(onNext: { [weak self] visibility in
@@ -106,16 +163,14 @@ extension VideoPlayerControlsViewModel {
       case .softToggle:
         switch self.currentVisibility {
         case .force: return
-        case .soft(let previousVisibility):
-          controlsVisible = Visibility.soft(visible: previousVisibility)
-        case .acceptSoft, .softToggle:
-          controlsVisible = Visibility.soft(visible: !self.visible.value.visible)
+        case .soft, .acceptSoft, .softToggle:
+          controlsVisible = Visibility.soft(visible: !self.visibleRelay.value.visible)
         }
       case .acceptSoft:
         controlsVisible = Visibility.force(visible: true)
       }
       self.currentVisibility = visibility
-      self.visible.accept(controlsVisible)
+      self.visibleRelay.accept(controlsVisible)
     }).disposed(by: disposeBag)
   }
 

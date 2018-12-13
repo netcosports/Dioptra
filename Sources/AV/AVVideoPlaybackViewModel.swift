@@ -34,11 +34,14 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
 
 open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
 
+  fileprivate let seekCompleatedRelay = PublishRelay<Void>()
   fileprivate static var interval       = CMTime(value: 1, timescale: 60)
   fileprivate var disposeBag: DisposeBag?
-  fileprivate let itemRelay             = BehaviorRelay<AVPlayerItem?>(value: nil)
-  fileprivate let currentTimeRelay      = BehaviorRelay<TimeInSeconds>(value: 0)
-  let stateRelay            = BehaviorRelay<PlayerState>(value: .idle)
+  fileprivate let itemRelay             = PublishRelay<AVPlayerItem?>()
+  fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
+  let stateRelay                        = PublishRelay<PlayerState>()
+  var expectedStartTime: Double?
+
 
   var player: AVPlayer?
 
@@ -49,6 +52,11 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       case .content(let stream):
         startPlayback(with: stream)
         stateRelay.accept(.loading)
+        expectedStartTime = nil
+      case .contentWithStartTime(let stream, let startTime):
+        startPlayback(with: stream)
+        stateRelay.accept(.loading)
+        expectedStartTime = startTime
       case .ad(let stream):
         startPlayback(with: stream)
         stateRelay.accept(.loading)
@@ -67,15 +75,18 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   public let seek = PublishSubject<TimeInSeconds>()
   public var state = PublishSubject<PlaybackState>()
   public var time: Driver<TimeInSeconds> {
-    return currentTimeRelay.asDriver()
+    return currentTimeRelay.asDriver(onErrorJustReturn: 0.0)
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return itemRelay.asDriver().filter { $0 != nil }.flatMapLatest { item -> Driver<TimeInSeconds> in
+    return itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<TimeInSeconds> in
       if let item = item {
-        return item.rx.duration.distinctUntilChanged().asDriver(onErrorJustReturn: CMTime.zero).map { duration -> TimeInSeconds in
-          return CMTimeGetSeconds(duration)
-        }
+        return item.rx.seekableRange.map {
+          guard let lastRange = $0.last else { return 0.0 }
+          let seconds = CMTimeGetSeconds(lastRange.end)
+          guard seconds.isFinite else { return 0.0 }
+          return seconds
+        }.asDriver(onErrorJustReturn: 0.0).distinctUntilChanged().filter { $0 > 0.0 }
       } else {
         return .empty()
       }
@@ -83,13 +94,15 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return itemRelay.asDriver().filter { $0 != nil }.flatMapLatest { item -> Driver<LoadedTimeRange> in
+    return itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<LoadedTimeRange> in
       if let item = item {
         return item.rx.loadedTimeRanges.asDriver(onErrorJustReturn: []).map { ranges -> LoadedTimeRange in
           return ranges.map {
-            let start = CMTimeGetSeconds($0.start)
-            let end = start + CMTimeGetSeconds($0.duration)
-            return TimeInSecondsRange(uncheckedBounds: (lower: start, upper: end))
+            let bounds = (lower: CMTimeGetSeconds($0.start), upper: CMTimeGetSeconds($0.end))
+            guard bounds.lower.isFinite && bounds.upper.isFinite else {
+              return TimeInSecondsRange(uncheckedBounds: (0, 0))
+            }
+            return TimeInSecondsRange(uncheckedBounds: bounds)
           }
         }
       } else {
@@ -99,7 +112,11 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   }
 
   public var playerState: Driver<PlayerState> {
-    return stateRelay.asDriver()
+    return stateRelay.asDriver(onErrorJustReturn: .idle)
+  }
+
+  public var seekCompleated: Driver<Void> {
+    return seekCompleatedRelay.asDriver(onErrorJustReturn: ())
   }
 
   public func bind(to player: AVPlayer) {
@@ -109,6 +126,8 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     let disposeBag = DisposeBag()
     player.rx.periodicTimeObserver(interval: AVVideoPlaybackViewModel.interval)
       .map { CMTimeGetSeconds($0) }
+      .filter { $0.isFinite }
+      .filter { [weak self] _ in self?.expectedStartTime == nil }
       .bind(to: currentTimeRelay)
       .disposed(by: disposeBag)
 
@@ -129,11 +148,14 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       }
     }).disposed(by: disposeBag)
 
-    player.rx.rate
-      .filter { [weak self] _ in
-        guard let item = self?.itemRelay.value else { return false }
+    player.rx.rate.withLatestFrom(itemRelay.asObservable(), resultSelector: { rate, item in
+      return (rate, item)
+    })
+      .filter { [weak self] rate, item in
+        guard let item = item else { return false }
         return item.duration.seconds != item.currentTime().seconds
       }
+      .map { $0.0 }
       .distinctUntilChanged()
       .map {
         return $0 != 0 ? PlayerState.active(state: .playing) : PlayerState.active(state: .paused)
@@ -141,7 +163,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       .bind(to: stateRelay)
       .disposed(by: disposeBag)
 
-    itemRelay.asDriver().filter { $0 != nil }.flatMapLatest { item -> Driver<Bool> in
+    itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<Bool> in
         if let item = item {
           return item.rx.playbackLikelyToKeepUp
             .observeOn(MainScheduler.asyncInstance)
@@ -152,7 +174,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       }.map {
         return $0 ? PlayerState.active(state: .playing) : PlayerState.stuck
       }
-      .drive(stateRelay)
+      .asObservable().bind(to: stateRelay)
       .disposed(by: disposeBag)
 
     itemRelay.filter { $0 != nil }.flatMapLatest { item -> Observable<PlayerState> in
@@ -164,16 +186,22 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       }.bind(to: stateRelay)
       .disposed(by: disposeBag)
 
-    itemRelay.filter { $0 != nil }.flatMapLatest { item -> Observable<PlayerState> in
+    itemRelay.filter { $0 != nil }.flatMapLatest { [weak self] item -> Observable<PlayerState> in
       if let item = item {
-        return item.rx.status.filter { $0 == .readyToPlay }.take(1).map { _ in PlayerState.ready }
+        return item.rx.status.filter { $0 == .readyToPlay }.take(1).map {_ in
+          if let expectedStartTime = self?.expectedStartTime {
+            self?.seek(to: expectedStartTime)
+            self?.expectedStartTime = nil
+          }
+          return PlayerState.ready
+        }
       } else {
         return .empty()
       }
       }.bind(to: stateRelay)
       .disposed(by: disposeBag)
 
-    itemRelay.asDriver().filter { $0 != nil }.flatMapLatest { item -> Driver<Error> in
+    itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<Error> in
         if let item = item {
           return item.rx.error.asDriver(onErrorJustReturn: nil).flatMap { error -> Driver<Error> in
             guard let error = error else { return .empty() }
@@ -183,7 +211,8 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
           return .empty()
         }
       }.map { error in PlayerState.error(error: error) }
-      .drive(stateRelay)
+      .asObservable()
+      .bind(to: stateRelay)
       .disposed(by: disposeBag)
     self.disposeBag = disposeBag
   }
@@ -214,11 +243,16 @@ extension AVVideoPlaybackManagableViewModel {
   }
 
   fileprivate func seek(to seconds: TimeInSeconds) {
-    if let duration = player?.currentItem?.duration {
-      if duration.isIndefinite { return }
+    if let timeRange = player?.currentItem?.seekableTimeRanges.last?.timeRangeValue {
+      let duration = timeRange.end
       let progress = seconds / CMTimeGetSeconds(duration)
       let time = CMTime(value: CMTimeValue(Double(duration.value) * progress), timescale: duration.timescale)
-      player?.seek(to: time)
+      player?.currentItem?.cancelPendingSeeks()
+      player?.currentItem?.seek(to: time, completionHandler: { [weak self] finished in
+        if finished {
+          self?.seekCompleatedRelay.accept(())
+        }
+      })
     }
   }
 }

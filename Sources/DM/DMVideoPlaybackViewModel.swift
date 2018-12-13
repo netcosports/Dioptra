@@ -17,35 +17,40 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   public let state = PublishSubject<PlaybackState>()
 
   public var time: Driver<TimeInSeconds> {
-    return currentTimeVariable.asDriver()
+    return currentTimeRelay.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationVariable.asDriver()
+    return durationRelay.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite && $0 > 0.0 }
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return Driver.combineLatest(progressVariable.asDriver(), duration).map { [weak self] progress, duration in
-      guard let `self` = self else { return [] }
-      return [0...duration * progress / 100.0]
-    }
+    return progressRelay.asDriver(onErrorJustReturn: 0.0).withLatestFrom(duration, resultSelector: { progress, duration in
+      guard progress.isFinite && duration.isFinite else { return [] }
+      return [0...duration * progress]
+    })
   }
 
   public var playerState: Driver<PlayerState> {
     return playerStateRelay.asDriver(onErrorJustReturn: .idle)
   }
 
-  fileprivate var startCount: Int = 0
+  public var seekCompleated: Driver<Void> {
+    return seekCompleatedRelay.asDriver(onErrorJustReturn: ())
+  }
+
   fileprivate let disposeBag = DisposeBag()
 
   let streamSubject = PublishSubject<Stream?>()
   let mutedRelay = BehaviorRelay<Bool>(value: true)
   let openUrlSubject = PublishSubject<URL>()
+  var expectedStartTime: Double?
 
-  fileprivate let currentTimeVariable = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let durationVariable    = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let progressVariable    = BehaviorRelay<TimeInSeconds>(value: 0.0)
-  fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
+  fileprivate let seekCompleatedRelay = PublishRelay<Void>()
+  fileprivate let currentTimeRelay    = PublishRelay<TimeInSeconds>()
+  fileprivate let durationRelay    = PublishRelay<TimeInSeconds>()
+  fileprivate let progressRelay    = PublishRelay<TimeInSeconds>()
+  fileprivate let playerStateRelay    = PublishRelay<PlayerState>()
 
   public typealias Stream = String
   open var input: Input<Stream> = .cleanup {
@@ -53,7 +58,10 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     willSet(newInput) {
       switch newInput {
       case .content(let stream):
-        startCount = 0
+        expectedStartTime = nil
+        streamSubject.onNext(stream)
+      case .contentWithStartTime(let stream, let startTime):
+        expectedStartTime = startTime
         streamSubject.onNext(stream)
       case .ad:
         assertionFailure("External Ad is not supported by DM")
@@ -71,6 +79,10 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     set {
       mutedRelay.accept(muted)
     }
+  }
+  
+  init() {
+    seek.bind(to: currentTimeRelay).disposed(by: disposeBag)
   }
 }
 
@@ -90,20 +102,19 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
     case let .timeEvent(name, time):
       switch name {
       case "durationchange":
-        durationVariable.accept(time)
+        durationRelay.accept(time)
       case "timeupdate":
-        currentTimeVariable.accept(time)
+        currentTimeRelay.accept(time)
       case "progress":
-        progressVariable.accept(time)
+        progressRelay.accept(time)
+      case "seeked":
+        seekCompleatedRelay.accept(())
       default: break
       }
     case let .namedEvent(name, _):
       switch name {
       case "play":
-        if startCount > 0 {
-          playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))
-        }
-        startCount += 1
+        playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))
       case "pause":
         playerStateRelay.accept(PlayerState.active(state: PlaybackState.paused))
       case "video_end":
@@ -121,15 +132,5 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
 
   public func player(_ player: DMPlayerViewController, openUrl url: URL) {
     openUrlSubject.onNext(url)
-    // NOTE: go to portrait and open safari modally
-    //    if containerViewController?.presentedViewController != nil {
-    //      containerViewController?.presentedViewController?.dismiss(animated: true) {
-    //        let controller = SFSafariViewController(url: url)
-    //        self.containerViewController?.present(controller, animated: true, completion: nil)
-    //      }
-    //      return
-    //    }
-    //    let controller = SFSafariViewController(url: url)
-    //    containerViewController?.present(controller, animated: true, completion: nil)
   }
 }

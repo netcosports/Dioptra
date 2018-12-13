@@ -1,63 +1,44 @@
 //
-//  VideoCell.swift
+//  ConstraintsVideoCell.swift
 //  Demo
 //
-//  Created by Sergei Mikhan on 8/21/18.
+//  Created by Eugen Filipkov on 10/15/18.
 //  Copyright © 2018 Sergei Mikhan. All rights reserved.
 //
 
 import Astrolabe
 import Dioptra
 import RxSwift
+import SnapKit
 
-class ManualLayoutView: UIView {
-
-  override open class var requiresConstraintBasedLayout: Bool {
-    return false
-  }
-}
-
-class VideoCell: CollectionViewCell, Reusable {
-
+class ConstraintsVideoCell: CollectionViewCell, Reusable {
+  
   let disposeBag = DisposeBag()
-
+  
   weak var landscapeViewController: UIViewController?
   weak var fullscreenViewController: UIViewController?
-
-  //typealias Player = VideoPlayerView<YTVideoPlaybackView, VideoPlayerControlsView>
+  
+//  typealias Player = VideoPlayerView<YTVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<BCVideoPlaybackView, VideoPlayerControlsView>
   typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
-
-  let player = Player(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width - 48,
-                                    height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
-  let playerContainer = ManualLayoutView(frame: CGRect(x: 22.0, y: 44.0,
-                                         width: UIScreen.main.bounds.width - 48,
-                                         height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
+  
+  let player = Player(frame: .zero)
 
   override func setup() {
     super.setup()
-
-    playerContainer.translatesAutoresizingMaskIntoConstraints = true
-
-    contentView.addSubview(playerContainer)
-    playerContainer.addSubview(player)
-
-//    player.playbackView.viewModel.accountID = "4800266849001"
-//    player.playbackView.viewModel.servicePolicyKey = "BCpkADawqM3n0ImwKortQqSZCgJMcyVbb8lJVwt0z16UD0a_h8MpEYcHyKbM8CGOPxBRp0nfSVdfokXBrUu3Sso7Nujv3dnLo0JxC_lNXCl88O7NJ0PR0z2AprnJ_Lwnq7nTcy1GBUrQPr5e"
-//    player.playbackView.viewModel.input = .contentWithStartTime(stream: "5754208017001", startTime: 66.0)
-
-//    player.playbackView.viewModel.input = .contentWithStartTime(stream: "x6k8h19", startTime: 20.0)
-    player.playbackView.viewModel.input = .contentWithStartTime(stream: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8", startTime: 66.0)
-//  player.playbackView.viewModel.input = .contentWithStartTime(stream: "F1B9Fk_SgI0", startTime: 20.0)
-
+    
+    contentView.addSubview(player)
+    
+    player.playbackView.viewModel.input = .content(stream: "x6k8h19")
+    
     player.playbackView.viewModel.muted = true
     player.controlsView.fullscreenButton.backgroundColor = UIColor.magenta
     player.controlsView.errorLabel.text = "Error"
     player.controlsView.viewModel.fullscreen.subscribe(onNext: { [weak self] in
       self?.handleFullscreen()
     }).disposed(by: disposeBag)
-
+    
     NotificationCenter.default.rx.notification(UIDevice.orientationDidChangeNotification, object: nil)
       .map { _ in return UIDevice.current.orientation }
       .distinctUntilChanged()
@@ -74,9 +55,16 @@ class VideoCell: CollectionViewCell, Reusable {
         }
       }).disposed(by: disposeBag)
   }
-
+  
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    if self.player.superview == contentView {
+      self.player.frame = contentView.bounds
+    }
+  }
+  
   typealias TransitionableViewController = UIViewController & Transitionable
-
+  
   fileprivate func toLandscape() {
     guard let container = containerViewController as? TransitionableViewController else {
       return
@@ -84,9 +72,9 @@ class VideoCell: CollectionViewCell, Reusable {
     let detailsViewController = LandscapeViewController()
     self.landscapeViewController = detailsViewController
     container.present(modal: detailsViewController,
-            method: TransitionMethod.landscape(presentingView: self.player))
+                      method: TransitionMethod.landscape(presentingView: self.player))
   }
-
+  
   fileprivate func handleFullscreen() {
     guard let container = containerViewController as? TransitionableViewController else {
       return
@@ -102,24 +90,10 @@ class VideoCell: CollectionViewCell, Reusable {
                         method: TransitionMethod.fullscreen(presentingView: self.player))
     }
   }
-
-  override func willDisplay() {
-    super.willDisplay()
-    guard let containerView = containerView else { return }
-    if player.detached {
-      player.attach(to: playerContainer, with: playerContainer.bounds, overView: containerView)
-    }
-  }
-
-  override func endDisplay() {
-    super.endDisplay()
-    guard let containerViewController = containerViewController else { return }
-    let frame = CGRect(x: 20.0, y: 20.0, width: 120.0, height: 120.0 * 9.0 / 16.0)
-    player.detach(to: containerViewController.view, with: frame)
-  }
-
+  
   typealias Data = Void
   static func size(for data: Data, containerSize: CGSize) -> CGSize {
     return CGSize(width: containerSize.width, height: containerSize.width * 9.0 / 16.0)
   }
 }
+

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'Dioptra'
-  s.version = '0.1'
+  s.version = '4.2'
   s.summary = 'Video player RX based library'
 
   s.homepage = 'https://github.com/netcosports/Dioptra'
@@ -14,9 +14,9 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |sub|
     sub.source_files = 'Sources/Core/**/*.swift'
-    sub.dependency 'RxSwift', '~> 4.0'
-    sub.dependency 'RxCocoa', '~> 4.0'
-    sub.dependency 'RxGesture', '~> 1.2'
+    sub.dependency 'RxSwift', '~> 4.2'
+    sub.dependency 'RxCocoa', '~> 4.2'
+    sub.dependency 'RxGesture', '~> 2.0'
   end
 
   s.subspec 'AV' do |sub|
@@ -42,12 +42,12 @@ Pod::Spec.new do |s|
     sub.dependency 'Dioptra/Core'
   end
 
-  #FIXME: need to put this into separated spec
+  #FIXME: need to put this into separated pod
   s.subspec 'Presentation' do |sub|
     sub.source_files = 'Sources/Presentation/*.swift'
-    sub.dependency 'RxSwift', '~> 4.0'
-    sub.dependency 'RxCocoa', '~> 4.0'
-    sub.dependency 'RxGesture', '~> 1.2'
+    sub.dependency 'RxSwift', '~> 4.2'
+    sub.dependency 'RxCocoa', '~> 4.2'
+    sub.dependency 'RxGesture', '~> 2.0'
   end
 
   #s.subspec 'PulsePlugin' do |sub|

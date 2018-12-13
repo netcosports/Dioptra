@@ -38,12 +38,13 @@ open class DMVideoPlaybackView: UIView, PlaybackViewModable {
     }).disposed(by: disposeBag)
 
     viewModel.streamSubject.asDriver(onErrorJustReturn: nil).drive(onNext: { [weak self] stream in
+      guard let `self` = self else { return }
       if let stream = stream {
-        self?.playerViewController.view.isHidden = false
-        self?.playerViewController.load(videoId: stream)
+        self.playerViewController.view.isHidden = false
+        self.playerViewController.load(videoId: stream, params: "{start: \(Int(self.viewModel.expectedStartTime ?? 0.0))}")
       } else {
-        self?.playerViewController.view.isHidden = true
-        self?.playerViewController.pause()
+        self.playerViewController.view.isHidden = true
+        self.playerViewController.pause()
       }
     }).disposed(by: disposeBag)
 

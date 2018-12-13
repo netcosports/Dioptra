@@ -17,22 +17,26 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   public let state = PublishSubject<PlaybackState>()
 
   public var time: Driver<TimeInSeconds> {
-    return currentTimeVariable.asDriver()
+    return currentTimeVariable.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
   }
 
   public var duration: Driver<TimeInSeconds> {
-    return durationVariable.asDriver()
+    return durationVariable.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite && $0 > 0.0 }
   }
 
   public var loadedRange: Driver<LoadedTimeRange> {
-    return Driver.combineLatest(progressVariable.asDriver(), duration).map { [weak self] progress, duration in
-      guard let `self` = self else { return [] }
+    return progressVariable.asDriver(onErrorJustReturn: 0.0).withLatestFrom(duration, resultSelector: { progress, duration in
+      guard progress.isFinite && duration.isFinite else { return [] }
       return [0...duration * progress]
-    }
+    })
   }
 
   public var playerState: Driver<PlayerState> {
     return playerStateRelay.asDriver(onErrorJustReturn: .idle)
+  }
+
+  public var seekCompleated: Driver<Void> {
+    return seekCompletionRelay.asDriver(onErrorJustReturn: ())
   }
 
   fileprivate var startCount: Int = 0
@@ -42,10 +46,20 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   let mutedRelay = BehaviorRelay<Bool>(value: true)
   let openUrlSubject = PublishSubject<URL>()
 
-  fileprivate let currentTimeVariable = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let durationVariable    = BehaviorRelay<TimeInSeconds>(value: 0)
-  fileprivate let progressVariable    = BehaviorRelay<TimeInSeconds>(value: 0.0)
-  fileprivate let playerStateRelay    = BehaviorRelay<PlayerState>(value: .idle)
+  fileprivate let seekCompletionRelay = PublishRelay<Void>()
+  fileprivate let currentTimeVariable = PublishRelay<TimeInSeconds>()
+  fileprivate let durationVariable    = PublishRelay<TimeInSeconds>()
+  fileprivate let progressVariable    = PublishRelay<TimeInSeconds>()
+  fileprivate let playerStateRelay    = PublishRelay<PlayerState>()
+  var expectedStartTime: Double?
+
+  public override init() {
+    super.init()
+    seekCompletionRelay.subscribe(onNext: { [weak self] _ in
+      #warning("FIXME: we need to find correct way to manage completion")
+      self?.seekCompletionRelay.accept(())
+    }).disposed(by: disposeBag)
+  }
 
   public typealias Stream = String
   open var input: Input<Stream> = .cleanup {
@@ -53,6 +67,11 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
     willSet(newInput) {
       switch newInput {
       case .content(let stream):
+        expectedStartTime = nil
+        startCount = 0
+        streamSubject.onNext(stream)
+      case .contentWithStartTime(let stream, let startTime):
+        expectedStartTime = startTime
         startCount = 0
         streamSubject.onNext(stream)
       case .ad:

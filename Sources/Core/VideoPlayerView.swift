@@ -61,10 +61,11 @@ open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModab
 
   open var input: Input<Stream> = .cleanup {
     didSet {
+      guard playbackView.viewModel.input != input else { return }
       playbackView.viewModel.input = input
       switch input {
       case .content:
-        controlsView.viewModel.visibilityChange.accept(VisibilityChangeEvent.soft(visible: true))
+        controlsView.viewModel.visibilityChange.accept(.soft(visible: true))
       default: break
       }
     }

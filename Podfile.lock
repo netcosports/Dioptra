@@ -1,52 +1,46 @@
 PODS:
-  - Astrolabe/Core (3.1.1):
-    - RxCocoa (~> 4.0)
-    - RxSwift (~> 4.0)
-  - Astrolabe/Loaders (3.1.1):
-    - Astrolabe/Core
-    - Gnomon/Core (~> 3.0)
+  - Astrolabe (4.2):
+    - Astrolabe/Core (= 4.2)
+  - Astrolabe/Core (4.2):
+    - RxCocoa (~> 4.2)
+    - RxSwift (~> 4.2)
   - Brightcove-Player-SDK/dynamic (5.3.4)
-  - DailymotionPlayerSDK (3.7.4)
-  - Dioptra/AV (0.1):
+  - DailymotionPlayerSDK (3.7.6)
+  - Dioptra/AV (4.2):
     - Dioptra/Core
-  - Dioptra/BC (0.1):
+  - Dioptra/BC (4.2):
     - Brightcove-Player-SDK/dynamic
     - Dioptra/AV
-  - Dioptra/Core (0.1):
-    - RxCocoa (~> 4.0)
-    - RxGesture (~> 1.2)
-    - RxSwift (~> 4.0)
-  - Dioptra/DM (0.1):
+  - Dioptra/Core (4.2):
+    - RxCocoa (~> 4.2)
+    - RxGesture (~> 2.0)
+    - RxSwift (~> 4.2)
+  - Dioptra/DM (4.2):
     - DailymotionPlayerSDK
     - Dioptra/Core
-  - Dioptra/Presentation (0.1):
-    - RxCocoa (~> 4.0)
-    - RxGesture (~> 1.2)
-    - RxSwift (~> 4.0)
-  - Dioptra/YT (0.1):
+  - Dioptra/Presentation (4.2):
+    - RxCocoa (~> 4.2)
+    - RxGesture (~> 2.0)
+    - RxSwift (~> 4.2)
+  - Dioptra/YT (4.2):
     - Dioptra/Core
     - youtube-ios-player-helper
-  - FormatterKit/Resources (1.8.2)
-  - FormatterKit/URLRequestFormatter (1.8.2):
-    - FormatterKit/Resources
-  - Gnomon/Core (3.1.2):
-    - FormatterKit/URLRequestFormatter (>= 1.8.2)
+  - Nimble (7.3.1)
+  - RxBlocking (4.3.1):
     - RxSwift (~> 4.0)
-  - Nimble (7.1.1)
-  - RxBlocking (4.1.2):
+  - RxCocoa (4.3.1):
     - RxSwift (~> 4.0)
-  - RxCocoa (4.1.2):
+  - RxGesture (2.0.1):
+    - RxCocoa (~> 4.3.1)
+    - RxSwift (~> 4.3.1)
+  - RxSwift (4.3.1)
+  - RxTest (4.3.1):
     - RxSwift (~> 4.0)
-  - RxGesture (1.2.1):
-    - RxCocoa (~> 4.0)
-    - RxSwift (~> 4.0)
-  - RxSwift (4.1.2)
-  - RxTest (4.1.2):
-    - RxSwift (~> 4.0)
+  - SnapKit (4.0.1)
   - youtube-ios-player-helper (0.1.6)
 
 DEPENDENCIES:
-  - Astrolabe/Loaders (from `https://github.com/netcosports/Astrolabe`)
+  - Astrolabe (from `https://github.com/netcosports/Astrolabe`, branch `swift-4.2`)
   - Dioptra/AV (from `.`)
   - Dioptra/BC (from `.`)
   - Dioptra/DM (from `.`)
@@ -55,47 +49,47 @@ DEPENDENCIES:
   - Nimble (~> 7.0)
   - RxBlocking
   - RxTest
+  - SnapKit (~> 4.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Brightcove-Player-SDK
     - DailymotionPlayerSDK
-    - FormatterKit
-    - Gnomon
     - Nimble
     - RxBlocking
     - RxCocoa
     - RxGesture
     - RxSwift
     - RxTest
+    - SnapKit
     - youtube-ios-player-helper
 
 EXTERNAL SOURCES:
   Astrolabe:
+    :branch: swift-4.2
     :git: https://github.com/netcosports/Astrolabe
   Dioptra:
     :path: "."
 
 CHECKOUT OPTIONS:
   Astrolabe:
-    :commit: 36096b406d917d085e0f61671e8dfae7332168c5
+    :commit: be22abb42cbbdff910cac04b732673477f676ac0
     :git: https://github.com/netcosports/Astrolabe
 
 SPEC CHECKSUMS:
-  Astrolabe: 8bc4f77a84065c0d4ebda0bed72b69e9f5a7f2bd
+  Astrolabe: 4fb6ad0001b8b3395de4af2c1c0d0dd855a25dad
   Brightcove-Player-SDK: 797417ba9ca513d079df6844515a05498e3639d8
-  DailymotionPlayerSDK: afd14da75f14625c0b37dcb6c6db514a73075002
-  Dioptra: f7714e4448e4030da6029650e08ea8620f4f9ffd
-  FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
-  Gnomon: e82d177b4a806e846c3a862738886046ec106ffb
-  Nimble: 391f07782af4b37914f9bd7b2ffbb952731b8202
-  RxBlocking: f6054985901412fc8c02daa84e92d4ba68c61389
-  RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
-  RxGesture: c278eb05b187abd47e11e65464ae4de53ab71d95
-  RxSwift: e49536837d9901277638493ea537394d4b55f570
-  RxTest: e634f15fd2c2cd0e0120132ef7a4f7be69ad0393
+  DailymotionPlayerSDK: 2d1033cbc4d4b517b4f728c0ffa48e4fb50d0b85
+  Dioptra: bb0077f60026822edd8c8ad38230eddb262d5ed0
+  Nimble: 04f732da099ea4d153122aec8c2a88fd0c7219ae
+  RxBlocking: 64c051285261ca2339481e91b5f70eb06b03660a
+  RxCocoa: 78763c7b07d02455598d9fc3c1ad091a28b73635
+  RxGesture: 26ede4ed13ffc6336d29dbd9a8dff229bdb72de7
+  RxSwift: fe0fd770a43acdb7d0a53da411c9b892e69bb6e4
+  RxTest: ea97a208826906f3904c0debdd09575ebcbfe216
+  SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: f2dbea5147e7f6407a864bfd5c8a342d91cf8ac9
+PODFILE CHECKSUM: ffa30f8b938c68e458a8b81270c2170d8dcd60fa
 
 COCOAPODS: 1.5.3

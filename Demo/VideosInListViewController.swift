@@ -18,9 +18,20 @@ class VideosInListViewController: UIViewController, Accessor, Transitionable {
   var dismissSubscribed = false
   var disposeBag = DisposeBag()
 
+  var sections: [Sectionable] {
+    get {
+      return source.sections
+    }
+
+    set {
+      source.sections = newValue
+    }
+  }
+
   let containerView = CollectionView<CollectionViewSource>()
 
   typealias Video = CollectionCell<VideoCell>
+  typealias ConstraintsVideo = CollectionCell<ConstraintsVideoCell>
   typealias Placeholder = CollectionCell<PlaceholderCell>
 
   override func viewDidLoad() {
@@ -29,6 +40,7 @@ class VideosInListViewController: UIViewController, Accessor, Transitionable {
     source.hostViewController = self
     let cells: [Cellable] = [
       Video(data: ()),
+      //ConstraintsVideo(data: ()),
       Placeholder(data: ()),
       Placeholder(data: ()),
       Placeholder(data: ()),

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		228C109A6F49C9AEC783B125 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */; };
 		678299E8789D7DCEB4E26327 /* Pods_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40FA1278A9862C2FC74BBB93 /* Pods_iOSTests.framework */; };
+		8B45027D2174CC5A00CA3252 /* ConstraintsVideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B45027C2174CC5A00CA3252 /* ConstraintsVideoCell.swift */; };
 		AA2F346B212C14C50093212D /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2F346A212C14C50093212D /* VideoCell.swift */; };
 		AA2F346D212C187E0093212D /* PlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2F346C212C187E0093212D /* PlaceholderCell.swift */; };
 		AA2F346F212C18FF0093212D /* VideosInListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2F346E212C18FF0093212D /* VideosInListViewController.swift */; };
@@ -16,6 +17,7 @@
 		AA53982D20BEDCC2003329FB /* TestControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982C20BEDCC2003329FB /* TestControls.swift */; };
 		AA53982F20BEDD10003329FB /* TestPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53982E20BEDD10003329FB /* TestPlayback.swift */; };
 		AA73664C20F396F300451721 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA73664B20F396F300451721 /* DetailsViewController.swift */; };
+		AA88A2B3217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA88A2B2217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift */; };
 		AA925F5520B59F09002523D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA925F4D20B59F09002523D4 /* Assets.xcassets */; };
 		AA925F5620B59F09002523D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA925F4E20B59F09002523D4 /* LaunchScreen.storyboard */; };
 		AA925F5720B59F09002523D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA925F5020B59F09002523D4 /* Main.storyboard */; };
@@ -40,6 +42,7 @@
 		65BAB17923FD367D4C316C67 /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E08A3FBF55A20320043B01E /* Pods-Dioptra.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dioptra.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dioptra/Pods-Dioptra.debug.xcconfig"; sourceTree = "<group>"; };
 		762B345634DBE50325A567A5 /* Pods-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOSTests/Pods-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		8B45027C2174CC5A00CA3252 /* ConstraintsVideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintsVideoCell.swift; sourceTree = "<group>"; };
 		A2FE1BBC1D66C4F1C2A18891 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA2F346A212C14C50093212D /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		AA2F346C212C187E0093212D /* PlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderCell.swift; sourceTree = "<group>"; };
@@ -51,6 +54,7 @@
 		AA53982E20BEDD10003329FB /* TestPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPlayback.swift; sourceTree = "<group>"; };
 		AA7188E5207375FE002597F5 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA73664B20F396F300451721 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		AA88A2B2217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerControlsViewModelSpec.swift; sourceTree = "<group>"; };
 		AA925F4D20B59F09002523D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA925F4F20B59F09002523D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA925F5120B59F09002523D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -115,6 +119,7 @@
 				AA52598F20B835660089ECD2 /* Info.plist */,
 				AA53982A20BEDC77003329FB /* AVPlaybackSpec.swift */,
 				AA52598E20B835660089ECD2 /* VideoPlayerViewModelSpec.swift */,
+				AA88A2B2217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift */,
 				AA53982C20BEDCC2003329FB /* TestControls.swift */,
 				AA53982E20BEDD10003329FB /* TestPlayback.swift */,
 			);
@@ -153,6 +158,7 @@
 				AA2F346A212C14C50093212D /* VideoCell.swift */,
 				AA2F346C212C187E0093212D /* PlaceholderCell.swift */,
 				AA2F346E212C18FF0093212D /* VideosInListViewController.swift */,
+				8B45027C2174CC5A00CA3252 /* ConstraintsVideoCell.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -217,6 +223,7 @@
 					AAF311D720A7458600825F8E = {
 						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
+						TestTargetID = AA7188E4207375FE002597F5;
 					};
 				};
 			};
@@ -325,11 +332,10 @@
 				"${PODS_ROOT}/Brightcove-Player-SDK/ios/dynamic/BrightcovePlayerSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/DailymotionPlayerSDK/DailymotionPlayerSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/Dioptra-AV-BC-Core-DM-Presentation-YT/Dioptra.framework",
-				"${BUILT_PRODUCTS_DIR}/FormatterKit/FormatterKit.framework",
-				"${BUILT_PRODUCTS_DIR}/Gnomon/Gnomon.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxGesture/RxGesture.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/youtube-ios-player-helper/youtube_ios_player_helper.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -338,11 +344,10 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DailymotionPlayerSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Dioptra.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FormatterKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gnomon.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGesture.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/youtube_ios_player_helper.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,6 +394,7 @@
 			files = (
 				AA2F346F212C18FF0093212D /* VideosInListViewController.swift in Sources */,
 				AA925F5820B59F09002523D4 /* AppDelegate.swift in Sources */,
+				8B45027D2174CC5A00CA3252 /* ConstraintsVideoCell.swift in Sources */,
 				AA2F346B212C14C50093212D /* VideoCell.swift in Sources */,
 				AA73664C20F396F300451721 /* DetailsViewController.swift in Sources */,
 				AA2F346D212C187E0093212D /* PlaceholderCell.swift in Sources */,
@@ -401,6 +407,7 @@
 			files = (
 				AA53982F20BEDD10003329FB /* TestPlayback.swift in Sources */,
 				AA53982D20BEDCC2003329FB /* TestControls.swift in Sources */,
+				AA88A2B3217905180016DB2E /* VideoPlayerControlsViewModelSpec.swift in Sources */,
 				AA52599220B835860089ECD2 /* VideoPlayerViewModelSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -556,7 +563,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "6cb3c67c-fd25-4223-89f7-4071c9a28a2f";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.dev.rmcsport";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -575,7 +582,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "6cb3c67c-fd25-4223-89f7-4071c9a28a2f";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.dev.rmcsport";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -585,6 +592,7 @@
 			baseConfigurationReference = 762B345634DBE50325A567A5 /* Pods-iOSTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -595,8 +603,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dev.dioptra.DioptraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
 			};
 			name = Debug;
 		};
@@ -605,6 +614,7 @@
 			baseConfigurationReference = EE9EA8D1CB5C7F9A92761B87 /* Pods-iOSTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -615,8 +625,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dev.dioptra.DioptraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
 			};
 			name = Release;
 		};

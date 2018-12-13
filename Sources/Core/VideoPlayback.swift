@@ -51,10 +51,21 @@ public enum AdState {
 // - Embeded AD in playback(DM and youtube for example)
 // - Internal playback AD (setup different inputs)
 // - Overlay playback AD
-public enum Input<T> {
+public enum Input<T> where T: Equatable {
   case ad(stream: T)
   case content(stream: T)
+  case contentWithStartTime(stream: T, startTime: TimeInterval)
   case cleanup
+}
+
+extension Input: Equatable {
+
+  public static func == (lhs: Input<T>, rhs: Input<T>) -> Bool {
+    if case let .content(lhsStream) = lhs, case let .content(rhsStream) = rhs {
+      return lhsStream == rhsStream
+    }
+    return false
+  }
 }
 
 public enum PlayerState: Equatable {
@@ -77,6 +88,7 @@ public enum PlayerState: Equatable {
       case (.loading, .loading): return true
       case (.stuck, .stuck): return true
       case (.error, .error): return true
+      case (.finished, .finished): return true
     default: return false
     }
   }
@@ -100,6 +112,7 @@ public protocol VideoPlayback: class {
   var duration: Driver<TimeInSeconds> { get }
   var loadedRange: Driver<LoadedTimeRange> { get }
   var playerState: Driver<PlayerState> { get }
+  var seekCompleated: Driver<Void> { get }
 }
 
 extension VideoPlayback {

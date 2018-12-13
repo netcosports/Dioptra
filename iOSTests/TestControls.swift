@@ -12,11 +12,13 @@ import RxCocoa
 
 class TestControls: VideoControls {
 
+  var seekCompleted = PublishSubject<Void>()
+  var fullscreen = PublishSubject<Void>()
   let seekRelay = PublishRelay<SeekEvent>()
   let screenMode = BehaviorRelay<ScreenMode>(value: .compact)
   let playRelay = PublishRelay<PlaybackState>()
 
-  var visibilityChange = BehaviorRelay<VisibilityChangeEvent>(value: VisibilityChangeEvent.soft(visible: true))
+  var visibilityChange = BehaviorRelay<VisibilityChangeEvent>(value: .soft(visible: true))
   var progress = PublishSubject<Dioptra.Progress>()
   var buffer = PublishSubject<Float>()
   var state = PublishSubject<PlayerState>()

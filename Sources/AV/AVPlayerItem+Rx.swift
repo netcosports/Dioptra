@@ -12,8 +12,8 @@ import RxSwift
 import RxCocoa
 
 extension Reactive where Base: AVPlayerItem {
-    public var status: Observable<AVPlayerItemStatus> {
-        return self.observe(AVPlayerItemStatus.self, #keyPath(AVPlayerItem.status))
+  public var status: Observable<AVPlayerItem.Status> {
+    return self.observe(AVPlayerItem.Status.self, #keyPath(AVPlayerItem.status))
             .map { $0 ?? .unknown }
     }
     
@@ -25,6 +25,13 @@ extension Reactive where Base: AVPlayerItem {
         return self.observe(CMTime.self, #keyPath(AVPlayerItem.duration))
             .map { $0 ?? .zero }
     }
+
+  public var seekableRange: Observable<[CMTimeRange]> {
+    return self.observe([NSValue].self, #keyPath(AVPlayerItem.seekableTimeRanges))
+      .map { ranges in
+        return (ranges ?? []).map { $0.timeRangeValue }
+      }
+  }
     
     public var playbackLikelyToKeepUp: Observable<Bool> {
         return self.observe(Bool.self, #keyPath(AVPlayerItem.isPlaybackLikelyToKeepUp))

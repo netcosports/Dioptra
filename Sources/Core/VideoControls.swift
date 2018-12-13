@@ -16,27 +16,49 @@ public enum ScreenMode {
   case minimized
 }
 
-public enum SeekEvent {
-  case started(progress: Float)
-  case value(progress: Float)
-  case finished(progress: Float)
+public enum SeekEvent: Equatable {
+  case started(progress: Double)
+  case value(progress: Double)
+  case finished(progress: Double)
 
-  var progress: Float {
+  public var progress: Double {
     switch self {
     case .started(let progress), .finished(let progress), .value(let progress):
       return progress
     }
   }
+
+  public static func == (lhs: SeekEvent, rhs: SeekEvent) -> Bool {
+    switch (lhs, rhs) {
+    case (.started(let lprogress), .started(let rprogress)):
+      return lprogress == rprogress
+    case (.value(let lprogress), .value(let rprogress)):
+      return lprogress == rprogress
+    case (.finished(let lprogress), .finished(let rprogress)):
+      return lprogress == rprogress
+    default: return false
+    }
+  }
 }
 
-public enum Visibility {
+public enum Visibility: Equatable {
   case force(visible: Bool)
   case soft(visible: Bool)
 
-  var visible: Bool {
+  public var visible: Bool {
     switch self {
     case .force(let visible), .soft(let visible):
       return visible
+    }
+  }
+
+  public static func == (lhs: Visibility, rhs: Visibility) -> Bool {
+    switch (lhs, rhs) {
+    case (.force(let lVisible), .force(let rVisible)):
+      return lVisible == rVisible
+    case (.soft(let lVisible), .soft(let rVisible)):
+      return lVisible == rVisible
+    default: return false
     }
   }
 }
@@ -55,6 +77,7 @@ public protocol VideoControls: class {
   var screenMode: BehaviorRelay<ScreenMode> { get }
 
   // RX inputs
+  var seekCompleted: PublishSubject<Void> { get }
   var buffer: PublishSubject<Float> { get }
   var progress: PublishSubject<Progress> { get }
   var state: PublishSubject<PlayerState> { get }
