@@ -163,13 +163,13 @@ extension Transitionable where Self: UIViewController {
     return transition
   }
 
-  public func present(modal viewController: UIViewController, method: TransitionMethod) {
-    customTransitionMethod = method
+  public func present(modal viewController: UIViewController, method: TransitionableMethod, completion: (()->Void)? = nil) {
+    currentTransition = method.transition
     viewController.transitioningDelegate = self
     if let navigationController = navigationController {
-      navigationController.present(viewController, animated: true)
+      navigationController.present(viewController, animated: true, completion: completion)
     } else {
-      present(viewController, animated: true)
+      present(viewController, animated: true, completion: completion)
     }
   }
 
