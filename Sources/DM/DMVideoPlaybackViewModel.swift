@@ -15,6 +15,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
 
   public let seek = PublishSubject<TimeInSeconds>()
   public let state = PublishSubject<PlaybackState>()
+  fileprivate var playing = true
 
   public var time: Driver<TimeInSeconds> {
     return currentTimeRelay.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
@@ -60,9 +61,11 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
       case .content(let stream):
         expectedStartTime = nil
         streamSubject.onNext(stream)
+        playerStateRelay.accept(.loading)
       case .contentWithStartTime(let stream, let startTime):
         expectedStartTime = startTime
         streamSubject.onNext(stream)
+        playerStateRelay.accept(.loading)
       case .ad:
         assertionFailure("External Ad is not supported by DM")
       default:
@@ -80,7 +83,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
       mutedRelay.accept(muted)
     }
   }
-  
+
   init() {
     seek.bind(to: currentTimeRelay).disposed(by: disposeBag)
   }
@@ -100,7 +103,6 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
   public func player(_ player: DMPlayerViewController, didReceiveEvent event: PlayerEvent) {
     switch event {
     case let .timeEvent(name, time):
-      print(name)
       switch name {
       case "durationchange":
         durationRelay.accept(time)
@@ -110,17 +112,19 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
         progressRelay.accept(time)
       case "seeked":
         seekCompleatedRelay.accept(())
+        playerStateRelay.accept(.active(state: playing ? .playing : .paused))
       default: break
       }
     case let .namedEvent(name, _):
-      print(name)
       switch name {
       case "playback_ready":
         playerStateRelay.accept(.ready)
       case "playing":
         playerStateRelay.accept(.active(state: .playing))
+        playing = true
       case "pause":
         playerStateRelay.accept(.active(state: .paused))
+        playing = false
       case "video_end":
         playerStateRelay.accept(.finished)
       case "ad_start":
