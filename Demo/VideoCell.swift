@@ -43,13 +43,7 @@ class VideoCell: CollectionViewCell, Reusable {
     contentView.addSubview(playerContainer)
     playerContainer.addSubview(player)
 
-//    player.playbackView.viewModel.accountID = "4800266849001"
-//    player.playbackView.viewModel.servicePolicyKey = "BCpkADawqM3n0ImwKortQqSZCgJMcyVbb8lJVwt0z16UD0a_h8MpEYcHyKbM8CGOPxBRp0nfSVdfokXBrUu3Sso7Nujv3dnLo0JxC_lNXCl88O7NJ0PR0z2AprnJ_Lwnq7nTcy1GBUrQPr5e"
-//    player.playbackView.viewModel.input = .contentWithStartTime(stream: "5754208017001", startTime: 66.0)
-
-//    player.playbackView.viewModel.input = .content(stream: "x6k8h19")
     player.playbackView.viewModel.input = .contentWithStartTime(stream: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8", startTime: 66.0)
-//  player.playbackView.viewModel.input = .contentWithStartTime(stream: "F1B9Fk_SgI0", startTime: 20.0)
 
     player.playbackView.viewModel.muted = true
     player.controlsView.fullscreenButton.backgroundColor = UIColor.magenta
