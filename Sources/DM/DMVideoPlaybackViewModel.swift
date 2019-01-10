@@ -15,6 +15,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
 
   public let seek = PublishSubject<TimeInSeconds>()
   public let state = PublishSubject<PlaybackState>()
+  fileprivate var playing = true
 
   public var time: Driver<TimeInSeconds> {
     return currentTimeRelay.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
@@ -60,9 +61,11 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
       case .content(let stream):
         expectedStartTime = nil
         streamSubject.onNext(stream)
+        playerStateRelay.accept(.loading)
       case .contentWithStartTime(let stream, let startTime):
         expectedStartTime = startTime
         streamSubject.onNext(stream)
+        playerStateRelay.accept(.loading)
       case .ad:
         assertionFailure("External Ad is not supported by DM")
       default:
@@ -80,7 +83,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
       mutedRelay.accept(muted)
     }
   }
-  
+
   init() {
     seek.bind(to: currentTimeRelay).disposed(by: disposeBag)
   }
@@ -109,22 +112,29 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
         progressRelay.accept(time)
       case "seeked":
         seekCompleatedRelay.accept(())
+        playerStateRelay.accept(.active(state: playing ? .playing : .paused))
       default: break
       }
     case let .namedEvent(name, _):
       switch name {
-      case "play":
-        playerStateRelay.accept(PlayerState.active(state: PlaybackState.playing))
+      case "playback_ready":
+        playerStateRelay.accept(.ready)
+      case "playing":
+        playerStateRelay.accept(.active(state: .playing))
+        playing = true
       case "pause":
-        playerStateRelay.accept(PlayerState.active(state: PlaybackState.paused))
+        playerStateRelay.accept(.active(state: .paused))
+        playing = false
       case "video_end":
-        playerStateRelay.accept(PlayerState.finished)
+        playerStateRelay.accept(.finished)
       case "ad_start":
         playerStateRelay.accept(.ad(state: .started))
       case "ad_end":
         playerStateRelay.accept(.ad(state: .finished))
       case "error":
         playerStateRelay.accept(.error(error: nil))
+      case "waiting":
+        playerStateRelay.accept(.loading)
       default: break
       }
     }

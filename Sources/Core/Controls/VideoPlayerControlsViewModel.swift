@@ -27,6 +27,7 @@ open class VideoPlayerControlsViewModel: VideoControls {
   fileprivate let disposeBag = DisposeBag()
   fileprivate var currentTimeRelay: PublishRelay<String>?
   fileprivate var durationRelay: PublishRelay<String>?
+  fileprivate var stateBeforeSeek = PlayerState.idle
 
   public var settings: Settings
   public var seekCompleted = PublishSubject<Void>()
@@ -112,10 +113,24 @@ extension VideoPlayerControlsViewModel {
       }
     }).disposed(by: disposeBag)
 
-    seekSubject.asObservable().flatMap { seekEvent -> Observable<PlaybackState> in
-      switch seekEvent {
-      case .started: return .just(PlaybackState.paused)
-      case .finished: return .just(PlaybackState.playing)
+    seekSubject.asObservable()
+    .withLatestFrom(state.asObservable(), resultSelector: { ($0, $1) })
+    .flatMap { [weak self] seekAndState -> Observable<PlaybackState> in
+      guard let self = self else { return .empty() }
+      switch seekAndState.0 {
+      case .started:
+        self.stateBeforeSeek = seekAndState.1
+        return .just(PlaybackState.paused)
+      case .finished:
+        switch self.stateBeforeSeek {
+        case .active(let state):
+          switch state {
+          case .playing:
+            return .just(PlaybackState.playing)
+          default: return .empty()
+          }
+          default: return .empty()
+        }
       default: return .empty()
       }
     }.bind(to: stateSubject).disposed(by: disposeBag)
@@ -172,16 +187,5 @@ extension VideoPlayerControlsViewModel {
       self.currentVisibility = visibility
       self.visibleRelay.accept(controlsVisible)
     }).disposed(by: disposeBag)
-  }
-
-  public static func secondsText(with time: TimeInSeconds) -> String {
-    let hours = Int(time / 3600)
-    let minutes = Int((time.truncatingRemainder(dividingBy: 3600)) / 60)
-    let seconds = Int(time.truncatingRemainder(dividingBy: 60))
-    var result = ""
-    if hours > 0 {
-      result += "\(String(format: "%02d", hours)):"
-    }
-    return result + "\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))"
   }
 }

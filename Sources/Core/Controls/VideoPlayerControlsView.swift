@@ -141,7 +141,7 @@ open class VideoPlayerControlsView: UIView, ControlsViewModable {
     viewModel.duration.drive(endTimeLabel.rx.text).disposed(by: disposeBag)
     viewModel.buffer.bind(to: slider.rx.buffer).disposed(by: disposeBag)
     viewModel.bufferedValue.drive(slider.rx.bufferedValue).disposed(by: disposeBag)
-    self.rx.tapGesture().when(.recognized).map { _ -> VisibilityChangeEvent in return .softToggle }
+    self.rx.tapGesture().when(.recognized).map { _ in VisibilityChangeEvent.softToggle }
       .bind(to: viewModel.visibilityChange).disposed(by: disposeBag)
 
     viewModel.state.map {

@@ -151,17 +151,17 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     player.rx.rate.withLatestFrom(itemRelay.asObservable(), resultSelector: { rate, item in
       return (rate, item)
     })
-      .filter { [weak self] rate, item in
-        guard let item = item else { return false }
-        return item.duration.seconds != item.currentTime().seconds
-      }
-      .map { $0.0 }
-      .distinctUntilChanged()
-      .map {
-        return $0 != 0 ? PlayerState.active(state: .playing) : PlayerState.active(state: .paused)
-      }
-      .bind(to: stateRelay)
-      .disposed(by: disposeBag)
+    .filter { [weak self] rate, item in
+      guard let item = item else { return false }
+      return item.duration.seconds != item.currentTime().seconds
+    }
+    .map { $0.0 }
+    .distinctUntilChanged()
+    .map {
+      return $0 != 0 ? PlayerState.active(state: .playing) : PlayerState.active(state: .paused)
+    }
+    .bind(to: stateRelay)
+    .disposed(by: disposeBag)
 
     itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<Bool> in
         if let item = item {
@@ -171,8 +171,8 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
         } else {
           return .empty()
         }
-      }.map {
-        return $0 ? PlayerState.active(state: .playing) : PlayerState.stuck
+      }.map { [weak player] in
+        return $0 ? PlayerState.active(state: player?.rate == 1.0 ? .playing : .paused) : PlayerState.stuck
       }
       .asObservable().bind(to: stateRelay)
       .disposed(by: disposeBag)
