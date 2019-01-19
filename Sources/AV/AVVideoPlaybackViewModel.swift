@@ -247,8 +247,9 @@ extension AVVideoPlaybackManagableViewModel {
       let duration = timeRange.end
       let progress = seconds / CMTimeGetSeconds(duration)
       let time = CMTime(value: CMTimeValue(Double(duration.value) * progress), timescale: duration.timescale)
+      let tolerance = CMTime(seconds: 0.5, preferredTimescale: 1)
       player?.currentItem?.cancelPendingSeeks()
-      player?.currentItem?.seek(to: time, completionHandler: { [weak self] finished in
+      player?.currentItem?.seek(to: time, toleranceBefore: tolerance, toleranceAfter: tolerance, completionHandler: { [weak self] finished in
         if finished {
           self?.seekCompleatedRelay.accept(())
         }
