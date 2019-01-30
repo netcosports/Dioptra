@@ -33,18 +33,6 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
   }
 }
 
-extension VideoQuality {
-
-  var preferredPeakBitRate: Double {
-    switch self {
-    case .auto:
-      return 0.0
-    case .stream(let bandwidth, _, _, _):
-      return bandwidth + 1.0
-    }
-  }
-}
-
 open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
 
   fileprivate let seekCompleatedRelay = PublishRelay<Void>()

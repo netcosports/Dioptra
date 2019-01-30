@@ -98,6 +98,15 @@ public enum VideoQuality {
   case auto
   case stream(bandwidth: Double, resolution: CGSize, url: String, description: String)
 
+  public var preferredPeakBitRate: Double {
+    switch self {
+    case .auto:
+      return 0.0
+    case .stream(let bandwidth, _, _, _):
+      return bandwidth + 1.0
+    }
+  }
+
   public func closest(in list: [VideoQuality]) -> VideoQuality {
     switch self {
     case .auto: return .auto
