@@ -94,6 +94,22 @@ public enum PlayerState: Equatable {
   }
 }
 
+public enum VideoQuality {
+  case auto
+  case stream(bandwidth: Double, resolution: CGSize, url: String, description: String)
+
+  public func closest(in list: [VideoQuality]) -> VideoQuality {
+    switch self {
+    case .auto: return .auto
+    case .stream(let bandwidth, _, _, _):
+      if let quality = list.first(where: { abs($0.preferredPeakBitRate - bandwidth) < 100.0 }) {
+        return quality
+      }
+    }
+    return .auto
+  }
+}
+
 public protocol VideoPlayback: class {
 
   // input:
@@ -102,6 +118,8 @@ public protocol VideoPlayback: class {
 
   // params:
   var muted: Bool { get set }
+  var quality: VideoQuality { get set }
+  var speed: Double { set get }
 
   // RX input:
   var seek: PublishSubject<TimeInSeconds> { get }
@@ -113,6 +131,7 @@ public protocol VideoPlayback: class {
   var loadedRange: Driver<LoadedTimeRange> { get }
   var playerState: Driver<PlayerState> { get }
   var seekCompleated: Driver<Void> { get }
+  var availableQualities: Driver<[VideoQuality]> { get }
 }
 
 extension VideoPlayback {

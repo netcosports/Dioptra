@@ -15,6 +15,8 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
 
   public let seek = PublishSubject<TimeInSeconds>()
   public let state = PublishSubject<PlaybackState>()
+  public var quality: VideoQuality = .auto
+  public var speed: Double = 1.0
 
   public var time: Driver<TimeInSeconds> {
     return currentTimeVariable.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
@@ -51,6 +53,8 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   fileprivate let durationVariable    = PublishRelay<TimeInSeconds>()
   fileprivate let progressVariable    = PublishRelay<TimeInSeconds>()
   fileprivate let playerStateRelay    = PublishRelay<PlayerState>()
+  fileprivate let availableQualitiesRelay = PublishRelay<[VideoQuality]>()
+
   var expectedStartTime: Double?
 
   public override init() {
@@ -80,6 +84,10 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
         streamSubject.onNext(nil)
       }
     }
+  }
+
+  public var availableQualities: Driver<[VideoQuality]> {
+    return availableQualitiesRelay.asDriver(onErrorJustReturn: [])
   }
 
   open var muted: Bool {

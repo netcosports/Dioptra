@@ -52,6 +52,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   fileprivate let durationRelay    = PublishRelay<TimeInSeconds>()
   fileprivate let progressRelay    = PublishRelay<TimeInSeconds>()
   fileprivate let playerStateRelay    = PublishRelay<PlayerState>()
+  fileprivate let availableQualitiesRelay = PublishRelay<[VideoQuality]>()
 
   public typealias Stream = String
   open var input: Input<Stream> = .cleanup {
@@ -84,8 +85,15 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     }
   }
 
+  public var quality = VideoQuality.auto
+  public var speed: Double = 1.0
+
   init() {
     seek.bind(to: currentTimeRelay).disposed(by: disposeBag)
+  }
+
+  public var availableQualities: Driver<[VideoQuality]> {
+    return availableQualitiesRelay.asDriver(onErrorJustReturn: [])
   }
 }
 

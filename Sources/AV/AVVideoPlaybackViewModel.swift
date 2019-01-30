@@ -18,6 +18,7 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
   }
 
   override func startPlayback(with stream: String) {
+    super.startPlayback(with: stream)
     let item: AVPlayerItem
     if stream.hasPrefix("http") {
       guard let url = URL(string: stream) else { return }
@@ -32,6 +33,18 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
   }
 }
 
+extension VideoQuality {
+
+  var preferredPeakBitRate: Double {
+    switch self {
+    case .auto:
+      return 0.0
+    case .stream(let bandwidth, _, _, _):
+      return bandwidth + 1.0
+    }
+  }
+}
+
 open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
 
   fileprivate let seekCompleatedRelay = PublishRelay<Void>()
@@ -39,9 +52,9 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   fileprivate var disposeBag: DisposeBag?
   fileprivate let itemRelay             = PublishRelay<AVPlayerItem?>()
   fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
+  fileprivate let availableQualitiesRelay = BehaviorSubject<[VideoQuality]>(value: [.auto])
   let stateRelay                        = PublishRelay<PlayerState>()
   var expectedStartTime: Double?
-
 
   var player: AVPlayer?
 
@@ -71,9 +84,30 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       player?.currentItem?.audioMix = nil
     }
   }
-
+  public var quality = VideoQuality.auto {
+    didSet {
+      if #available(iOS 10.0, *) {
+        switch quality {
+        case .auto:
+          player?.currentItem?.preferredForwardBufferDuration = 0.0
+        case .stream:
+          player?.currentItem?.preferredForwardBufferDuration = 1.0
+        }
+      }
+      player?.currentItem?.preferredPeakBitRate = quality.preferredPeakBitRate
+    }
+  }
+  public var speed = 1.0 {
+    didSet {
+      player?.rate = Float(speed)
+    }
+  }
   public let seek = PublishSubject<TimeInSeconds>()
   public var state = PublishSubject<PlaybackState>()
+  public var availableQualities: Driver<[VideoQuality]> {
+    return availableQualitiesRelay.asDriver(onErrorJustReturn: [])
+  }
+
   public var time: Driver<TimeInSeconds> {
     return currentTimeRelay.asDriver(onErrorJustReturn: 0.0)
   }
@@ -157,9 +191,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     }
     .map { $0.0 }
     .distinctUntilChanged()
-    .map {
-      return $0 != 0 ? PlayerState.active(state: .playing) : PlayerState.active(state: .paused)
-    }
+    .map { $0 == 0.0 ? PlayerState.active(state: .paused) : PlayerState.active(state: .playing) }
     .bind(to: stateRelay)
     .disposed(by: disposeBag)
 
@@ -172,7 +204,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
           return .empty()
         }
       }.map { [weak player] in
-        return $0 ? PlayerState.active(state: player?.rate == 1.0 ? .playing : .paused) : PlayerState.stuck
+        return $0 ? PlayerState.active(state: player?.rate == 0.0 ? .paused : .playing ) : PlayerState.stuck
       }
       .asObservable().bind(to: stateRelay)
       .disposed(by: disposeBag)
@@ -217,7 +249,37 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     self.disposeBag = disposeBag
   }
 
-  func startPlayback(with stream: String) { }
+  func startPlayback(with stream: String) {
+    DispatchQueue.global(qos: .background).async { [weak self] in
+      let builder = ManifestBuilder()
+      if let url = URL(string: stream) {
+        let manifest = builder.parse(url)
+        let qualities = manifest.playlists.compactMap { submanifest -> VideoQuality? in
+          guard let path = submanifest.path else { return nil }
+          let urlString: String
+          if path.starts(with: "http") || path.starts(with: "file") {
+            urlString = path
+          } else {
+            urlString = url.URLByReplacingLastPathComponent(path)?.absoluteString ?? path
+          }
+          let description: String
+          if submanifest.height > 0 {
+            description = "\(submanifest.height)p"
+          } else {
+            description = "\(Int(submanifest.bandwidth/1000.0)) kbps"
+          }
+          return VideoQuality.stream(bandwidth: submanifest.bandwidth,
+                                     resolution: CGSize( width: submanifest.width, height: submanifest.height),
+                                     url: urlString, description: description)
+        }
+        guard let self = self else { return }
+        let availableQualities = [.auto] + qualities
+        let closestQuality = self.quality.closest(in: availableQualities)
+        self.quality = closestQuality
+        self.availableQualitiesRelay.onNext(availableQualities)
+      }
+    }
+  }
 }
 
 

@@ -30,6 +30,7 @@ open class BCVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel, BCOVPlay
   }
 
   override func startPlayback(with stream: String) {
+    super.startPlayback(with: stream)
     guard let service = BCOVPlaybackService(accountId: accountID, policyKey: servicePolicyKey) else {
       return
     }
