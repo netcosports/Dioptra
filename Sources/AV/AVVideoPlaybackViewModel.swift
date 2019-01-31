@@ -87,7 +87,9 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   }
   public var speed = 1.0 {
     didSet {
-      player?.rate = Float(speed)
+      if player?.rate != 0.0 {
+        player?.rate = Float(speed)
+      }
     }
   }
   public let seek = PublishSubject<TimeInSeconds>()
@@ -281,11 +283,11 @@ extension AVVideoPlaybackManagableViewModel {
 extension AVVideoPlaybackManagableViewModel {
 
   fileprivate func play() {
-    player?.play()
+    player?.rate = Float(speed)
   }
 
   fileprivate func pause() {
-    player?.pause()
+    player?.rate = 0.0
   }
 
   fileprivate func stop() {
