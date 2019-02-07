@@ -85,6 +85,10 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     }
   }
 
+  public var speedUpdated: Driver<Double> {
+    return .empty()
+  }
+
   public var quality = VideoQuality.auto
   public var speed: Double = 1.0
 

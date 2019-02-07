@@ -40,6 +40,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   fileprivate var disposeBag: DisposeBag?
   fileprivate let itemRelay             = PublishRelay<AVPlayerItem?>()
   fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
+  fileprivate let speedRelay            = PublishRelay<Double>()
   fileprivate let availableQualitiesRelay = BehaviorSubject<[VideoQuality]>(value: [.auto])
   let stateRelay                        = PublishRelay<PlayerState>()
   var expectedStartTime: Double?
@@ -96,6 +97,10 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   public var state = PublishSubject<PlaybackState>()
   public var availableQualities: Driver<[VideoQuality]> {
     return availableQualitiesRelay.asDriver(onErrorJustReturn: [])
+  }
+
+  public var speedUpdated: Driver<Double> {
+    return speedRelay.asDriver(onErrorJustReturn: 0.0)
   }
 
   public var time: Driver<TimeInSeconds> {
@@ -185,6 +190,8 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     .bind(to: stateRelay)
     .disposed(by: disposeBag)
 
+    player.rx.rate.map { Double($0) }.bind(to: speedRelay).disposed(by: disposeBag)
+
     itemRelay.asDriver(onErrorJustReturn: nil).filter { $0 != nil }.flatMapLatest { item -> Driver<Bool> in
         if let item = item {
           return item.rx.playbackLikelyToKeepUp
@@ -256,7 +263,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
           if submanifest.height > 0 {
             description = "\(submanifest.height)p"
           } else {
-            description = "\(Int(submanifest.bandwidth/1000.0)) kbps"
+            description = "\(Int(submanifest.bandwidth/1000.0)) Kbps"
           }
           return VideoQuality.stream(bandwidth: submanifest.bandwidth,
                                      resolution: CGSize( width: submanifest.width, height: submanifest.height),

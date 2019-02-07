@@ -86,6 +86,10 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
     }
   }
 
+  public var speedUpdated: Driver<Double> {
+    return .empty()
+  }
+
   public var availableQualities: Driver<[VideoQuality]> {
     return availableQualitiesRelay.asDriver(onErrorJustReturn: [])
   }

@@ -94,7 +94,7 @@ public enum PlayerState: Equatable {
   }
 }
 
-public enum VideoQuality {
+public enum VideoQuality: Equatable {
   case auto
   case stream(bandwidth: Double, resolution: CGSize, url: String, description: String)
 
@@ -140,6 +140,7 @@ public protocol VideoPlayback: class {
   var loadedRange: Driver<LoadedTimeRange> { get }
   var playerState: Driver<PlayerState> { get }
   var seekCompleated: Driver<Void> { get }
+  var speedUpdated: Driver<Double> { get }
   var availableQualities: Driver<[VideoQuality]> { get }
 }
 
