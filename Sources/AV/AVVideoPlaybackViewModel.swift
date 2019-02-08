@@ -29,7 +29,7 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
     }
     bind(to: item)
     player?.replaceCurrentItem(with: item)
-    player?.play()
+    self.play()
   }
 }
 
