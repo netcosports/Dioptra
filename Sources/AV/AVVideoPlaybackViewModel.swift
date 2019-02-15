@@ -157,7 +157,6 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     let disposeBag = DisposeBag()
     player.rx.periodicTimeObserver(interval: AVVideoPlaybackViewModel.interval)
       .map {
-        print("[TEST] time is \($0)")
         return CMTimeGetSeconds($0)
       }
       .filter { $0.isFinite }
