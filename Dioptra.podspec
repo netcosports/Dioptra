@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'Dioptra'
-  s.version = '1.0.7'
+  s.version = '1.0.8'
   s.summary = 'Video player RX based library'
 
   s.homepage = 'https://github.com/netcosports/Dioptra'
