@@ -20,8 +20,9 @@ class URLBufferedReader: BufferedReader {
         let response: AutoreleasingUnsafeMutablePointer<URLResponse?>? = nil
         do {
             let dataVal = try NSURLConnection.sendSynchronousRequest(request1, returning: response)
-            let text = String(data: dataVal, encoding: String.Encoding.utf8)!
-            _stringReader = StringBufferedReader(string: text)
+            if let text = String(data: dataVal, encoding: String.Encoding.utf8) {
+                _stringReader = StringBufferedReader(string: text)
+            }
         } catch {
             print("Failed to make request for content at \(_uri)")
         }

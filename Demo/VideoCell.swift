@@ -43,13 +43,20 @@ class VideoCell: CollectionViewCell, Reusable {
     contentView.addSubview(playerContainer)
     playerContainer.addSubview(player)
 
-    player.playbackView.viewModel.input = .contentWithStartTime(stream: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8", startTime: 66.0)
-
+    player.playbackView.viewModel.input = .content(stream: "http://psg75.c-cast-cdn.tv/8E0071723758EE5CDD1CA0544FE4FF53/8E0071723758EE5CDD1CA0544FE4FF53.mp4")
     player.playbackView.viewModel.muted = true
     player.controlsView.fullscreenButton.backgroundColor = UIColor.magenta
     player.controlsView.errorLabel.text = "Error"
     player.controlsView.viewModel.fullscreen.subscribe(onNext: { [weak self] in
       self?.handleFullscreen()
+    }).disposed(by: disposeBag)
+
+    player.playbackView.viewModel.playerState.asObservable().subscribe(onNext: { [weak self] playerState in
+      switch playerState {
+      case .ready:
+        self?.player.playbackView.viewModel.state.onNext(PlaybackState.playing)
+      default: break
+      }
     }).disposed(by: disposeBag)
 
     NotificationCenter.default.rx.notification(UIDevice.orientationDidChangeNotification, object: nil)

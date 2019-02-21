@@ -37,8 +37,12 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
 
 open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
 
+  public struct Settings {
+    public let retrieveQualities = false
+    public let periodicTimeUpdateInterval = CMTime(seconds: 1.0, preferredTimescale: 2)
+  }
+
   fileprivate let seekCompleatedRelay = PublishRelay<Void>()
-  fileprivate static var interval       = CMTime(seconds: 1.0, preferredTimescale: 1)
   fileprivate var disposeBag: DisposeBag?
   fileprivate let itemRelay             = PublishRelay<AVPlayerItem?>()
   fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
@@ -68,7 +72,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       }
     }
   }
-
+  public var settings = Settings()
   public var muted: Bool = false {
     didSet {
       player?.isMuted = muted
@@ -155,7 +159,13 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     player.isMuted = self.muted
     player.actionAtItemEnd = .none
     let disposeBag = DisposeBag()
-    player.rx.periodicTimeObserver(interval: AVVideoPlaybackViewModel.interval)
+    player.rx.periodicTimeObserver(interval: settings.periodicTimeUpdateInterval)
+      .filter { [weak self] progress in
+        guard let timeRange = self?.player?.currentItem?.seekableTimeRanges.last?.timeRangeValue else {
+          return false
+        }
+        return timeRange.containsTime(progress)
+      }
       .map {
         return CMTimeGetSeconds($0)
       }
@@ -251,6 +261,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   }
 
   func startPlayback(with stream: String) {
+    guard settings.retrieveQualities else { return }
     DispatchQueue.global(qos: .background).async { [weak self] in
       let builder = ManifestBuilder()
       if let url = URL(string: stream) {
@@ -267,7 +278,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
           if submanifest.height > 0 {
             description = "\(submanifest.height)p"
           } else {
-            description = "\(Int(submanifest.bandwidth/1000.0)) Kbps"
+            description = "\(Int(submanifest.bandwidth / 1000.0)) Kbps"
           }
           return VideoQuality.stream(bandwidth: submanifest.bandwidth,
                                      resolution: CGSize( width: submanifest.width, height: submanifest.height),
