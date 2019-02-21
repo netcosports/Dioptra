@@ -38,8 +38,13 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
 open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
 
   public struct Settings {
-    public let retrieveQualities = false
-    public let periodicTimeUpdateInterval = CMTime(seconds: 1.0, preferredTimescale: 2)
+    public init(retrieveQualities: Bool = false, periodicTimeUpdateInterval: CMTime = CMTime(value: 1, timescale: 10)) {
+      self.retrieveQualities = retrieveQualities
+      self.periodicTimeUpdateInterval = periodicTimeUpdateInterval
+    }
+    
+    public let retrieveQualities: Bool
+    public let periodicTimeUpdateInterval: CMTime
   }
 
   fileprivate let seekCompleatedRelay = PublishRelay<Void>()

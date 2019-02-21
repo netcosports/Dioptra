@@ -1,11 +1,11 @@
 PODS:
-  - Astrolabe (4.2):
-    - Astrolabe/Core (= 4.2)
-  - Astrolabe/Core (4.2):
+  - Astrolabe (4.2.0):
+    - Astrolabe/Core (= 4.2.0)
+  - Astrolabe/Core (4.2.0):
     - RxCocoa (~> 4.2)
     - RxSwift (~> 4.2)
   - Brightcove-Player-SDK/dynamic (5.3.4)
-  - DailymotionPlayerSDK (3.7.6)
+  - DailymotionPlayerSDK (3.7.7)
   - Dioptra/AV (1.0.10):
     - Dioptra/Core
   - Dioptra/BC (1.0.10):
@@ -25,18 +25,22 @@ PODS:
   - Dioptra/YT (1.0.10):
     - Dioptra/Core
     - youtube-ios-player-helper
-  - Nimble (7.3.1)
-  - RxBlocking (4.3.1):
+  - Nimble (7.3.4)
+  - RxAtomic (4.4.1)
+  - RxBlocking (4.4.1):
+    - RxAtomic (~> 4.4)
     - RxSwift (~> 4.0)
-  - RxCocoa (4.3.1):
+  - RxCocoa (4.4.1):
     - RxSwift (~> 4.0)
-  - RxGesture (2.0.1):
-    - RxCocoa (~> 4.3.1)
-    - RxSwift (~> 4.3.1)
-  - RxSwift (4.3.1)
-  - RxTest (4.3.1):
+  - RxGesture (2.1.0):
+    - RxCocoa (~> 4.4.0)
+    - RxSwift (~> 4.4.0)
+  - RxSwift (4.4.1):
+    - RxAtomic (~> 4.4)
+  - RxTest (4.4.1):
+    - RxAtomic (~> 4.4)
     - RxSwift (~> 4.0)
-  - SnapKit (4.0.1)
+  - SnapKit (4.2.0)
   - youtube-ios-player-helper (0.1.6)
 
 DEPENDENCIES:
@@ -56,6 +60,7 @@ SPEC REPOS:
     - Brightcove-Player-SDK
     - DailymotionPlayerSDK
     - Nimble
+    - RxAtomic
     - RxBlocking
     - RxCocoa
     - RxGesture
@@ -73,21 +78,22 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Astrolabe:
-    :commit: be22abb42cbbdff910cac04b732673477f676ac0
+    :commit: fe77034ec20116be4012517b3f5b492766b862d4
     :git: https://github.com/netcosports/Astrolabe
 
 SPEC CHECKSUMS:
-  Astrolabe: 4fb6ad0001b8b3395de4af2c1c0d0dd855a25dad
+  Astrolabe: 20fc84f98108a61b621d0c259b8dc2d47ee90693
   Brightcove-Player-SDK: 797417ba9ca513d079df6844515a05498e3639d8
-  DailymotionPlayerSDK: 2d1033cbc4d4b517b4f728c0ffa48e4fb50d0b85
+  DailymotionPlayerSDK: 26ee0fec4bd756bf29eee19d7e61ba972543198c
   Dioptra: 504705ec253cb4ffa08694f16fb6dd3b98c32a5b
-  Nimble: 04f732da099ea4d153122aec8c2a88fd0c7219ae
-  RxBlocking: 64c051285261ca2339481e91b5f70eb06b03660a
-  RxCocoa: 78763c7b07d02455598d9fc3c1ad091a28b73635
-  RxGesture: 26ede4ed13ffc6336d29dbd9a8dff229bdb72de7
-  RxSwift: fe0fd770a43acdb7d0a53da411c9b892e69bb6e4
-  RxTest: ea97a208826906f3904c0debdd09575ebcbfe216
-  SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
+  Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
+  RxAtomic: f8d6adc1ccb87a767811269e4875887bc74dbf19
+  RxBlocking: 5508e90d36ca2304632dc9378ece4e9b5d4bf656
+  RxCocoa: 2f35a76bf8887872e28a1914112395b11b8e0e64
+  RxGesture: 7f6dfb45dbde06e618c24442d38493e3144f2c95
+  RxSwift: 92fcf68dfef21f3e2ab1965363d9e7b3d787597e
+  RxTest: f8e548755ca3c7502dc41c7d3b28802c90115a38
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
 PODFILE CHECKSUM: ffa30f8b938c68e458a8b81270c2170d8dcd60fa
