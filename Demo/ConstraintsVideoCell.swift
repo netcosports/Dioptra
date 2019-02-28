@@ -43,7 +43,7 @@ class ConstraintsVideoCell: CollectionViewCell, Reusable {
       .map { _ in return UIDevice.current.orientation }
       .distinctUntilChanged()
       .filter { [weak self] _ in self?.fullscreenViewController == nil }
-      .filter { $0 != .portraitUpsideDown }
+      .filter { $0.isLandscape || $0.isPortrait }
       .filter({ [weak self] _ -> Bool in
         guard let detailsViewController = self?.landscapeViewController else { return true }
         return !(detailsViewController.isBeingPresented || detailsViewController.isBeingDismissed)
