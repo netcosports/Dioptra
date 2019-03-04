@@ -2,6 +2,11 @@
 
 RX based Library for managing different video playback types.
 
+[![Version](https://img.shields.io/cocoapods/v/Dioptra.svg?style=flat)](http://cocoapods.org/pods/Dioptra)
+[![License](https://img.shields.io/cocoapods/l/Dioptra.svg?style=flat)](http://cocoapods.org/pods/Dioptra)
+[![Platform](https://img.shields.io/cocoapods/p/Dioptra.svg?style=flat)](http://cocoapods.org/pods/Dioptra)
+
+
 ## Installation
 
 ```ruby
