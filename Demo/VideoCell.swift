@@ -45,7 +45,7 @@ class VideoCell: CollectionViewCell, Reusable {
 
     player.playbackView.viewModel.input = .content(stream: "http://psg75.c-cast-cdn.tv/8E0071723758EE5CDD1CA0544FE4FF53/8E0071723758EE5CDD1CA0544FE4FF53.mp4")
     player.playbackView.viewModel.muted = true
-    player.controlsView.fullscreenButton.backgroundColor = UIColor.magenta
+    player.controlsView.fullscreenButton.setTitle("Full", for: .normal)
     player.controlsView.errorLabel.text = "Error"
     player.controlsView.viewModel.fullscreen.subscribe(onNext: { [weak self] in
       self?.handleFullscreen()

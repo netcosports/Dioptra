@@ -8,9 +8,11 @@ Pod::Spec.new do |s|
     'Sergei Mikhan' => 'sergei@netcosports.com'
   }
   s.source = { :git => 'https://github.com/netcosports/Dioptra.git', :tag => s.version.to_s }
+  s.license = { :type => "MIT" }
 
   s.ios.deployment_target = '9.0'
   s.default_subspec = 'Core'
+
 
   s.subspec 'Core' do |sub|
     sub.source_files = 'Sources/Core/**/*.swift'

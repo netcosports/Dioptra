@@ -33,7 +33,7 @@ class ConstraintsVideoCell: CollectionViewCell, Reusable {
     player.playbackView.viewModel.input = .content(stream: "x6k8h19")
     
     player.playbackView.viewModel.muted = true
-    player.controlsView.fullscreenButton.backgroundColor = UIColor.magenta
+    player.controlsView.fullscreenButton.setTitle("Full", for: .normal)
     player.controlsView.errorLabel.text = "Error"
     player.controlsView.viewModel.fullscreen.subscribe(onNext: { [weak self] in
       self?.handleFullscreen()
