@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModable & UIView>: UIView {
+open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModable & UIView>: UIView, Detachable {
 
   public typealias ViewModel = VideoPlayerViewModel<P.ViewModel, C.ViewModel>
   public typealias Stream = P.ViewModel.Stream
@@ -26,9 +26,9 @@ open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModab
   let viewModel: ViewModel
   let disposeBag = DisposeBag()
 
-  public internal(set) var detached = false
-  internal var detachDisposeBag: DisposeBag?
-  internal var detachOriginalPoint: CGPoint = .zero
+  public var detached = false
+  public var detachDisposeBag: DisposeBag?
+  public var detachOriginalPoint: CGPoint = .zero
 
   public override init(frame: CGRect) {
     viewModel = ViewModel(playback: playbackView.viewModel, controls: controlsView.viewModel)
@@ -69,5 +69,13 @@ open class VideoPlayerView<P: PlaybackViewModable & UIView, C: ControlsViewModab
       default: break
       }
     }
+  }
+
+  public func minimize() {
+    controlsView.viewModel.screenMode.accept(ScreenMode.minimized)
+  }
+
+  public func compact() {
+    controlsView.viewModel.screenMode.accept(ScreenMode.compact)
   }
 }

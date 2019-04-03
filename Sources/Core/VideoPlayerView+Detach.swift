@@ -11,9 +11,17 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
-extension VideoPlayerView {
+public protocol Detachable: class {
+  var detached: Bool { get set }
+  var detachOriginalPoint: CGPoint { get set }
+  var detachDisposeBag: DisposeBag? { get set }
+  func minimize()
+  func compact()
+}
 
-  open func detach(to view: UIView, with frame: CGRect) {
+extension Detachable where Self: UIView {
+
+  public func detach(to view: UIView, with frame: CGRect) {
     guard detached == false else { return }
     guard let detachedOriginalContainer = view.superview else { return }
     self.detached = true
@@ -24,14 +32,14 @@ extension VideoPlayerView {
 
     UIView.animate(withDuration: 0.27, animations: {
       self.frame = frame
-      self.controlsView.viewModel.screenMode.accept(ScreenMode.minimized)
+      self.minimize()
       self.layoutSubviews()
     }, completion: { finished in
       self.registerForPanGeture()
     })
   }
 
-  open func attach(to view: UIView, with frame: CGRect, overView: UIView) {
+  public func attach(to view: UIView, with frame: CGRect, overView: UIView) {
     guard detached == true else { return }
     let targetFrame = view.convert(frame, to: overView)
     let originalFrame = self.convert(self.bounds, to: overView)
@@ -41,7 +49,8 @@ extension VideoPlayerView {
 
     UIView.animate(withDuration: 0.27, animations: {
       self.frame = targetFrame
-      self.controlsView.viewModel.screenMode.accept(ScreenMode.compact)
+      //self.controlsView.viewModel.screenMode.accept(ScreenMode.compact)
+      self.compact()
       self.layoutSubviews()
     }, completion: { finished in
       view.addSubview(self)

@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'BC' do |sub|
     sub.source_files = 'Sources/BC/**/*.swift'
-    sub.dependency 'Brightcove-Player-SDK/dynamic'
+    sub.dependency 'Brightcove-Player-Core/dynamic'
     sub.dependency 'Dioptra/AV'
   end
 

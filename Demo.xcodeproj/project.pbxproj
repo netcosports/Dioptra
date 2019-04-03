@@ -292,7 +292,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/Brightcove-Player-SDK/BCOVPUIResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Brightcove-Player-Core/BCOVPUIResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -329,7 +329,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Astrolabe/Astrolabe.framework",
-				"${PODS_ROOT}/Brightcove-Player-SDK/ios/dynamic/BrightcovePlayerSDK.framework",
+				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/DailymotionPlayerSDK/DailymotionPlayerSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/Dioptra-AV-BC-Core-DM-Presentation-YT/Dioptra.framework",
 				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",

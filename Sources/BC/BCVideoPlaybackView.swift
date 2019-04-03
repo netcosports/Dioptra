@@ -20,12 +20,12 @@ open class BCVideoPlaybackView: UIView, PlaybackViewModable {
     super.init(frame: frame)
     backgroundColor = .black
     // FIXME: need to setup parent view controller
-    self.addSubview(viewModel.playback.view)
+    viewModel.targetView = self
   }
 
   open override func layoutSubviews() {
     super.layoutSubviews()
-    viewModel.playback.view.frame = bounds
+    viewModel.playback?.view.frame = bounds
   }
 
   public required init?(coder aDecoder: NSCoder) {

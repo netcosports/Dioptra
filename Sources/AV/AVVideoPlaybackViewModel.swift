@@ -47,7 +47,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     public let periodicTimeUpdateInterval: CMTime
   }
 
-  fileprivate let seekCompleatedRelay = PublishRelay<Void>()
+  internal let seekCompleatedRelay = PublishRelay<Void>()
   fileprivate var disposeBag: DisposeBag?
   fileprivate let itemRelay             = PublishRelay<AVPlayerItem?>()
   fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
@@ -297,31 +297,24 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       }
     }
   }
-}
 
-
-extension AVVideoPlaybackManagableViewModel {
-
-  func bind(to item: AVPlayerItem) {
+  internal func bind(to item: AVPlayerItem) {
     itemRelay.accept(item)
   }
-}
 
-extension AVVideoPlaybackManagableViewModel {
-
-  fileprivate func play() {
+  internal func play() {
     player?.rate = Float(speed)
   }
 
-  fileprivate func pause() {
+  internal func pause() {
     player?.rate = 0.0
   }
 
-  fileprivate func stop() {
+  internal func stop() {
     player?.replaceCurrentItem(with: nil)
   }
 
-  fileprivate func seek(to seconds: TimeInSeconds) {
+  internal func seek(to seconds: TimeInSeconds) {
     if let timeRange = player?.currentItem?.seekableTimeRanges.last?.timeRangeValue {
       let duration = timeRange.end
       let progress = seconds / CMTimeGetSeconds(duration)
