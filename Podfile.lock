@@ -26,6 +26,7 @@ PODS:
     - Dioptra/Core
     - youtube-ios-player-helper
   - Nimble (7.3.4)
+  - Quick (2.0.0)
   - RxAtomic (4.4.1)
   - RxBlocking (4.4.1):
     - RxAtomic (~> 4.4)
@@ -51,6 +52,7 @@ DEPENDENCIES:
   - Dioptra/Presentation (from `.`)
   - Dioptra/YT (from `.`)
   - Nimble (~> 7.0)
+  - Quick
   - RxBlocking
   - RxTest
   - SnapKit (~> 4.0)
@@ -61,6 +63,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - DailymotionPlayerSDK
     - Nimble
+    - Quick
     - RxAtomic
     - RxBlocking
     - RxCocoa
@@ -88,6 +91,7 @@ SPEC CHECKSUMS:
   DailymotionPlayerSDK: 26ee0fec4bd756bf29eee19d7e61ba972543198c
   Dioptra: 82dfb010690c6d1243d1fb71bf2e007444220787
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
+  Quick: ce1276c7c27ba2da3cb2fd0cde053c3648b3b22d
   RxAtomic: f8d6adc1ccb87a767811269e4875887bc74dbf19
   RxBlocking: 5508e90d36ca2304632dc9378ece4e9b5d4bf656
   RxCocoa: 2f35a76bf8887872e28a1914112395b11b8e0e64
@@ -97,6 +101,6 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: ffa30f8b938c68e458a8b81270c2170d8dcd60fa
+PODFILE CHECKSUM: e3761b22f11de1d28ef542d162769605674fd06b
 
 COCOAPODS: 1.5.3

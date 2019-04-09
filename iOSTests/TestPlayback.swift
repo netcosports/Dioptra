@@ -11,6 +11,11 @@ import RxSwift
 import RxCocoa
 
 class TestPlayback: VideoPlayback {
+  var quality = VideoQuality.auto
+  var speed: Double = 1.0
+  var speedUpdated: Driver<Double> = .empty()
+  var availableQualities: Driver<[VideoQuality]> = .empty()
+
 
   typealias Stream = String
   var input: Input<Stream> = .cleanup

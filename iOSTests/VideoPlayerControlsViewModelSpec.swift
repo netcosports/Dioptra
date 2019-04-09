@@ -9,159 +9,192 @@
 import Dioptra
 import XCTest
 import Nimble
+import Quick
 
-import RxBlocking
 import RxSwift
 import RxCocoa
 import RxTest
 
-class VideoPlayerControlsViewModelSpec: XCTestCase {
-    
-  override func setUp() {
-    super.setUp()
-  }
+class VideoPlayerControlsViewModelSpecQuick: QuickSpec {
 
-  override func tearDown() {
-    super.tearDown()
-  }
+  var scheduler: TestScheduler!
+  var disposeBag: DisposeBag!
+  var controlsViewModel: VideoPlayerControlsViewModel!
 
-  let disposeBag = DisposeBag()
+  override func spec() {
 
-  func testForce() {
-    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
-    let testViewModel = VideoPlayerControlsViewModel()
+    describe("'Visibility'") {
 
-    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+      beforeEach {
 
-    testViewModel.visibilityChange.accept(.force(visible: true))
-    testViewModel.visibilityChange.accept(.softToggle)
-    testViewModel.visibilityChange.accept(.soft(visible: false))
-    testViewModel.visibilityChange.accept(.soft(visible: true))
-    testViewModel.visibilityChange.accept(.force(visible: false))
+      }
 
-    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
-      next(0, Visibility.soft(visible: true)),
-      next(0, Visibility.force(visible: true)),
-      next(0, Visibility.force(visible: false))
-    ]
-    XCTAssertEqual(testObserver.events, expectedEvents)
-  }
+      context("changes") {
+        beforeEach {
+          let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 5.0)
+          self.scheduler = TestScheduler(initialClock: 0)
+          self.disposeBag = DisposeBag()
+          self.controlsViewModel = VideoPlayerControlsViewModel(settings: settings, scheduler: self.scheduler)
+        }
 
-  func testAutohide() {
-    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
-    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
-    let actual = try? testViewModel.visible.asObservable().take(2)
-      .toBlocking(timeout: 0.1).toArray()
-    let expected: [Dioptra.Visibility] = [
-      Visibility.soft(visible: true),
-      Visibility.soft(visible: false)
-    ]
-    XCTAssertEqual(actual, expected)
-  }
+        it("between force update events") {
+          self.scheduler.createColdObservable([
+            .next(1, VisibilityChangeEvent.force(visible: true)),
+            .next(20, VisibilityChangeEvent.softToggle),
+            .next(30, VisibilityChangeEvent.soft(visible: false)),
+            .next(40, VisibilityChangeEvent.soft(visible: true)),
+            .next(50, VisibilityChangeEvent.force(visible: false))
+          ]).bind(to: self.controlsViewModel.visibilityChange).disposed(by: self.disposeBag)
 
-  func testAutohideAndToggle() {
-    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
-    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
-    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
-    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+          let visibilities = self.scheduler.createObserver(Dioptra.Visibility.self)
+          self.controlsViewModel.visible.drive(visibilities).disposed(by: self.disposeBag)
+          self.scheduler.performUntil(60)
 
-    let _ = try? testViewModel.visible.asObservable().skip(1).take(1).toBlocking(timeout: 0.1).toArray()
-    testViewModel.visibilityChange.accept(.softToggle)
+          expect(visibilities.events).to(equal(expectedEvents: [
+            .next(0, Visibility.soft(visible: true)),
+            .next(1, Visibility.force(visible: true)),
+            .next(50, Visibility.force(visible: false))
+          ]))
+        }
 
-    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
-      next(0, Visibility.soft(visible: true)),
-      next(0, Visibility.soft(visible: false)),
-      next(0, Visibility.soft(visible: true)),
-    ]
-    XCTAssertEqual(testObserver.events, expectedEvents)
-  }
+        it("automatically after timeout") {
+          let visibilities = self.scheduler.createObserver(Dioptra.Visibility.self)
+          self.controlsViewModel.visible.drive(visibilities).disposed(by: self.disposeBag)
+          self.scheduler.performUntil(60)
 
-  func testAutohideToggleAutohide() {
-    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
-    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
-    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
-    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+          expect(visibilities.events).to(equal(expectedEvents: [
+            .next(0, Visibility.soft(visible: true)),
+            .next(5, Visibility.soft(visible: false))
+          ]))
+        }
 
-    let _ = try? testViewModel.visible.asObservable().skip(1).take(1).toBlocking(timeout: 0.1).toArray()
-    testViewModel.visibilityChange.accept(.softToggle)
-    let _ = try? testViewModel.visible.asObservable().skip(1).take(1).toBlocking(timeout: 0.1).toArray()
+        it("automatically after timeout then toggle") {
+          self.scheduler.createColdObservable([
+            .next(10, VisibilityChangeEvent.softToggle)
+          ]).bind(to: self.controlsViewModel.visibilityChange).disposed(by: self.disposeBag)
 
-    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
-      next(0, Visibility.soft(visible: true)),
-      next(0, Visibility.soft(visible: false)),
-      next(0, Visibility.soft(visible: true)),
-      next(0, Visibility.soft(visible: false))
-      ]
-    XCTAssertEqual(testObserver.events, expectedEvents)
-  }
+          let visibilities = self.scheduler.createObserver(Dioptra.Visibility.self)
+          self.controlsViewModel.visible.drive(visibilities).disposed(by: self.disposeBag)
+          self.scheduler.performUntil(11)
 
-  func testSoftForceVisible() {
-    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
-    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
-    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
-    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+          expect(visibilities.events).to(equal(expectedEvents: [
+            .next(0, Visibility.soft(visible: true)),
+            .next(5, Visibility.soft(visible: false)),
+            .next(10, Visibility.soft(visible: true))
+          ]))
+        }
 
-    testViewModel.visibilityChange.accept(.soft(visible: true))
-    testViewModel.visibilityChange.accept(.force(visible: true))
-    let _ = try? testViewModel.visible.asObservable().skip(1).take(1).toBlocking(timeout: 0.1).toArray()
+        it("automatically after timeout then toggle and hide again automatically") {
+          self.scheduler.createColdObservable([
+            .next(10, VisibilityChangeEvent.softToggle)
+            ]).bind(to: self.controlsViewModel.visibilityChange).disposed(by: self.disposeBag)
 
-    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
-      next(0, Visibility.soft(visible: true)),
-      next(0, Visibility.force(visible: true))
-    ]
-    XCTAssertEqual(testObserver.events, expectedEvents)
-  }
+          let visibilities = self.scheduler.createObserver(Dioptra.Visibility.self)
+          self.controlsViewModel.visible.drive(visibilities).disposed(by: self.disposeBag)
+          self.scheduler.performUntil(11)
 
-  func testSoftToggle() {
-    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
-    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
-    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
-    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+          expect(visibilities.events).to(equal(expectedEvents: [
+            .next(0, Visibility.soft(visible: true)),
+            .next(5, Visibility.soft(visible: false)),
+            .next(10, Visibility.soft(visible: true))
+          ]))
+        }
 
-    testViewModel.visibilityChange.accept(.softToggle)
+        it("after force update event") {
+          self.scheduler.createColdObservable([
+            .next(2, VisibilityChangeEvent.soft(visible: true)),
+            .next(10, VisibilityChangeEvent.force(visible: true))
+          ]).bind(to: self.controlsViewModel.visibilityChange).disposed(by: self.disposeBag)
 
-    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
-      next(0, Visibility.soft(visible: true)),
-      next(0, Visibility.soft(visible: false))
-    ]
-    XCTAssertEqual(testObserver.events, expectedEvents)
-  }
+          let visibilities = self.scheduler.createObserver(Dioptra.Visibility.self)
+          self.controlsViewModel.visible.drive(visibilities).disposed(by: self.disposeBag)
+          self.scheduler.performUntil(60)
 
-  func testSoftMultiple() {
-    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
-    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
-    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
-    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+          expect(visibilities.events).to(equal(expectedEvents: [
+            .next(0, Visibility.soft(visible: true)),
+            .next(7, Visibility.soft(visible: false)),
+            .next(10, Visibility.force(visible: true))
+          ]))
+        }
 
-    testViewModel.visibilityChange.accept(.soft(visible: true))
-    testViewModel.visibilityChange.accept(.soft(visible: true))
-    testViewModel.visibilityChange.accept(.soft(visible: true))
+        it("after toogle event") {
+          self.scheduler.createColdObservable([
+            .next(2, VisibilityChangeEvent.softToggle),
+            .next(4, VisibilityChangeEvent.softToggle)
+          ]).bind(to: self.controlsViewModel.visibilityChange).disposed(by: self.disposeBag)
 
-    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
-      next(0, Visibility.soft(visible: true))
-    ]
-    XCTAssertEqual(testObserver.events, expectedEvents)
-  }
+          let visibilities = self.scheduler.createObserver(Dioptra.Visibility.self)
+          self.controlsViewModel.visible.drive(visibilities).disposed(by: self.disposeBag)
+          self.scheduler.performUntil(60)
 
-  func testAcceptSoft() {
-    let testObserver = TestScheduler(initialClock: 0).createObserver(Dioptra.Visibility.self)
-    let settings = VideoPlayerControlsViewModel.Settings(autoHideTimer: 0.01)
-    let testViewModel = VideoPlayerControlsViewModel(settings: settings)
-    testViewModel.visible.drive(testObserver).disposed(by: disposeBag)
+          expect(visibilities.events).to(equal(expectedEvents: [
+            .next(0, Visibility.soft(visible: true)),
+            .next(2, Visibility.soft(visible: false)),
+            .next(4, Visibility.soft(visible: true)),
+            .next(9, Visibility.soft(visible: false)),
+          ]))
+        }
 
-    testViewModel.visibilityChange.accept(.force(visible: false))
-    testViewModel.visibilityChange.accept(.soft(visible: true))
-    testViewModel.visibilityChange.accept(.acceptSoft)
-    testViewModel.visibilityChange.accept(.soft(visible: true))
-    testViewModel.visibilityChange.accept(.softToggle)
+        it("after multiple soft events") {
+          self.scheduler.createColdObservable([
+            .next(4, VisibilityChangeEvent.soft(visible: true)),
+            .next(8, VisibilityChangeEvent.soft(visible: true)),
+            .next(12, VisibilityChangeEvent.soft(visible: true)),
+            .next(15, VisibilityChangeEvent.soft(visible: true))
+          ]).bind(to: self.controlsViewModel.visibilityChange).disposed(by: self.disposeBag)
 
-    let expectedEvents: [Recorded<Event<Dioptra.Visibility>>] = [
-      next(0, Visibility.soft(visible: true)),
-      next(0, Visibility.force(visible: false)),
-      next(0, Visibility.force(visible: true)),
-      next(0, Visibility.soft(visible: true)),
-      next(0, Visibility.soft(visible: false)),
-    ]
-    XCTAssertEqual(testObserver.events, expectedEvents)
+          let visibilities = self.scheduler.createObserver(Dioptra.Visibility.self)
+          self.controlsViewModel.visible.drive(visibilities).disposed(by: self.disposeBag)
+          self.scheduler.performUntil(60)
+
+          expect(visibilities.events).to(equal(expectedEvents: [
+            .next(0, Visibility.soft(visible: true)),
+            .next(20, Visibility.soft(visible: false))
+          ]))
+        }
+
+        it("after accept soft events between the autohiding timer") {
+          self.scheduler.createColdObservable([
+            .next(4, VisibilityChangeEvent.force(visible: false)),
+            .next(8, VisibilityChangeEvent.soft(visible: true)),
+            .next(12, VisibilityChangeEvent.acceptSoft),
+            .next(15, VisibilityChangeEvent.soft(visible: true)),
+            .next(19, VisibilityChangeEvent.softToggle)
+          ]).bind(to: self.controlsViewModel.visibilityChange).disposed(by: self.disposeBag)
+
+          let visibilities = self.scheduler.createObserver(Dioptra.Visibility.self)
+          self.controlsViewModel.visible.drive(visibilities).disposed(by: self.disposeBag)
+          self.scheduler.performUntil(60)
+
+          expect(visibilities.events).to(equal(expectedEvents: [
+            .next(0, Visibility.soft(visible: true)),
+            .next(4, Visibility.force(visible: false)),
+            .next(15, Visibility.soft(visible: true)),
+            .next(19, Visibility.soft(visible: false))
+          ]))
+        }
+
+        it("after accept soft events") {
+          self.scheduler.createColdObservable([
+            .next(4, VisibilityChangeEvent.force(visible: false)),
+            .next(8, VisibilityChangeEvent.soft(visible: true)),
+            .next(15, VisibilityChangeEvent.acceptSoft),
+            .next(20, VisibilityChangeEvent.soft(visible: true)),
+            .next(24, VisibilityChangeEvent.softToggle)
+          ]).bind(to: self.controlsViewModel.visibilityChange).disposed(by: self.disposeBag)
+
+          let visibilities = self.scheduler.createObserver(Dioptra.Visibility.self)
+          self.controlsViewModel.visible.drive(visibilities).disposed(by: self.disposeBag)
+          self.scheduler.performUntil(60)
+
+          expect(visibilities.events).to(equal(expectedEvents: [
+            .next(0, Visibility.soft(visible: true)),
+            .next(4, Visibility.force(visible: false)),
+            .next(20, Visibility.soft(visible: true)),
+            .next(24, Visibility.soft(visible: false))
+          ]))
+        }
+      }
+    }
   }
 }

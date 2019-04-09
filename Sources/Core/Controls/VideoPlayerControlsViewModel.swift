@@ -18,8 +18,9 @@ open class VideoPlayerControlsViewModel: VideoControls {
     public var autoHideTimer: Double
   }
 
-  public init(settings: Settings = Settings()) {
+  public init(settings: Settings = Settings(), scheduler: SchedulerType = MainScheduler.instance) {
     self.settings = settings
+    self.scheduler = scheduler
     bind()
   }
 
@@ -28,6 +29,7 @@ open class VideoPlayerControlsViewModel: VideoControls {
   fileprivate var currentTimeRelay: PublishRelay<String>?
   fileprivate var durationRelay: PublishRelay<String>?
   fileprivate var stateBeforeSeek = PlayerState.idle
+  fileprivate let scheduler: SchedulerType
 
   public var settings: Settings
   public var seekCompleted = PublishSubject<Void>()
@@ -137,19 +139,27 @@ extension VideoPlayerControlsViewModel {
 
     screenMode.asDriver().map { _ in VisibilityChangeEvent.soft(visible: true) }.drive(visibilityChange).disposed(by: disposeBag)
 
-    visibilityChange.asDriver()
+    visibilityChange.asObservable()
       .filter { [weak self] in
+        guard let self = self else { return false }
+        let accepted: Bool
         switch $0 {
         case .soft(let visible):
-          return visible
+          accepted = visible
         case .softToggle:
-          guard let visible = self?.visibleRelay.value.visible else { return false }
-          return !visible
+          accepted = !self.visibleRelay.value.visible
         default:
-          return false
+          accepted = false
         }
+        if accepted {
+          switch self.currentVisibility {
+            case .force: return false
+            default: return true
+          }
+        }
+        return false
       }
-      .debounce(settings.autoHideTimer)
+      .debounce(settings.autoHideTimer, scheduler: self.scheduler)
       .map { _ in
         Visibility.soft(visible: false)
       }
@@ -157,9 +167,13 @@ extension VideoPlayerControlsViewModel {
         guard let `self` = self else { return false }
         switch self.visibilityChange.value {
           case .force: return false
-          default: return true
+          default:
+            switch self.currentVisibility {
+              case .force: return false
+              default: return true
+          }
         }
-      }
+      }.asDriver(onErrorJustReturn: Visibility.soft(visible: false))
       .drive(visibleRelay)
       .disposed(by: disposeBag)
 
@@ -182,7 +196,13 @@ extension VideoPlayerControlsViewModel {
           controlsVisible = Visibility.soft(visible: !self.visibleRelay.value.visible)
         }
       case .acceptSoft:
-        controlsVisible = Visibility.force(visible: true)
+        switch self.currentVisibility {
+        case .force(let visible):
+          self.currentVisibility = .soft(visible: visible)
+          return
+        case .soft, .acceptSoft, .softToggle:
+          return
+        }
       }
       self.currentVisibility = visibility
       self.visibleRelay.accept(controlsVisible)

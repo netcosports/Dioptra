@@ -22,6 +22,7 @@ end
 target 'iOSTests' do
   pod 'Dioptra/AV', :path => '.'
   pod 'Nimble', '~> 7.0'
+  pod 'Quick'
   pod 'RxBlocking'
   pod 'RxTest'
 end
