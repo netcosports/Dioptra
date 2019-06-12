@@ -57,17 +57,19 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
     if presentation {
       presentingOrientation = TransitionOrientation.current()
       targetView = toVC.view
-      midY = startFrame.midX
       switch transition {
       case .left:
         angle = -CGFloat.pi * 0.5
         midX = startFrame.midY
+        midY = startFrame.midX
       case .right:
         angle = CGFloat.pi * 0.5
         midX = UIScreen.main.bounds.width - startFrame.midY
+        midY = startFrame.midX
       default:
-        angle = CGFloat.pi * 0.5
-        midX = UIScreen.main.bounds.width - startFrame.midY
+        angle = -CGFloat.pi * 0.5
+        midX = startFrame.midY
+        midY = startFrame.midX
       }
     } else {
       midX = UIScreen.main.bounds.width * 0.5
