@@ -81,7 +81,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     }
 
     set {
-      mutedRelay.accept(muted)
+      mutedRelay.accept(newValue)
     }
   }
 
