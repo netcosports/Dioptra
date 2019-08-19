@@ -103,6 +103,8 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
       mutedRelay.accept(muted)
     }
   }
+
+  open var volume: Float = 1.0
 }
 
 

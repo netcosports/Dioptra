@@ -85,6 +85,8 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
     }
   }
 
+  open var volume: Float = 1.0
+
   public var speedUpdated: Driver<Double> {
     return .empty()
   }

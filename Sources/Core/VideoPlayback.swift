@@ -133,6 +133,7 @@ public protocol VideoPlayback: class {
 
   // params:
   var muted: Bool { get set }
+  var volume: Float { get set }
   var quality: VideoQuality { get set }
   var speed: Double { set get }
 
