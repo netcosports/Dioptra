@@ -13,6 +13,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.default_subspec = 'Core'
 
+  s.swift_versions = ['5.0', '5.1']
 
   s.subspec 'Core' do |sub|
     sub.source_files = 'Sources/Core/**/*.swift'
