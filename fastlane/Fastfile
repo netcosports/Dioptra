@@ -10,7 +10,7 @@ lane :release do |options|
   message ||= ''
   tag(message: message)
   sh("git push origin master")
-  pod_push(allow_warnings: true)
+  pod_push(allow_warnings: true, sources: ['https://github.com/brightcove/BrightcoveSpecs.git'])
 end
 
 lane :patch do |options|
