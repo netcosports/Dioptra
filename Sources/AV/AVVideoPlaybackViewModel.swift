@@ -84,6 +84,17 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       player?.currentItem?.audioMix = nil
     }
   }
+
+  public var volume: Float {
+    set {
+      player?.volume = newValue
+    }
+
+    get {
+      return player?.volume ?? 0.0
+    }
+  }
+
   public var quality = VideoQuality.auto {
     didSet {
       if #available(iOS 10.0, *) {

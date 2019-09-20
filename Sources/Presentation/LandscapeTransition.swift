@@ -16,8 +16,8 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
   public var presentation = true
   public weak var transitionContext: UIViewControllerContextTransitioning?
 
-  fileprivate var presentingView: UIView
-  fileprivate var dismissTarget: UIView?
+  fileprivate weak var presentingView: UIView?
+  fileprivate weak var dismissTarget: UIView?
   fileprivate var presentingOrientation = TransitionOrientation.current()
 
   public init(presentingView: UIView) {
@@ -35,7 +35,7 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
   open func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
     guard let fromVC = transitionContext.viewController(forKey: .from) else { return }
     guard let toVC = transitionContext.viewController(forKey: .to) else { return }
-    guard let dismissTarget = dismissTarget else { return }
+    guard let presentingView = presentingView, let dismissTarget = dismissTarget else { return }
 
     let containerView = transitionContext.containerView
     let startFrame = dismissTarget.convert(presentingView.frame, to: fromVC.view)
@@ -57,17 +57,19 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
     if presentation {
       presentingOrientation = TransitionOrientation.current()
       targetView = toVC.view
-      midY = startFrame.midX
       switch transition {
       case .left:
         angle = -CGFloat.pi * 0.5
         midX = startFrame.midY
+        midY = startFrame.midX
       case .right:
         angle = CGFloat.pi * 0.5
         midX = UIScreen.main.bounds.width - startFrame.midY
+        midY = startFrame.midX
       default:
-        angle = CGFloat.pi * 0.5
-        midX = UIScreen.main.bounds.width - startFrame.midY
+        angle = -CGFloat.pi * 0.5
+        midX = startFrame.midY
+        midY = startFrame.midX
       }
     } else {
       midX = UIScreen.main.bounds.width * 0.5
@@ -81,9 +83,9 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
         angle = 3.0 * CGFloat.pi * 0.5
       default:
         switch presentingOrientation {
-          case .left: angle = CGFloat.pi * 0.5
-          case .right: angle = -CGFloat.pi * 0.5
-          default: angle = -3.0 * CGFloat.pi * 0.5
+        case .left: angle = CGFloat.pi * 0.5
+        case .right: angle = -CGFloat.pi * 0.5
+        default: angle = -3.0 * CGFloat.pi * 0.5
         }
       }
     }
@@ -91,22 +93,22 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
     presentingView.bounds.size = startFrame.size
     presentingView.center = CGPoint(x: midX, y: midY)
     presentingView.transform = CGAffineTransform(rotationAngle: angle)
-    
-    self.presentingView.setNeedsUpdateConstraints()
-    self.presentingView.layoutIfNeeded()
+
+    presentingView.setNeedsUpdateConstraints()
+    presentingView.layoutIfNeeded()
 
     toVC.view.frame = finalFrame
 
     UIView.animate(withDuration: transitionDuration(using: transitionContext),
                    delay: 0, options: .curveEaseInOut, animations: {
-      self.presentingView.transform = CGAffineTransform.identity
-      self.presentingView.frame = targetFrame
-      self.presentingView.setNeedsUpdateConstraints()
-      self.presentingView.layoutIfNeeded()
+                    presentingView.transform = CGAffineTransform.identity
+                    presentingView.frame = targetFrame
+                    presentingView.setNeedsUpdateConstraints()
+                    presentingView.layoutIfNeeded()
     }) { _ in
       transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-      targetView.insertSubview(self.presentingView, at: 0)
-      self.presentingView.frame = targetView.bounds
+      targetView.insertSubview(presentingView, at: 0)
+      presentingView.frame = targetView.bounds
     }
   }
 }

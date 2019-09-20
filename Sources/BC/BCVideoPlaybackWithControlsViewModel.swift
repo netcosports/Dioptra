@@ -101,6 +101,8 @@ open class BCVideoPlaybackWithControlsViewModel: NSObject, VideoPlayback {
     }
   }
 
+  open var volume: Float = 1.0
+
   public var speedUpdated: Driver<Double> {
     return .empty()
   }

@@ -57,14 +57,20 @@ public enum Input<T> where T: Equatable {
   case contentWithStartTime(stream: T, startTime: TimeInterval)
   case cleanup
 }
-
 extension Input: Equatable {
 
   public static func == (lhs: Input<T>, rhs: Input<T>) -> Bool {
-    if case let .content(lhsStream) = lhs, case let .content(rhsStream) = rhs {
+    switch (lhs, rhs) {
+    case (.ad(let lhsStream), .ad(let rhsStream)):
       return lhsStream == rhsStream
+    case (.content(let lhsStream), .content(let rhsStream)):
+      return lhsStream == rhsStream
+    case (.contentWithStartTime(let lhsStream, let lTime), .contentWithStartTime(let rhsStream, let rTime)):
+      return lhsStream == rhsStream && lTime == rTime
+    case (.cleanup, .cleanup):
+      return true
+    default: return false
     }
-    return false
   }
 }
 
@@ -127,6 +133,7 @@ public protocol VideoPlayback: class {
 
   // params:
   var muted: Bool { get set }
+  var volume: Float { get set }
   var quality: VideoQuality { get set }
   var speed: Double { set get }
 

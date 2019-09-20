@@ -39,7 +39,7 @@ public enum InteractiveTransitionDirection {
 
 public protocol PresentTransition: class {
   var presentation: Bool { get set }
-  weak var transitionContext: UIViewControllerContextTransitioning? { get set }
+  var transitionContext: UIViewControllerContextTransitioning? { get set }
 }
 
 public protocol InteractiveTransition: class {

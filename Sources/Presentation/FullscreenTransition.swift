@@ -16,8 +16,8 @@ public class FullscreenTransition: NSObject, UIViewControllerAnimatedTransitioni
   public var presentation = true
   public weak var transitionContext: UIViewControllerContextTransitioning?
 
-  fileprivate var presentingView: UIView
-  fileprivate var dismissTarget: UIView?
+  fileprivate weak var presentingView: UIView?
+  fileprivate weak var dismissTarget: UIView?
   fileprivate var presentingOrientation = TransitionOrientation.current()
 
   public init(presentingView: UIView) {
@@ -35,7 +35,7 @@ public class FullscreenTransition: NSObject, UIViewControllerAnimatedTransitioni
   open func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
     guard let fromVC = transitionContext.viewController(forKey: .from) else { return }
     guard let toVC = transitionContext.viewController(forKey: .to) else { return }
-    guard let dismissTarget = dismissTarget else { return }
+    guard let presentingView = presentingView, let dismissTarget = dismissTarget else { return }
 
     let containerView = transitionContext.containerView
     let startFrame = dismissTarget.convert(presentingView.frame, to: fromVC.view)
@@ -100,20 +100,20 @@ public class FullscreenTransition: NSObject, UIViewControllerAnimatedTransitioni
     presentingView.center = CGPoint(x: midX, y: midY)
     presentingView.transform = CGAffineTransform(rotationAngle: angle)
 
-    self.presentingView.setNeedsUpdateConstraints()
-    self.presentingView.layoutIfNeeded()
+    presentingView.setNeedsUpdateConstraints()
+    presentingView.layoutIfNeeded()
 
     toVC.view.frame = finalFrame
     UIView.animate(withDuration: transitionDuration(using: transitionContext),
                    delay: 0, options: .curveEaseInOut, animations: {
-      self.presentingView.transform = CGAffineTransform.identity
-      self.presentingView.frame = targetFrame
-      self.presentingView.setNeedsUpdateConstraints()
-      self.presentingView.layoutIfNeeded()
+                    presentingView.transform = CGAffineTransform.identity
+                    presentingView.frame = targetFrame
+                    presentingView.setNeedsUpdateConstraints()
+                    presentingView.layoutIfNeeded()
     }) { _ in
       transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-      targetView.insertSubview(self.presentingView, at: 0)
-      self.presentingView.frame = targetView.bounds
+      targetView.insertSubview(presentingView, at: 0)
+      presentingView.frame = targetView.bounds
     }
   }
 }
