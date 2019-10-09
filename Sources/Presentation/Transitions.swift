@@ -180,6 +180,7 @@ extension Transitionable where Self: UIViewController {
   public func present(modal viewController: UIViewController, method: TransitionableMethod, completion: (()->Void)? = nil) {
     currentTransition = method.transition
     viewController.transitioningDelegate = self
+    viewController.modalPresentationStyle = .fullScreen
     if let navigationController = navigationController {
       navigationController.present(viewController, animated: true, completion: completion)
     } else {
@@ -190,7 +191,6 @@ extension Transitionable where Self: UIViewController {
   public func push(viewController: UIViewController, method: TransitionableMethod) {
     if let navigationController = navigationController {
       currentTransition = method.transition
-
       navigationController.delegate = self
       navigationController.pushViewController(viewController, animated: true)
     }

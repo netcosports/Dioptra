@@ -5,6 +5,8 @@ source 'https://github.com/brightcove/BrightcoveSpecs.git'
 use_frameworks!
 inhibit_all_warnings!
 
+install! 'cocoapods', :disable_input_output_paths => true
+
 target 'Demo' do
 
   pod 'Astrolabe', :git => 'https://github.com/netcosports/Astrolabe', :branch => 'swift-4.2'

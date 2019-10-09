@@ -26,8 +26,8 @@ class VideoCell: CollectionViewCell, Reusable {
 
   //typealias Player = VideoPlayerView<YTVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
-  typealias Player = VideoPlayerView<BCVideoPlaybackView, VideoPlayerControlsView>
-  //typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
+  //typealias Player = VideoPlayerView<BCVideoPlaybackView, VideoPlayerControlsView>
+  typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
 
   let player = Player(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width - 48,
                                     height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
@@ -43,10 +43,10 @@ class VideoCell: CollectionViewCell, Reusable {
     contentView.addSubview(playerContainer)
     playerContainer.addSubview(player)
 
-    //player.playbackView.viewModel.input = .content(stream: "http://psg75.c-cast-cdn.tv/8E0071723758EE5CDD1CA0544FE4FF53/8E0071723758EE5CDD1CA0544FE4FF53.mp4")
-    player.playbackView.viewModel.servicePolicyKey = "BCpkADawqM1W-vUOMe6RSA3pA6Vw-VWUNn5rL0lzQabvrI63-VjS93gVUugDlmBpHIxP16X8TSe5LSKM415UHeMBmxl7pqcwVY_AZ4yKFwIpZPvXE34TpXEYYcmulxJQAOvHbv2dpfq-S_cm"
-    player.playbackView.viewModel.accountID = "3636334163001"
-    player.playbackView.viewModel.input = .content(stream: "3666678807001")
+    player.playbackView.viewModel.input = .content(stream: "http://psg75.c-cast-cdn.tv/8E0071723758EE5CDD1CA0544FE4FF53/8E0071723758EE5CDD1CA0544FE4FF53.mp4")
+//    player.playbackView.viewModel.servicePolicyKey = "BCpkADawqM1W-vUOMe6RSA3pA6Vw-VWUNn5rL0lzQabvrI63-VjS93gVUugDlmBpHIxP16X8TSe5LSKM415UHeMBmxl7pqcwVY_AZ4yKFwIpZPvXE34TpXEYYcmulxJQAOvHbv2dpfq-S_cm"
+//    player.playbackView.viewModel.accountID = "3636334163001"
+//    player.playbackView.viewModel.input = .content(stream: "3666678807001")
     player.playbackView.viewModel.muted = true
     player.controlsView.fullscreenButton.setTitle("Full", for: .normal)
     player.controlsView.errorLabel.text = "Error"

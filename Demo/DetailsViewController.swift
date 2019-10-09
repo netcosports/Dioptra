@@ -22,6 +22,10 @@ class LandscapeViewController: UIViewController {
   override var prefersStatusBarHidden: Bool {
     return true
   }
+  
+  override var shouldAutorotate: Bool {
+    return true
+  }
 }
 
 class FullscreenViewController: UIViewController {
@@ -41,6 +45,10 @@ class FullscreenViewController: UIViewController {
 
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
     return UIInterfaceOrientationMask.all
+  }
+  
+  override var shouldAutorotate: Bool {
+    return true
   }
 
   override var prefersStatusBarHidden: Bool {
