@@ -18,12 +18,18 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
 
   fileprivate weak var presentingView: UIView?
   fileprivate weak var dismissTarget: UIView?
+  fileprivate var dismissTargetFrame: CGRect
+
   fileprivate var presentingOrientation = TransitionOrientation.current()
 
   public init(presentingView: UIView) {
     self.presentingView = presentingView
     self.dismissTarget = presentingView.superview
-
+    if let window = presentingView.window {
+      self.dismissTargetFrame = dismissTarget?.convert(presentingView.frame, to: window) ?? .zero
+    } else {
+      self.dismissTargetFrame = .zero
+    }
     super.init()
   }
 
@@ -71,11 +77,15 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
         midX = startFrame.midY
         midY = startFrame.midX
       }
+      let invertedSize = CGSize(width: UIScreen.main.bounds.height, height: UIScreen.main.bounds.width)
+      fromVC.view.transform = CGAffineTransform.identity
+      fromVC.view.bounds = CGRect(origin: .zero, size: invertedSize)
+      fromVC.view.transform = CGAffineTransform(rotationAngle: angle)
     } else {
       midX = UIScreen.main.bounds.width * 0.5
       midY = UIScreen.main.bounds.height * 0.5
       targetView = dismissTarget
-      targetFrame = dismissTarget.superview?.convert(dismissTarget.frame, to: toVC.view) ?? .zero
+      targetFrame = dismissTargetFrame
       switch transition {
       case .left:
         angle = -3.0 * CGFloat.pi * 0.5

@@ -18,11 +18,17 @@ public class FullscreenTransition: NSObject, UIViewControllerAnimatedTransitioni
 
   fileprivate weak var presentingView: UIView?
   fileprivate weak var dismissTarget: UIView?
+  fileprivate var dismissTargetFrame: CGRect
   fileprivate var presentingOrientation = TransitionOrientation.current()
 
   public init(presentingView: UIView) {
     self.presentingView = presentingView
     self.dismissTarget = presentingView.superview
+    if let window = presentingView.window {
+      self.dismissTargetFrame = dismissTarget?.convert(presentingView.frame, to: window) ?? .zero
+    } else {
+      self.dismissTargetFrame = .zero
+    }
 
     super.init()
   }
@@ -77,11 +83,19 @@ public class FullscreenTransition: NSObject, UIViewControllerAnimatedTransitioni
         midX = startFrame.midX
         midY = startFrame.midY
       }
+      switch transition {
+      case .left, .right:
+        let invertedSize = CGSize(width: UIScreen.main.bounds.height, height: UIScreen.main.bounds.width)
+        fromVC.view.transform = CGAffineTransform.identity
+        fromVC.view.bounds = CGRect(origin: .zero, size: invertedSize)
+        fromVC.view.transform = CGAffineTransform(rotationAngle: angle)
+      default: break
+      }
     } else {
       midX = UIScreen.main.bounds.width * 0.5
       midY = UIScreen.main.bounds.height * 0.5
       targetView = dismissTarget
-      targetFrame = dismissTarget.superview?.convert(dismissTarget.frame, to: toVC.view) ?? .zero
+      targetFrame = dismissTargetFrame
       if UIDevice.current.userInterfaceIdiom != .pad {
         switch transition {
         case .left:
