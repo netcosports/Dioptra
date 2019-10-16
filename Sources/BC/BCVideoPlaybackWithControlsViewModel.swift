@@ -145,7 +145,7 @@ extension BCVideoPlaybackWithControlsViewModel: BCOVPlaybackControllerDelegate {
 
 
   public func playbackController(_ controller: BCOVPlaybackController!, didAdvanceTo session: BCOVPlaybackSession!) {
-
+    session.player.isMuted = muted
   }
 
   public func playbackController(_ controller: BCOVPlaybackController!, playbackSession session: BCOVPlaybackSession!, didProgressTo progress: TimeInterval) {
