@@ -15,17 +15,22 @@ public protocol TransitionableMethod {
   var transition: Transitionable.Transition? { get }
 }
 
+public enum DismissTarget {
+  case view
+  case frame
+}
+
 public enum TransitionMethod: TransitionableMethod {
   case none
   case landscape(presentingView: UIView)
-  case fullscreen(presentingView: UIView)
+  case fullscreen(presentingView: UIView, dismissTarget: DismissTarget)
 
   public var transition: Transitionable.Transition? {
     switch self {
     case .landscape(let presentingView):
       return LandscapeTransition(presentingView: presentingView)
-    case .fullscreen(let presentingView):
-      return FullscreenTransition(presentingView: presentingView)
+    case .fullscreen(let presentingView, let dismissTarget):
+      return FullscreenTransition(presentingView: presentingView, dismissTarget: dismissTarget)
     case .none:
       return nil
     }

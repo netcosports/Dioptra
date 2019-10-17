@@ -87,7 +87,7 @@ class ConstraintsVideoCell: CollectionViewCell, Reusable {
       let detailsViewController = FullscreenViewController()
       self.fullscreenViewController = detailsViewController
       container.present(modal: detailsViewController,
-                        method: TransitionMethod.fullscreen(presentingView: self.player))
+                        method: TransitionMethod.fullscreen(presentingView: self.player, dismissTarget: .view))
     }
   }
   
