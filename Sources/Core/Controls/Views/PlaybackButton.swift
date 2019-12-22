@@ -264,7 +264,7 @@ open class PlaybackButton: UIButton {
 public extension Reactive where Base: PlaybackButton {
 
   public var state: ControlProperty<PlaybackButtonState> {
-    return base.rx.controlProperty(editingEvents: UIControlEvents.allEvents, getter: { button in
+    return base.rx.controlProperty(editingEvents: UIControl.Event.allEvents, getter: { button in
       return button.buttonState
     }, setter: { button, state in
       button.setButtonState(state, animated: true)

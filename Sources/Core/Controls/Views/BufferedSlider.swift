@@ -178,7 +178,7 @@ open class BufferedSlider: UISlider {
 public extension Reactive where Base: BufferedSlider {
 
   public var buffer: ControlProperty<Float> {
-    return base.rx.controlProperty(editingEvents: UIControlEvents.allEvents, getter: { slider in
+    return base.rx.controlProperty(editingEvents: UIControl.Event.allEvents, getter: { slider in
       return Float(slider.bufferEndValue)
     }, setter: { slider, buffer in
       slider.bufferStartValue = 0.0
@@ -188,7 +188,7 @@ public extension Reactive where Base: BufferedSlider {
   }
 
   public var bufferedValue: ControlProperty<Float> {
-    return base.rx.controlProperty(editingEvents: UIControlEvents.allEvents, getter: { slider in
+    return base.rx.controlProperty(editingEvents: UIControl.Event.allEvents, getter: { slider in
       return slider.value
     }, setter: { slider, value in
       slider.value = value

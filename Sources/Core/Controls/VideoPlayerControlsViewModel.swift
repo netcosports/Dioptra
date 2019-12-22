@@ -12,10 +12,10 @@ import RxCocoa
 open class VideoPlayerControlsViewModel: VideoControls {
 
   public struct Settings {
-    public init(autoHideTimer: Double = 3.0) {
+    public init(autoHideTimer: DispatchTimeInterval = .seconds(3)) {
       self.autoHideTimer = autoHideTimer
     }
-    public var autoHideTimer: Double
+    public var autoHideTimer: DispatchTimeInterval
   }
 
   public init(settings: Settings = Settings(), scheduler: SchedulerType = MainScheduler.instance) {

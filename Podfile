@@ -9,7 +9,7 @@ install! 'cocoapods', :disable_input_output_paths => true
 
 target 'Demo' do
 
-  pod 'Astrolabe', :git => 'https://github.com/netcosports/Astrolabe', :branch => 'swift-4.2'
+  pod 'Astrolabe'
 
   pod 'Dioptra/AV', :path => '.'
   pod 'Dioptra/DM', :path => '.'

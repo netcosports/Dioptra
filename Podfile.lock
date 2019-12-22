@@ -1,47 +1,50 @@
 PODS:
-  - Astrolabe (4.2.0):
-    - Astrolabe/Core (= 4.2.0)
-  - Astrolabe/Core (4.2.0):
-    - RxCocoa (~> 4.2)
-    - RxSwift (~> 4.2)
+  - Astrolabe (5.1.0):
+    - Astrolabe/Core (= 5.1.0)
+  - Astrolabe/Core (5.1.0):
+    - RxCocoa (~> 5)
+    - RxSwift (~> 5)
   - Brightcove-Player-Core/dynamic (6.3.11)
   - DailymotionPlayerSDK (3.7.8)
-  - Dioptra/AV (5.1):
+  - Dioptra/AV (5.1.1):
     - Dioptra/Core
-  - Dioptra/Core (5.1):
-    - RxCocoa (~> 4.5)
-    - RxGesture (~> 2.0)
-    - RxSwift (~> 4.5)
-  - Dioptra/DM (5.1):
+  - Dioptra/Core (5.1.1):
+    - RxCocoa (~> 5)
+    - RxGesture (~> 3)
+    - RxSwift (~> 5)
+  - Dioptra/DM (5.1.1):
     - DailymotionPlayerSDK
     - Dioptra/Core
-  - Dioptra/Presentation (5.1):
-    - RxCocoa (~> 4.5)
-    - RxGesture (~> 2.0)
-    - RxSwift (~> 4.5)
-  - Dioptra/YT (5.1):
+  - Dioptra/Presentation (5.1.1):
+    - RxCocoa (~> 5)
+    - RxGesture (~> 3)
+    - RxSwift (~> 5)
+  - Dioptra/YT (5.1.1):
     - Dioptra/Core
     - youtube-ios-player-helper
   - Dioptra_BC (5.0):
     - Brightcove-Player-Core/dynamic
     - Dioptra/AV
   - Nimble (7.3.4)
-  - Quick (2.1.0)
-  - RxBlocking (4.5.0):
-    - RxSwift (>= 4.4.2, ~> 4.4)
-  - RxCocoa (4.5.0):
-    - RxSwift (>= 4.4.2, ~> 4.4)
-  - RxGesture (2.2.0):
-    - RxCocoa (~> 4.5)
-    - RxSwift (~> 4.5)
-  - RxSwift (4.5.0)
-  - RxTest (4.5.0):
-    - RxSwift (>= 4.4.2, ~> 4.4)
+  - Quick (2.2.0)
+  - RxBlocking (5.0.1):
+    - RxSwift (~> 5)
+  - RxCocoa (5.0.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxGesture (3.0.1):
+    - RxCocoa (~> 5.0)
+    - RxSwift (~> 5.0)
+  - RxRelay (5.0.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.0.1)
+  - RxTest (5.0.1):
+    - RxSwift (~> 5)
   - SnapKit (4.2.0)
   - youtube-ios-player-helper (0.1.6)
 
 DEPENDENCIES:
-  - Astrolabe (from `https://github.com/netcosports/Astrolabe`, branch `swift-4.2`)
+  - Astrolabe
   - Dioptra/AV (from `.`)
   - Dioptra/DM (from `.`)
   - Dioptra/Presentation (from `.`)
@@ -57,47 +60,42 @@ SPEC REPOS:
   https://github.com/brightcove/BrightcoveSpecs.git:
     - Brightcove-Player-Core
   https://github.com/CocoaPods/Specs.git:
+    - Astrolabe
     - DailymotionPlayerSDK
     - Nimble
     - Quick
     - RxBlocking
     - RxCocoa
     - RxGesture
+    - RxRelay
     - RxSwift
     - RxTest
     - SnapKit
     - youtube-ios-player-helper
 
 EXTERNAL SOURCES:
-  Astrolabe:
-    :branch: swift-4.2
-    :git: https://github.com/netcosports/Astrolabe
   Dioptra:
     :path: "."
   Dioptra_BC:
     :path: "./Dioptra_BC.podspec"
 
-CHECKOUT OPTIONS:
-  Astrolabe:
-    :commit: fe77034ec20116be4012517b3f5b492766b862d4
-    :git: https://github.com/netcosports/Astrolabe
-
 SPEC CHECKSUMS:
-  Astrolabe: 20fc84f98108a61b621d0c259b8dc2d47ee90693
+  Astrolabe: 4da23a9da1a934fd8854765e79f53674c4ac19dd
   Brightcove-Player-Core: 2984d9852c0cffad76949e95172db22c20380266
   DailymotionPlayerSDK: 8f08b46718bb6728f6b1dae9e431480a11688e1a
-  Dioptra: 39a433b681cdcb6ecbec3b9bc332737e24a8e519
+  Dioptra: 1290818da045d13f93abf1f19b7e64581a39708f
   Dioptra_BC: 5f22eddcfba1522bbb37ca5a7d5fdfc2685440f2
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
-  Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
-  RxBlocking: 79413e4d916f44bb3e113c5b2cc059e36fe58910
-  RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
-  RxGesture: c1b7bf17166b0ef9d642a9510f8bac5785f18990
-  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
-  RxTest: 3ccb66bfbace0bf7df1c43a7c75d046f8ce60372
+  Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
+  RxBlocking: c5e090f42d046df8b0e7752742510f349963710f
+  RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
+  RxGesture: a3f8dd6adf078110ed5e1c9c30d09d705a09852e
+  RxRelay: 89d54507f4fd4d969e6ec1d4bd7f3673640b4640
+  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
+  RxTest: 0132f952a61da82d5233abedaa559df91e5330e5
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: fee0ad300188213381c2d08c6bf8e575092d990f
+PODFILE CHECKSUM: fa135e1f5aa550bef9ad93c079494636542f8706
 
 COCOAPODS: 1.8.4
