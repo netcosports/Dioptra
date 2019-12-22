@@ -8,9 +8,6 @@ PODS:
   - DailymotionPlayerSDK (3.7.8)
   - Dioptra/AV (5.0):
     - Dioptra/Core
-  - Dioptra/BC (5.0):
-    - Brightcove-Player-Core/dynamic
-    - Dioptra/AV
   - Dioptra/Core (5.0):
     - RxCocoa (~> 4.5)
     - RxGesture (~> 2.0)
@@ -25,6 +22,9 @@ PODS:
   - Dioptra/YT (5.0):
     - Dioptra/Core
     - youtube-ios-player-helper
+  - Dioptra_BC (5.0):
+    - Brightcove-Player-Core/dynamic
+    - Dioptra/AV
   - Nimble (7.3.4)
   - Quick (2.1.0)
   - RxBlocking (4.5.0):
@@ -43,10 +43,10 @@ PODS:
 DEPENDENCIES:
   - Astrolabe (from `https://github.com/netcosports/Astrolabe`, branch `swift-4.2`)
   - Dioptra/AV (from `.`)
-  - Dioptra/BC (from `.`)
   - Dioptra/DM (from `.`)
   - Dioptra/Presentation (from `.`)
   - Dioptra/YT (from `.`)
+  - Dioptra_BC (from `./Dioptra_BC.podspec`)
   - Nimble (~> 7.0)
   - Quick
   - RxBlocking
@@ -56,7 +56,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/brightcove/BrightcoveSpecs.git:
     - Brightcove-Player-Core
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - DailymotionPlayerSDK
     - Nimble
     - Quick
@@ -74,6 +74,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/netcosports/Astrolabe
   Dioptra:
     :path: "."
+  Dioptra_BC:
+    :path: "./Dioptra_BC.podspec"
 
 CHECKOUT OPTIONS:
   Astrolabe:
@@ -84,7 +86,8 @@ SPEC CHECKSUMS:
   Astrolabe: 20fc84f98108a61b621d0c259b8dc2d47ee90693
   Brightcove-Player-Core: 2984d9852c0cffad76949e95172db22c20380266
   DailymotionPlayerSDK: 8f08b46718bb6728f6b1dae9e431480a11688e1a
-  Dioptra: b9d7b71a823af1e7a573a3fc4e11cd74f9935c47
+  Dioptra: c9230870f21af4b6ee5bf5c196066d387f4e6027
+  Dioptra_BC: 5f22eddcfba1522bbb37ca5a7d5fdfc2685440f2
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
   RxBlocking: 79413e4d916f44bb3e113c5b2cc059e36fe58910
@@ -95,6 +98,6 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: 22122cae809bb75deefea09d17c180ea6ea5d639
+PODFILE CHECKSUM: fee0ad300188213381c2d08c6bf8e575092d990f
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.4

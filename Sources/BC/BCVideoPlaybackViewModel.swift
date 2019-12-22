@@ -8,6 +8,7 @@
 
 import AVKit
 import BrightcovePlayerSDK
+import Dioptra
 import RxSwift
 import RxCocoa
 
@@ -33,7 +34,7 @@ open class BCVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel, BCOVPlay
   open var playbackCreation: PlaybackCreationBlock?
   open var targetView: UIView?
 
-  override func startPlayback(with stream: String) {
+  override open func startPlayback(with stream: String) {
     super.startPlayback(with: stream)
     guard let service = BCOVPlaybackService(accountId: accountID, policyKey: servicePolicyKey) else {
       return
@@ -55,19 +56,19 @@ open class BCVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel, BCOVPlay
     bind(to: item)
   }
 
-  override func play() {
+  override open func play() {
     playback?.play()
   }
 
-  override func pause() {
+  override open func pause() {
     playback?.pause()
   }
 
-  override func stop() {
+  override open func stop() {
     player?.replaceCurrentItem(with: nil)
   }
 
-  override func seek(to seconds: TimeInSeconds) {
+  override open func seek(to seconds: TimeInSeconds) {
     if let timeRange = player?.currentItem?.seekableTimeRanges.last?.timeRangeValue {
       let duration = timeRange.end
       let progress = seconds / CMTimeGetSeconds(duration)

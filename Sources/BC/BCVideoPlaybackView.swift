@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import BrightcovePlayerSDK
+import Dioptra
 import RxSwift
 import RxCocoa
 

@@ -7,6 +7,7 @@
 //
 import AVKit
 import BrightcovePlayerSDK
+import Dioptra
 import RxSwift
 import RxCocoa
 

@@ -17,7 +17,7 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
     player = AVPlayer()
   }
 
-  override func startPlayback(with stream: String) {
+  override open func startPlayback(with stream: String) {
     super.startPlayback(with: stream)
     let item: AVPlayerItem
     if stream.hasPrefix("http") {
@@ -47,16 +47,16 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     public let periodicTimeUpdateInterval: CMTime
   }
 
-  internal let seekCompleatedRelay = PublishRelay<Void>()
   fileprivate var disposeBag: DisposeBag?
   fileprivate let itemRelay             = PublishRelay<AVPlayerItem?>()
   fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
   fileprivate let speedRelay            = PublishRelay<Double>()
   fileprivate let availableQualitiesRelay = BehaviorSubject<[VideoQuality]>(value: [.auto])
-  let stateRelay                        = PublishRelay<PlayerState>()
   var expectedStartTime: Double?
 
-  var player: AVPlayer?
+  public let stateRelay = PublishRelay<PlayerState>()
+  public let seekCompleatedRelay = PublishRelay<Void>()
+  public var player: AVPlayer?
 
   public typealias Stream = String
   public var input: Input<Stream> = .cleanup {
@@ -276,7 +276,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     self.disposeBag = disposeBag
   }
 
-  func startPlayback(with stream: String) {
+  open func startPlayback(with stream: String) {
     guard settings.retrieveQualities else { return }
     DispatchQueue.global(qos: .background).async { [weak self] in
       let builder = ManifestBuilder()
@@ -309,23 +309,23 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     }
   }
 
-  internal func bind(to item: AVPlayerItem) {
+  open func bind(to item: AVPlayerItem) {
     itemRelay.accept(item)
   }
 
-  internal func play() {
+  open func play() {
     player?.rate = Float(speed)
   }
 
-  internal func pause() {
+  open func pause() {
     player?.rate = 0.0
   }
 
-  internal func stop() {
+  open func stop() {
     player?.replaceCurrentItem(with: nil)
   }
 
-  internal func seek(to seconds: TimeInSeconds) {
+  open func seek(to seconds: TimeInSeconds) {
     if let timeRange = player?.currentItem?.seekableTimeRanges.last?.timeRangeValue {
       let duration = timeRange.end
       let progress = seconds / CMTimeGetSeconds(duration)

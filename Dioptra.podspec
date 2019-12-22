@@ -27,12 +27,6 @@ Pod::Spec.new do |s|
     sub.dependency 'Dioptra/Core'
   end
 
-  s.subspec 'BC' do |sub|
-    sub.source_files = 'Sources/BC/**/*.swift'
-    sub.dependency 'Brightcove-Player-Core/dynamic'
-    sub.dependency 'Dioptra/AV'
-  end
-
   s.subspec 'DM' do |sub|
     sub.source_files = 'Sources/DM/**/*.swift'
     sub.dependency 'DailymotionPlayerSDK'

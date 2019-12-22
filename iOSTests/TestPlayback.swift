@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 
 class TestPlayback: VideoPlayback {
+  var volume: Float = 1.0
+  
   var quality = VideoQuality.auto
   var speed: Double = 1.0
   var speedUpdated: Driver<Double> = .empty()
@@ -30,7 +32,7 @@ class TestPlayback: VideoPlayback {
   let startedSubject = PublishSubject<String>()
   let finishedSubject = PublishSubject<String>()
   let playerStateRelay = BehaviorRelay<PlayerState>(value: PlayerState.idle)
-  var seekCompleatedRelay = PublishRelay<Void>()
+  public let seekCompleatedRelay = PublishRelay<Void>()
 
   var seekCompleated: Driver<Void> {
     return seekCompleatedRelay.asDriver(onErrorJustReturn: ())

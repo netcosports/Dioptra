@@ -47,7 +47,8 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   let openUrlSubject = PublishSubject<URL>()
   var expectedStartTime: Double?
 
-  fileprivate let seekCompleatedRelay = PublishRelay<Void>()
+  public let seekCompleatedRelay = PublishRelay<Void>()
+
   fileprivate let currentTimeRelay    = PublishRelay<TimeInSeconds>()
   fileprivate let durationRelay    = PublishRelay<TimeInSeconds>()
   fileprivate let progressRelay    = PublishRelay<TimeInSeconds>()

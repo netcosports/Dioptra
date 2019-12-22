@@ -8,6 +8,7 @@
 
 import Astrolabe
 import Dioptra
+import Dioptra_BC
 import RxSwift
 
 class ManualLayoutView: UIView {
