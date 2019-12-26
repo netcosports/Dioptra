@@ -6,20 +6,20 @@ PODS:
     - RxSwift (~> 5)
   - Brightcove-Player-Core/dynamic (6.3.11)
   - DailymotionPlayerSDK (3.7.8)
-  - Dioptra/AV (5.1.1):
+  - Dioptra/AV (5.1.2):
     - Dioptra/Core
-  - Dioptra/Core (5.1.1):
+  - Dioptra/Core (5.1.2):
     - RxCocoa (~> 5)
     - RxGesture (~> 3)
     - RxSwift (~> 5)
-  - Dioptra/DM (5.1.1):
+  - Dioptra/DM (5.1.2):
     - DailymotionPlayerSDK
     - Dioptra/Core
-  - Dioptra/Presentation (5.1.1):
+  - Dioptra/Presentation (5.1.2):
     - RxCocoa (~> 5)
     - RxGesture (~> 3)
     - RxSwift (~> 5)
-  - Dioptra/YT (5.1.1):
+  - Dioptra/YT (5.1.2):
     - Dioptra/Core
     - youtube-ios-player-helper
   - Dioptra_BC (5.0):
@@ -83,7 +83,7 @@ SPEC CHECKSUMS:
   Astrolabe: 4da23a9da1a934fd8854765e79f53674c4ac19dd
   Brightcove-Player-Core: 2984d9852c0cffad76949e95172db22c20380266
   DailymotionPlayerSDK: 8f08b46718bb6728f6b1dae9e431480a11688e1a
-  Dioptra: 1290818da045d13f93abf1f19b7e64581a39708f
+  Dioptra: 3b57e872a6fcd48e89f2a3771859f923b6db1c29
   Dioptra_BC: 5f22eddcfba1522bbb37ca5a7d5fdfc2685440f2
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
@@ -96,6 +96,6 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: fa135e1f5aa550bef9ad93c079494636542f8706
+PODFILE CHECKSUM: 899e96e214aeab615cf4ec26a30296ae77b933cb
 
 COCOAPODS: 1.8.4
