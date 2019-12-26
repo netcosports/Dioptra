@@ -1,0 +1,22 @@
+name: Dioptra
+options:
+  minimumXcodeGenVersion: '2.1.0'
+  xcodeVersion: '11.3'
+  indentWidth: 2
+  tabWidth: 2
+  developmentLanguage: 'en'
+targets:
+  Demo:
+    type: application
+    platform: iOS
+    deploymentTarget: '10.0'
+    sources: 'Demo'
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: [1]
+        PRODUCT_BUNDLE_IDENTIFIER: com.dev.dioptra
+        SWIFT_VERSION: '5.1'
+  iOSTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: 'iOSTests'
