@@ -69,7 +69,7 @@ open class WrapperViewModel: NSObject, VideoPlayback {
   public var input: Input<Stream> = .cleanup {
 
     didSet {
-      print("No actions here...")
+      print("Input can not be provided since wrapper view must be implemented outside the Dioptra lib")
     }
   }
 
