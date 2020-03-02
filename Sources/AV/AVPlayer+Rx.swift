@@ -49,6 +49,7 @@ extension Reactive where Base: AVPlayer {
         if #available(iOS 10.0, *) {
           guard self.base.reasonForWaitingToPlay == nil else { return }
         }
+        guard self.base.currentItem?.status != .unknown else { return }
         observer.onNext(time)
       }
 
