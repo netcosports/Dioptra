@@ -176,12 +176,6 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     player.actionAtItemEnd = .none
     let disposeBag = DisposeBag()
     player.rx.periodicTimeObserver(interval: settings.periodicTimeUpdateInterval)
-      .filter { [weak self] progress in
-        guard let timeRange = self?.player?.currentItem?.seekableTimeRanges.last?.timeRangeValue else {
-          return false
-        }
-        return timeRange.containsTime(progress)
-      }
       .map {
         return CMTimeGetSeconds($0)
       }
