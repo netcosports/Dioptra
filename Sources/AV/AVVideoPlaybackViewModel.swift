@@ -12,6 +12,8 @@ import RxCocoa
 
 open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
 
+  public var itemCreationClosure: ((String) -> (AVPlayerItem?))?
+
   override init() {
     super.init()
     player = AVPlayer()
@@ -20,7 +22,9 @@ open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
   override open func startPlayback(with stream: String) {
     super.startPlayback(with: stream)
     let item: AVPlayerItem
-    if stream.hasPrefix("http") {
+    if let customItem = itemCreationClosure?(stream) {
+      item = customItem
+    } else if stream.hasPrefix("http") {
       guard let url = URL(string: stream) else { return }
       item = AVPlayerItem(url: url)
     } else {
@@ -42,7 +46,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       self.retrieveQualities = retrieveQualities
       self.periodicTimeUpdateInterval = periodicTimeUpdateInterval
     }
-    
+
     public let retrieveQualities: Bool
     public let periodicTimeUpdateInterval: CMTime
   }
