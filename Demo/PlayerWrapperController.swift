@@ -89,7 +89,7 @@ extension DMPlayerDemo: DMPlayerViewControllerDelegate {
       case "ad_end":
         playerStateClosure?(.ad(state: .finished))
       case "error":
-        playerStateClosure?(.error(error: nil))
+				playerStateClosure?(.error(error: .playback(error: nil)))
       case "waiting":
         playerStateClosure?(.loading)
       default: break

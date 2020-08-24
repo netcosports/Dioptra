@@ -25,18 +25,21 @@ Pod::Spec.new do |s|
   s.subspec 'AV' do |sub|
     sub.source_files = 'Sources/AV/**/*.swift'
     sub.dependency 'Dioptra/Core'
+    sub.dependency 'RxReachability'
   end
 
   s.subspec 'DM' do |sub|
     sub.source_files = 'Sources/DM/**/*.swift'
     sub.dependency 'DailymotionPlayerSDK'
     sub.dependency 'Dioptra/Core'
+    sub.dependency 'RxReachability'
   end
 
   s.subspec 'YT' do |sub|
     sub.source_files = 'Sources/YT/**/*.swift'
     sub.dependency 'youtube-ios-player-helper'
     sub.dependency 'Dioptra/Core'
+    sub.dependency 'RxReachability'
   end
 
   #FIXME: need to put this into separated pod

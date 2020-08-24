@@ -8,6 +8,7 @@ PODS:
   - DailymotionPlayerSDK (3.7.8)
   - Dioptra/AV (5.1.6):
     - Dioptra/Core
+    - RxReachability
   - Dioptra/Core (5.1.6):
     - RxCocoa (~> 5)
     - RxGesture (~> 3)
@@ -15,18 +16,21 @@ PODS:
   - Dioptra/DM (5.1.6):
     - DailymotionPlayerSDK
     - Dioptra/Core
+    - RxReachability
   - Dioptra/Presentation (5.1.6):
     - RxCocoa (~> 5)
     - RxGesture (~> 3)
     - RxSwift (~> 5)
   - Dioptra/YT (5.1.6):
     - Dioptra/Core
+    - RxReachability
     - youtube-ios-player-helper
   - Dioptra_BC (5.0):
     - Brightcove-Player-Core/dynamic
     - Dioptra/AV
   - Nimble (7.3.4)
   - Quick (2.2.0)
+  - ReachabilitySwift (4.3.1)
   - RxBlocking (5.0.1):
     - RxSwift (~> 5)
   - RxCocoa (5.0.1):
@@ -35,6 +39,10 @@ PODS:
   - RxGesture (3.0.1):
     - RxCocoa (~> 5.0)
     - RxSwift (~> 5.0)
+  - RxReachability (1.0.0):
+    - ReachabilitySwift (~> 4.3.1)
+    - RxCocoa (~> 5)
+    - RxSwift (~> 5)
   - RxRelay (5.0.1):
     - RxSwift (~> 5)
   - RxSwift (5.0.1)
@@ -64,9 +72,11 @@ SPEC REPOS:
     - DailymotionPlayerSDK
     - Nimble
     - Quick
+    - ReachabilitySwift
     - RxBlocking
     - RxCocoa
     - RxGesture
+    - RxReachability
     - RxRelay
     - RxSwift
     - RxTest
@@ -83,13 +93,15 @@ SPEC CHECKSUMS:
   Astrolabe: 4da23a9da1a934fd8854765e79f53674c4ac19dd
   Brightcove-Player-Core: 2984d9852c0cffad76949e95172db22c20380266
   DailymotionPlayerSDK: 8f08b46718bb6728f6b1dae9e431480a11688e1a
-  Dioptra: a77c8a69df3b7055d43e0b7161d2f48b7252f613
+  Dioptra: 684041a911de8ef5d50839454f6c017f6a64a216
   Dioptra_BC: 5f22eddcfba1522bbb37ca5a7d5fdfc2685440f2
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
+  ReachabilitySwift: 4032e2f59586e11e3b0ebe15b167abdd587a388b
   RxBlocking: c5e090f42d046df8b0e7752742510f349963710f
   RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
   RxGesture: a3f8dd6adf078110ed5e1c9c30d09d705a09852e
+  RxReachability: 21d3e96f39bc166a21c357e923f47dec148ca97b
   RxRelay: 89d54507f4fd4d969e6ec1d4bd7f3673640b4640
   RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
   RxTest: 0132f952a61da82d5233abedaa559df91e5330e5

@@ -10,6 +10,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 import youtube_ios_player_helper
+import Reachability
+import RxReachability
 
 open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
 
@@ -43,6 +45,7 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
 
   fileprivate var startCount: Int = 0
   fileprivate let disposeBag = DisposeBag()
+	fileprivate let reachability = Reachability()
 
   let streamSubject = PublishSubject<Stream?>()
   let mutedRelay = BehaviorRelay<Bool>(value: true)
@@ -63,6 +66,8 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
       #warning("FIXME: we need to find correct way to manage completion")
       self?.seekCompletionRelay.accept(())
     }).disposed(by: disposeBag)
+		try? reachability?.startNotifier()
+		reachability?.rx.isReachable.compactMap { $0 ? nil : PlayerState.error(error: .connection(error: nil)) }.bind(to: playerStateRelay).disposed(by: disposeBag)
   }
 
   public typealias Stream = String
@@ -105,6 +110,10 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   }
 
   open var volume: Float = 1.0
+
+	deinit {
+		reachability?.stopNotifier()
+	}
 }
 
 
@@ -139,7 +148,7 @@ extension YTVideoPlaybackViewModel: YTPlayerViewDelegate {
   }
 
   public func playerView(_ playerView: YTPlayerView, receivedError error: YTPlayerError) {
-    playerStateRelay.accept(.error(error: nil))
+		playerStateRelay.accept(.error(error: .playback(error: nil)))
   }
 
   public func playerViewPreferredWebViewBackgroundColor(_ playerView: YTPlayerView) -> UIColor {

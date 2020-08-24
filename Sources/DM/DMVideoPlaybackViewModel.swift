@@ -10,6 +10,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 import DailymotionPlayerSDK
+import Reachability
+import RxReachability
 
 open class DMVideoPlaybackViewModel: VideoPlayback {
 
@@ -41,6 +43,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   }
 
   fileprivate let disposeBag = DisposeBag()
+	fileprivate let reachability = Reachability()
 
   let streamSubject = PublishSubject<Stream?>()
   let mutedRelay = BehaviorRelay<Bool>(value: true)
@@ -97,8 +100,14 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
 
   init() {
     seek.bind(to: currentTimeRelay).disposed(by: disposeBag)
+		try? reachability?.startNotifier()
+		reachability?.rx.isReachable.compactMap { $0 ? nil : PlayerState.error(error: .connection(error: nil)) }.bind(to: playerStateRelay).disposed(by: disposeBag)
   }
 
+	deinit {
+		reachability?.stopNotifier()
+	}
+	
   public var availableQualities: Driver<[VideoQuality]> {
     return availableQualitiesRelay.asDriver(onErrorJustReturn: [])
   }
@@ -147,7 +156,7 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
       case "ad_end":
         playerStateRelay.accept(.ad(state: .finished))
       case "error":
-        playerStateRelay.accept(.error(error: nil))
+				playerStateRelay.accept(.error(error: .playback(error: nil)))
       case "waiting":
         playerStateRelay.accept(.loading)
       default: break
