@@ -74,6 +74,11 @@ extension Input: Equatable {
   }
 }
 
+public enum DioptraError {
+	case connection(error: Error?)
+	case playback(error: Error?)
+}
+
 public enum PlayerState: Equatable {
 
   case ready
@@ -82,7 +87,7 @@ public enum PlayerState: Equatable {
   case idle
   case loading
   case stuck
-  case error(error: Error?)
+  case error(error: DioptraError)
   case finished
 
   public static func == (lhs: PlayerState, rhs: PlayerState) -> Bool {

@@ -28,9 +28,9 @@ class VideoCell: CollectionViewCell, Reusable {
   //typealias Player = VideoPlayerView<YTVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
   //typealias Player = VideoPlayerView<BCVideoPlaybackView, VideoPlayerControlsView>
-  //typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
+  typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
   
-  typealias Player = VideoPlayerView<BCVideoPlaybackWithControlsView, VideoPlayerControlsView>
+  //typealias Player = VideoPlayerView<BCVideoPlaybackWithControlsView, VideoPlayerControlsView>
 
   let player = Player(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width - 48,
                                     height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
@@ -46,10 +46,13 @@ class VideoCell: CollectionViewCell, Reusable {
     contentView.addSubview(playerContainer)
     playerContainer.addSubview(player)
 
-//    player.playbackView.viewModel.input = .content(stream: "http://psg75.c-cast-cdn.tv/8E0071723758EE5CDD1CA0544FE4FF53/8E0071723758EE5CDD1CA0544FE4FF53.mp4")
-    player.playbackView.viewModel.servicePolicyKey = "BCpkADawqM0OUY2p9f8mN-yz3AYZG5JGObBFziLyu8f14LJ-g6hnM2eOFAN_IASTrVaNkpdNlq4bCQdoMTuKyRBbBMH4B4lpupOOXyfb18avJp_vBH-xZNaRqAE"
-    player.playbackView.viewModel.accountID = "887906353001"
-    player.playbackView.viewModel.input = .content(stream: "6095183635001")
+    player.playbackView.viewModel.input = .content(stream: "http://psg75.c-cast-cdn.tv/8E0071723758EE5CDD1CA0544FE4FF53/8E0071723758EE5CDD1CA0544FE4FF53.mp4")
+
+//    player.playbackView.viewModel.servicePolicyKey = "BCpkADawqM0OUY2p9f8mN-yz3AYZG5JGObBFziLyu8f14LJ-g6hnM2eOFAN_IASTrVaNkpdNlq4bCQdoMTuKyRBbBMH4B4lpupOOXyfb18avJp_vBH-xZNaRqAE"
+//    player.playbackView.viewModel.accountID = "887906353001"
+//    player.playbackView.viewModel.input = .content(stream: "6095183635001")
+
+//		player.playbackView.viewModel.input = .content(stream: "h7hEgE0S-uM")
 
     player.playbackView.viewModel.muted = true
     player.controlsView.fullscreenButton.setTitle("Full", for: .normal)

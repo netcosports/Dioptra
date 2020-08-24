@@ -109,7 +109,7 @@ open class BCVideoPlaybackWithControlsViewModel: NSObject, VideoPlayback {
     }
     service.findVideo(withVideoID: stream, parameters: [:]) { [weak self] (video, params, error) in
       guard let video = video else {
-        self?.playerStateRelay.accept(.error(error: error))
+				self?.playerStateRelay.accept(.error(error: .playback(error: error)))
         return
       }
       self?.playback?.setVideos([video] as NSFastEnumeration)
@@ -139,7 +139,7 @@ extension BCVideoPlaybackWithControlsViewModel: BCOVPlaybackControllerDelegate {
     case kBCOVPlaybackSessionLifecycleEventReady, kBCOVPlaybackSessionLifecycleEventFailedToPlayToEndTime:
       playerStateRelay.accept(.ready)
     case kBCOVPlaybackSessionLifecycleEventFail, kBCOVPlaybackSessionLifecycleEventError:
-      playerStateRelay.accept(.error(error: nil))
+			playerStateRelay.accept(.error(error: .playback(error: nil)))
     case kBCOVPlaybackSessionLifecycleEventPlay:
       playerStateRelay.accept(.active(state: .playing))
       playing = true

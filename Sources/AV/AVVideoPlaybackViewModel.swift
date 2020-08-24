@@ -9,6 +9,8 @@
 import AVKit
 import RxSwift
 import RxCocoa
+import RxReachability
+import Reachability
 
 open class AVVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel {
 
@@ -56,6 +58,9 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
   fileprivate let speedRelay            = PublishRelay<Double>()
   fileprivate let availableQualitiesRelay = BehaviorSubject<[VideoQuality]>(value: [.auto])
+	fileprivate let reachability = Reachability()
+	fileprivate let reachabilityDisposeBag = DisposeBag()
+
   var expectedStartTime: Double?
 
   public let stateRelay = PublishRelay<PlayerState>()
@@ -174,10 +179,23 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
     return seekCompleatedRelay.asDriver(onErrorJustReturn: ())
   }
 
+	public override init() {
+    super.init()
+		try? reachability?.startNotifier()
+		reachability?.rx.isReachable.compactMap { $0 ? nil : PlayerState.error(error: .connection(error: nil)) }.bind(to: stateRelay).disposed(by: reachabilityDisposeBag)
+  }
+
+	deinit {
+		reachability?.stopNotifier()
+	}
+
   public func bind(to player: AVPlayer) {
     self.player = player
     player.isMuted = self.muted
     player.actionAtItemEnd = .none
+
+
+
     let disposeBag = DisposeBag()
     player.rx.periodicTimeObserver(interval: settings.periodicTimeUpdateInterval)
       .map {
@@ -267,7 +285,7 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
       } else {
         return .empty()
       }
-      }.map { error in PlayerState.error(error: error) }
+		}.map { error in PlayerState.error(error: .playback(error: error)) }
       .asObservable()
       .bind(to: stateRelay)
       .disposed(by: disposeBag)
