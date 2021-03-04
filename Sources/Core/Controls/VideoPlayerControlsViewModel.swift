@@ -122,7 +122,7 @@ extension VideoPlayerControlsViewModel {
       switch seekAndState.0 {
       case .started:
         self.stateBeforeSeek = seekAndState.1
-        return .just(PlaybackState.paused)
+        return .empty()
       case .finished:
         switch self.stateBeforeSeek {
         case .active(let state):
