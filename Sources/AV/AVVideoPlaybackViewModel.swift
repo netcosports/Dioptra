@@ -54,11 +54,11 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   }
 
   fileprivate var disposeBag: DisposeBag?
+	fileprivate let reachability: Reachability?
   fileprivate let itemRelay             = PublishRelay<AVPlayerItem?>()
   fileprivate let currentTimeRelay      = PublishRelay<TimeInSeconds>()
   fileprivate let speedRelay            = PublishRelay<Double>()
   fileprivate let availableQualitiesRelay = BehaviorSubject<[VideoQuality]>(value: [.auto])
-	fileprivate let reachability = Reachability()
 	fileprivate let reachabilityDisposeBag = DisposeBag()
 
   var expectedStartTime: Double?
@@ -180,9 +180,10 @@ open class AVVideoPlaybackManagableViewModel: NSObject, VideoPlayback {
   }
 
 	public override init() {
+		reachability = try? Reachability()
     super.init()
 		try? reachability?.startNotifier()
-		reachability?.rx.isReachable.compactMap { $0 ? nil : PlayerState.error(error: .connection(error: nil)) }.bind(to: stateRelay).disposed(by: reachabilityDisposeBag)
+		reachability?.rx.isReachable.debug("===").compactMap { $0 ? nil : PlayerState.error(error: .connection(error: nil)) }.bind(to: stateRelay).disposed(by: reachabilityDisposeBag)
   }
 
 	deinit {

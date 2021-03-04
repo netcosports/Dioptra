@@ -43,7 +43,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
   }
 
   fileprivate let disposeBag = DisposeBag()
-	fileprivate let reachability = Reachability()
+	fileprivate let reachability: Reachability?
 
   let streamSubject = PublishSubject<Stream?>()
   let mutedRelay = BehaviorRelay<Bool>(value: true)
@@ -100,6 +100,7 @@ open class DMVideoPlaybackViewModel: VideoPlayback {
 
   init() {
     seek.bind(to: currentTimeRelay).disposed(by: disposeBag)
+		reachability = try? Reachability()
 		try? reachability?.startNotifier()
 		reachability?.rx.isReachable.compactMap { $0 ? nil : PlayerState.error(error: .connection(error: nil)) }.bind(to: playerStateRelay).disposed(by: disposeBag)
   }

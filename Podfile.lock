@@ -30,7 +30,7 @@ PODS:
     - Dioptra/AV
   - Nimble (7.3.4)
   - Quick (2.2.0)
-  - ReachabilitySwift (4.3.1)
+  - ReachabilitySwift (5.0.0)
   - RxBlocking (5.0.1):
     - RxSwift (~> 5)
   - RxCocoa (5.0.1):
@@ -39,8 +39,8 @@ PODS:
   - RxGesture (3.0.1):
     - RxCocoa (~> 5.0)
     - RxSwift (~> 5.0)
-  - RxReachability (1.0.0):
-    - ReachabilitySwift (~> 4.3.1)
+  - RxReachability (1.1.0):
+    - ReachabilitySwift (~> 5.0)
     - RxCocoa (~> 5)
     - RxSwift (~> 5)
   - RxRelay (5.0.1):
@@ -97,11 +97,11 @@ SPEC CHECKSUMS:
   Dioptra_BC: 5f22eddcfba1522bbb37ca5a7d5fdfc2685440f2
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
-  ReachabilitySwift: 4032e2f59586e11e3b0ebe15b167abdd587a388b
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   RxBlocking: c5e090f42d046df8b0e7752742510f349963710f
   RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
   RxGesture: a3f8dd6adf078110ed5e1c9c30d09d705a09852e
-  RxReachability: 21d3e96f39bc166a21c357e923f47dec148ca97b
+  RxReachability: 3da1c23ba6d93dabc004290cda61dd9e7884422d
   RxRelay: 89d54507f4fd4d969e6ec1d4bd7f3673640b4640
   RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
   RxTest: 0132f952a61da82d5233abedaa559df91e5330e5
@@ -110,4 +110,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 899e96e214aeab615cf4ec26a30296ae77b933cb
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.10.1

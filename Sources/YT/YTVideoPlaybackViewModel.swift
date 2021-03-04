@@ -45,7 +45,7 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
 
   fileprivate var startCount: Int = 0
   fileprivate let disposeBag = DisposeBag()
-	fileprivate let reachability = Reachability()
+	fileprivate let reachability: Reachability?
 
   let streamSubject = PublishSubject<Stream?>()
   let mutedRelay = BehaviorRelay<Bool>(value: true)
@@ -61,11 +61,13 @@ open class YTVideoPlaybackViewModel: NSObject, VideoPlayback {
   var expectedStartTime: Double?
 
   public override init() {
+		reachability = try? Reachability()
     super.init()
     seekCompletionRelay.subscribe(onNext: { [weak self] _ in
       #warning("FIXME: we need to find correct way to manage completion")
       self?.seekCompletionRelay.accept(())
     }).disposed(by: disposeBag)
+
 		try? reachability?.startNotifier()
 		reachability?.rx.isReachable.compactMap { $0 ? nil : PlayerState.error(error: .connection(error: nil)) }.bind(to: playerStateRelay).disposed(by: disposeBag)
   }
