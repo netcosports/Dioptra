@@ -4,11 +4,13 @@ PODS:
   - Astrolabe/Core (5.1.0):
     - RxCocoa (~> 5)
     - RxSwift (~> 5)
-  - Brightcove-Player-Core/dynamic (6.3.11)
   - DailymotionPlayerSDK (3.7.8)
   - Dioptra/AV (5.1.10):
     - Dioptra/Core
     - RxReachability
+  - Dioptra/Chromecast (5.1.10):
+    - Dioptra/Core
+    - google-cast-sdk
   - Dioptra/Core (5.1.10):
     - RxCocoa (~> 5)
     - RxGesture (~> 3)
@@ -25,10 +27,16 @@ PODS:
     - Dioptra/Core
     - RxReachability
     - youtube-ios-player-helper
-  - Dioptra_BC (5.0):
-    - Brightcove-Player-Core/dynamic
-    - Dioptra/AV
+  - google-cast-sdk (4.5.3):
+    - google-cast-sdk/Core (= 4.5.3)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.13)
+  - google-cast-sdk/Core (4.5.3):
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.13)
+  - GTMSessionFetcher/Core (1.5.0)
   - Nimble (7.3.4)
+  - Protobuf (3.14.0)
   - Quick (2.2.0)
   - ReachabilitySwift (5.0.0)
   - RxBlocking (5.0.1):
@@ -54,10 +62,10 @@ PODS:
 DEPENDENCIES:
   - Astrolabe
   - Dioptra/AV (from `.`)
+  - Dioptra/Chromecast (from `.`)
   - Dioptra/DM (from `.`)
   - Dioptra/Presentation (from `.`)
   - Dioptra/YT (from `.`)
-  - Dioptra_BC (from `./Dioptra_BC.podspec`)
   - Nimble (~> 7.0)
   - Quick
   - RxBlocking
@@ -65,12 +73,13 @@ DEPENDENCIES:
   - SnapKit (~> 4.0)
 
 SPEC REPOS:
-  https://github.com/brightcove/BrightcoveSpecs.git:
-    - Brightcove-Player-Core
   https://github.com/CocoaPods/Specs.git:
     - Astrolabe
     - DailymotionPlayerSDK
+    - google-cast-sdk
+    - GTMSessionFetcher
     - Nimble
+    - Protobuf
     - Quick
     - ReachabilitySwift
     - RxBlocking
@@ -86,16 +95,15 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Dioptra:
     :path: "."
-  Dioptra_BC:
-    :path: "./Dioptra_BC.podspec"
 
 SPEC CHECKSUMS:
   Astrolabe: 4da23a9da1a934fd8854765e79f53674c4ac19dd
-  Brightcove-Player-Core: 2984d9852c0cffad76949e95172db22c20380266
   DailymotionPlayerSDK: 8f08b46718bb6728f6b1dae9e431480a11688e1a
-  Dioptra: 670e457e1f5cf7858f63654245b80f288c01db7b
-  Dioptra_BC: 5f22eddcfba1522bbb37ca5a7d5fdfc2685440f2
+  Dioptra: ae2c8857e645f397096d1d5294c6f9e3206e624a
+  google-cast-sdk: f94c5df87564f71d4342400b8487665e9bed27c6
+  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
+  Protobuf: 0cde852566359049847168e51bd1c690e0f70056
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   RxBlocking: c5e090f42d046df8b0e7752742510f349963710f
@@ -108,6 +116,6 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: 899e96e214aeab615cf4ec26a30296ae77b933cb
+PODFILE CHECKSUM: d833799d5fa8167f711d2089a156ee1ce5fb3c06
 
 COCOAPODS: 1.8.4

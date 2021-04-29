@@ -8,7 +8,7 @@
 
 import Astrolabe
 import Dioptra
-import Dioptra_BC
+//import Dioptra_BC
 import RxSwift
 
 class ManualLayoutView: UIView {
@@ -25,15 +25,22 @@ class VideoCell: CollectionViewCell, Reusable {
   weak var landscapeViewController: UIViewController?
   weak var fullscreenViewController: UIViewController?
 
-  //typealias Player = VideoPlayerView<YTVideoPlaybackView, VideoPlayerControlsView>
-  //typealias Player = VideoPlayerView<DMVideoPlaybackView, VideoPlayerControlsView>
-  //typealias Player = VideoPlayerView<BCVideoPlaybackView, VideoPlayerControlsView>
-  typealias Player = VideoPlayerView<AVVideoPlaybackView, VideoPlayerControlsView>
-  
-  //typealias Player = VideoPlayerView<BCVideoPlaybackWithControlsView, VideoPlayerControlsView>
+//  typealias Playback = YTVideoPlaybackView
+//  typealias Playback = DMVideoPlaybackView
+//  typealias Playback = BCVideoPlaybackView
+//  typealias Playback = AVVideoPlaybackView
+//  typealias Playback = BCVideoPlaybackWithControlsView
 
-  let player = Player(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width - 48,
-                                    height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
+  typealias Playback = CompositePlaybackView<ChromecastPlaybackView, AVVideoPlaybackView>
+  typealias Player = VideoPlayerView<Playback, VideoPlayerControlsView>
+
+  let videoPlayerView = AVVideoPlaybackView()
+
+  let player = Player(frame: CGRect(
+    x: 0.0, y: 0.0,
+    width: UIScreen.main.bounds.width - 48,
+    height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0
+  ))
   let playerContainer = ManualLayoutView(frame: CGRect(x: 22.0, y: 44.0,
                                          width: UIScreen.main.bounds.width - 48,
                                          height: (UIScreen.main.bounds.width - 48) * 9.0 / 16.0))
@@ -41,17 +48,21 @@ class VideoCell: CollectionViewCell, Reusable {
   override func setup() {
     super.setup()
 
+    player.playbackView.firstPlaybackView.viewModel.rx.connected.debug("TEST").bind(
+      to: player.playbackView.rx.firstActive
+    ).disposed(by: disposeBag)
+
     playerContainer.translatesAutoresizingMaskIntoConstraints = true
 
     contentView.addSubview(playerContainer)
     playerContainer.addSubview(player)
 
-    player.playbackView.viewModel.input = .content(stream: "http://psg75.c-cast-cdn.tv/8E0071723758EE5CDD1CA0544FE4FF53/8E0071723758EE5CDD1CA0544FE4FF53.mp4")
+    player.playbackView.viewModel.input = .content(stream: "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/DesigningForGoogleCast.m3u8")
+    player.playbackView.viewModel.state.onNext(.playing)
 
 //    player.playbackView.viewModel.servicePolicyKey = "BCpkADawqM0OUY2p9f8mN-yz3AYZG5JGObBFziLyu8f14LJ-g6hnM2eOFAN_IASTrVaNkpdNlq4bCQdoMTuKyRBbBMH4B4lpupOOXyfb18avJp_vBH-xZNaRqAE"
 //    player.playbackView.viewModel.accountID = "887906353001"
 //    player.playbackView.viewModel.input = .content(stream: "6095183635001")
-
 //		player.playbackView.viewModel.input = .content(stream: "h7hEgE0S-uM")
 
     player.playbackView.viewModel.muted = true

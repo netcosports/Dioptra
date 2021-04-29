@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_googlecast._tcp</string>
+		<string>_0CAF644C._googlecast._tcp</string>
+	</array>
+  <key>NSBluetoothAlwaysUsageDescription</key>
+  <string>${PRODUCT_NAME} uses Bluetooth to discover nearby devices.</string>
+  <key>NSLocalNetworkUsageDescription</key>
+  <string>${PRODUCT_NAME} uses the local network to discover Cast-enabled devices on your WiFi network.</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>${PRODUCT_NAME} uses the microphone to discover nearby devices.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -25,10 +36,12 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

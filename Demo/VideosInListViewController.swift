@@ -10,7 +10,7 @@ import Astrolabe
 import Dioptra
 import RxSwift
 
-class VideosInListViewController: UIViewController, Accessor, Transitionable {
+class VideosInListViewController: BaseChromecastController, Accessor, Transitionable {
 
   var currentTransition: Transitionable.Transition?
   var customTransitionMethod = TransitionMethod.none
