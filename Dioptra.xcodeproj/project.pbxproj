@@ -11,8 +11,9 @@
 		2161AAEB6CB4B2444F0FF12B /* VideoPlayerControlsViewModelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6746EBABD9EBECF240CDC978 /* VideoPlayerControlsViewModelSpec.swift */; };
 		25CAC39070CAE128379DE65C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 741095934EDACBFE50A01682 /* Assets.xcassets */; };
 		48D54F3671F72177C9C39DA0 /* VideoPlayerViewModelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7907C8059BF82803FBFFF8 /* VideoPlayerViewModelSpec.swift */; };
+		57570817E13A395123CC92CE /* libPods-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C5F368BB6EAC9EAD0A7C388 /* libPods-Demo.a */; };
 		5B55C912F0C3F7563D97DF23 /* AVPlaybackSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A64023261DD9AD8C78C73A /* AVPlaybackSpec.swift */; };
-		6B64766B16A1D53BC53CB13F /* libPods-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0975C32E996644CA0176259D /* libPods-Demo.a */; };
+		790A7F0DF6B9EFB4FEB47576 /* libPods-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE014B318A2BECC39BCB331 /* libPods-iOSTests.a */; };
 		892AB3CBBDA35A6F06863B3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE519587BAD7641B6B849C06 /* LaunchScreen.storyboard */; };
 		963F8C43F1570615B3F80380 /* PlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C1E7910D980A61AF01A3E2 /* PlaceholderCell.swift */; };
 		9A4879ADE1CD35C7B273DF26 /* TestPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3602B290AE9352EBC8B9EA83 /* TestPlayback.swift */; };
@@ -25,13 +26,12 @@
 		CC172CA82A32A32D8A52641D /* Nimble+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2121AA69705C474F73AFBAB /* Nimble+Rx.swift */; };
 		CF33803EBEBDC2ED96883A87 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A3226A08F5E57DDD205FDD /* DetailsViewController.swift */; };
 		DBF9B3D4C7F086DEAE0B29D0 /* VideosInListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2491B17C83E8893029F24C24 /* VideosInListViewController.swift */; };
-		FB4F161405998F24B016C84F /* libPods-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA811BFDCD56FEC95F3712B2 /* libPods-iOSTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		03C1E7910D980A61AF01A3E2 /* PlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderCell.swift; sourceTree = "<group>"; };
-		0975C32E996644CA0176259D /* libPods-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E7907C8059BF82803FBFFF8 /* VideoPlayerViewModelSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewModelSpec.swift; sourceTree = "<group>"; };
+		1AE014B318A2BECC39BCB331 /* libPods-iOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-iOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2491B17C83E8893029F24C24 /* VideosInListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosInListViewController.swift; sourceTree = "<group>"; };
 		3602B290AE9352EBC8B9EA83 /* TestPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPlayback.swift; sourceTree = "<group>"; };
 		383ACD9866256D8F1DC81707 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,6 +39,7 @@
 		3D845AD143E3664DB322D6AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B55BA94868EDCE26769A9F1 /* Pods-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOSTests.debug.xcconfig"; path = "Target Support Files/Pods-iOSTests/Pods-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		59A64023261DD9AD8C78C73A /* AVPlaybackSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlaybackSpec.swift; sourceTree = "<group>"; };
+		5C5F368BB6EAC9EAD0A7C388 /* libPods-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6746EBABD9EBECF240CDC978 /* VideoPlayerControlsViewModelSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerControlsViewModelSpec.swift; sourceTree = "<group>"; };
 		741095934EDACBFE50A01682 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7A07F1E77017C84BEB72B7BD /* TestControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestControls.swift; sourceTree = "<group>"; };
@@ -50,7 +51,6 @@
 		AA67A47C23B4B60F00E6762E /* PlayerWrapperController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWrapperController.swift; sourceTree = "<group>"; };
 		AE185D24FE500657B10A7176 /* ConstraintsVideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintsVideoCell.swift; sourceTree = "<group>"; };
 		B85E68E668A13EAFEF3D08D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BA811BFDCD56FEC95F3712B2 /* libPods-iOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-iOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2121AA69705C474F73AFBAB /* Nimble+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Nimble+Rx.swift"; sourceTree = "<group>"; };
 		DB2D15B482D664CDDC106D78 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BFF72070CD8356D549B257 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -63,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB4F161405998F24B016C84F /* libPods-iOSTests.a in Frameworks */,
+				790A7F0DF6B9EFB4FEB47576 /* libPods-iOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,7 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B64766B16A1D53BC53CB13F /* libPods-Demo.a in Frameworks */,
+				57570817E13A395123CC92CE /* libPods-Demo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,8 +155,8 @@
 		D5D1DB260BEF44DD5C0706A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0975C32E996644CA0176259D /* libPods-Demo.a */,
-				BA811BFDCD56FEC95F3712B2 /* libPods-iOSTests.a */,
+				5C5F368BB6EAC9EAD0A7C388 /* libPods-Demo.a */,
+				1AE014B318A2BECC39BCB331 /* libPods-iOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
