@@ -105,7 +105,7 @@ where T1.Stream == T2.Stream {
   }
 
   public var time: Driver<TimeInSeconds> {
-    .merge(
+    return Driver<TimeInSeconds>.merge(
       firstPlayback.time,
       secondPlayback.time
     ).do(onNext: { [weak self] time in

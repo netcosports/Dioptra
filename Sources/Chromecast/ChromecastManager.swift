@@ -35,7 +35,7 @@ public class ChromecastManager: NSObject {
     GCKUICastButton.appearance().tintColor = .gray
 
     let castStyle = GCKUIStyle.sharedInstance()
-    castStyle.castViews.deviceControl.buttonTextColor = .white
+    castStyle.castViews.deviceControl.buttonTextColor = .darkGray
     castStyle.apply()
 
     GCKCastContext.sharedInstance().useDefaultExpandedMediaControls = false
