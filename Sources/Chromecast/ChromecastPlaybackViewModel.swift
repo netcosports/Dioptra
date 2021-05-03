@@ -26,13 +26,20 @@ open class ChromecastPlaybackViewModel: NSObject, VideoPlayback {
   fileprivate var currentSeekRequest: GCKRequest?
 
   public var time: Driver<TimeInSeconds> {
-    return currentStreamPositionRelay.debug("TEST").asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
+    return currentStreamPositionRelay.asDriver(onErrorJustReturn: 0.0).filter { $0.isFinite }
   }
 
   public var duration: Driver<TimeInSeconds> {
     return mediaStatusRelay.asDriver(onErrorJustReturn: .init())
-      .map { mediaStatus -> TimeInSeconds in
-      mediaStatus.currentQueueItem?.playbackDuration ?? 0.0
+      .map { [weak self] mediaStatus -> TimeInSeconds in
+        guard let remoteMediaClient = self?.sessionManager.currentSession?.remoteMediaClient else {
+          return 0.0
+        }
+        if remoteMediaClient.isPlayingLiveStream {
+          return remoteMediaClient.approximateLiveSeekableRangeEnd()
+        } else {
+          return mediaStatus.currentQueueItem?.playbackDuration ?? 0.0
+        }
     }.filter { $0.isFinite && $0 > 0.0 }
   }
 
@@ -118,7 +125,7 @@ open class ChromecastPlaybackViewModel: NSObject, VideoPlayback {
   override init() {
     super.init()
 
-    hasActiveSessionRelay.asDriver().distinctUntilChanged().debug("TEST session")
+    hasActiveSessionRelay.asDriver().distinctUntilChanged()
       .flatMapLatest { [weak self] sessionIsActive -> Driver<TimeInSeconds> in
         guard let self = self, sessionIsActive else {
           return .empty()
@@ -142,15 +149,17 @@ open class ChromecastPlaybackViewModel: NSObject, VideoPlayback {
         .distinctUntilChanged()
         .flatMapLatest { [weak self] heartbeat -> Driver<TimeInSeconds> in
           if heartbeat {
-            return Driver<Int>.timer(.seconds(1), period: .seconds(1)).map { [weak self] _ in
+            return Driver<Int>.timer(.seconds(1), period: .seconds(1))
+              .flatMap { [weak self] _ -> Driver<TimeInSeconds> in
               guard let remoteMediaClient = self?.sessionManager.currentSession?.remoteMediaClient else {
-                return 0.0
+                return .empty()
               }
-              if remoteMediaClient.isPlayingLiveStream {
-                return remoteMediaClient.approximateLiveSeekableRangeEnd()
-              } else {
-                return remoteMediaClient.approximateStreamPosition()
+              switch remoteMediaClient.mediaStatus?.playerState {
+              case .paused, .playing:
+                return .just(remoteMediaClient.approximateStreamPosition())
+              default: return .empty()
               }
+
             }
           } else {
             return .empty()
@@ -160,7 +169,7 @@ open class ChromecastPlaybackViewModel: NSObject, VideoPlayback {
       .drive(currentStreamPositionRelay)
       .disposed(by: disposeBag)
 
-    state.debug("TEST requestDidComplete").asObservable().subscribe(onNext: { [weak self] state in
+    state.asObservable().subscribe(onNext: { [weak self] state in
       switch state {
       case .paused:
         self?.sessionManager.currentSession?.remoteMediaClient?.pause()
@@ -179,7 +188,7 @@ open class ChromecastPlaybackViewModel: NSObject, VideoPlayback {
 
     sessionManager.add(self)
   }
-	
+
   public var availableQualities: Driver<[VideoQuality]> {
     return availableQualitiesRelay.asDriver(onErrorJustReturn: [])
   }
