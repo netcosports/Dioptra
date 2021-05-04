@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+
 public enum ScreenMode {
   case fullscreen
   case compact

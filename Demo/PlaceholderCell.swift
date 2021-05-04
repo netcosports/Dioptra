@@ -14,6 +14,7 @@ class PlaceholderCell: CollectionViewCell, Reusable {
     let label = UILabel()
     label.text = "PLACEHOLDER"
     label.textAlignment = .center
+    label.textColor = .black
     return label
   }()
 
