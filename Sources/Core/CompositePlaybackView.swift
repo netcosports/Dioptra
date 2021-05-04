@@ -27,8 +27,10 @@ open class CompositePlaybackView<T1: PlaybackViewModable & UIView,
     didSet {
       viewModel.firstActive = firstActive
 
-      firstPlaybackView.isHidden = !firstActive
-      secondPlaybackView.isHidden = firstActive
+      UIView.animate(withDuration: 0.25) {
+        self.firstPlaybackView.alpha = self.firstActive ? 1.0 : 0.0
+        self.secondPlaybackView.alpha = self.firstActive ? 0.0 : 1.0
+      }
 
       if firstActive {
         firstPlaybackView.viewModel.state.onNext(.playing)

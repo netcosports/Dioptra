@@ -12,18 +12,37 @@ import RxCocoa
 
 import GoogleCast
 
+public protocol ChromecastStatusApplier: AnyObject {
+
+  func apply(status: GCKMediaStatus)
+}
+
 open class ChromecastPlaybackView: UIView, PlaybackViewModable {
 
   public let viewModel = ChromecastPlaybackViewModel()
   fileprivate let disposeBag = DisposeBag()
 
+  public var placeholderView: (UIView & ChromecastStatusApplier)? = nil {
+    willSet {
+      self.placeholderView?.removeFromSuperview()
+      if let placeholderView = newValue {
+        self.addSubview(placeholderView)
+        self.viewModel.mediaStatusRelay.subscribe(onNext: { [weak self] status in
+          self?.placeholderView?.apply(status: status)
+        }).disposed(by: disposeBag)
+      }
+      setNeedsLayout()
+    }
+  }
+
   override init(frame: CGRect) {
     super.init(frame: frame)
-    backgroundColor = .orange
+    backgroundColor = .black
   }
 
   open override func layoutSubviews() {
     super.layoutSubviews()
+    placeholderView?.frame = bounds
   }
 
   public required init?(coder aDecoder: NSCoder) {

@@ -12,6 +12,8 @@ target 'Demo' do
 
   pod 'Astrolabe'
 
+  pod 'Kingfisher'
+
   pod 'Dioptra/AV', :path => '.'
   pod 'Dioptra/DM', :path => '.'
   pod 'Dioptra/YT', :path => '.'

@@ -9,12 +9,51 @@
 import Astrolabe
 import Dioptra
 //import Dioptra_BC
+
+import Kingfisher
+
+import GoogleCast
+
 import RxSwift
 
 class ManualLayoutView: UIView {
 
   override open class var requiresConstraintBasedLayout: Bool {
     return false
+  }
+}
+
+class PlaceholderView: UIView, ChromecastStatusApplier {
+
+  let title = UILabel()
+  let image = UIImageView()
+
+  override init(frame: CGRect) {
+    super.init(frame: .zero)
+
+    addSubview(image)
+    addSubview(title)
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+
+    image.frame = bounds
+    title.frame = bounds
+
+    title.textColor = .white
+  }
+
+  func apply(status: GCKMediaStatus) {
+    guard let imageUrl = (status.mediaInformation?.metadata?.images() as? [GCKImage])?.first?.url else {
+      return
+    }
+    image.kf.setImage(with: imageUrl)
+    title.text = status.mediaInformation?.metadata?.string(forKey: kGCKMetadataKeyTitle)
   }
 }
 
@@ -47,6 +86,22 @@ class VideoCell: CollectionViewCell, Reusable {
 
   override func setup() {
     super.setup()
+
+    let metadata = GCKMediaMetadata()
+    metadata.setString("Big Buck Bunny (2008)", forKey: kGCKMetadataKeyTitle)
+    metadata.setString("Big Buck Bunny tells the story of a giant rabbit with a heart bigger than " +
+      "himself. When one sunny day three rodents rudely harass him, something " +
+      "snaps... and the rabbit ain't no bunny anymore! In the typical cartoon " +
+      "tradition he prepares the nasty rodents a comical revenge.",
+                       forKey: kGCKMetadataKeySubtitle)
+    metadata.addImage(GCKImage(url: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg")!,
+                               width: 480,
+                               height: 360))
+
+    player.playbackView.firstPlaybackView.placeholderView = PlaceholderView()
+
+    player.playbackView.firstPlaybackView.viewModel.metadata = metadata
+
 
     player.playbackView.firstPlaybackView.viewModel.rx.connected.debug("TEST").bind(
       to: player.playbackView.rx.firstActive

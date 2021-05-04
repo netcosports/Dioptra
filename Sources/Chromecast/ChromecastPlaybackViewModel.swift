@@ -15,13 +15,16 @@ import GoogleCast
 open class ChromecastPlaybackViewModel: NSObject, VideoPlayback {
 
   private var sessionManager: GCKSessionManager = GCKCastContext.sharedInstance().sessionManager
-  private let mediaStatusRelay = PublishRelay<GCKMediaStatus>()
   private let currentStreamPositionRelay = BehaviorRelay<TimeInSeconds>(value: .nan)
 
   fileprivate let hasActiveSessionRelay = BehaviorRelay<Bool>(value: false)
 
   public let seek = PublishSubject<TimeInSeconds>()
   public let state = PublishSubject<PlaybackState>()
+
+  public let mediaStatusRelay = PublishRelay<GCKMediaStatus>()
+
+  public var metadata: GCKMediaMetadata? = nil
 
   fileprivate var currentSeekRequest: GCKRequest?
 
@@ -83,7 +86,8 @@ open class ChromecastPlaybackViewModel: NSObject, VideoPlayback {
         return
       }
 
-      guard let url = URL(string: currentStream), hasActiveSessionRelay.value else { return }
+      let currentContentUrl = self.sessionManager.currentSession?.remoteMediaClient?.mediaStatus?.mediaInformation?.contentURL
+      guard let url = URL(string: currentStream), hasActiveSessionRelay.value, currentContentUrl != url else { return }
 
       let builder = GCKMediaLoadRequestDataBuilder()
       builder.startTime = expectedStartTime ?? 0.0
@@ -91,9 +95,7 @@ open class ChromecastPlaybackViewModel: NSObject, VideoPlayback {
       mediaInfoBuilder.contentID = currentStream
       mediaInfoBuilder.streamType = .buffered
       mediaInfoBuilder.contentType = "application/x-mpegurl"
-//      mediaInfoBuilder.metadata = metadata
-//      mediaInfoBuilder.mediaTracks = mediaTracks
-//      mediaInfoBuilder.textTrackStyle = trackStyle
+      mediaInfoBuilder.metadata = self.metadata
       builder.mediaInformation = mediaInfoBuilder.build()
       self.sessionManager.currentCastSession?.remoteMediaClient?.loadMedia(with: builder.build())
     }

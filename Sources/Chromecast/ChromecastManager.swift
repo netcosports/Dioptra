@@ -17,6 +17,10 @@ public class ChromecastManager: NSObject {
 
   public static var shared = ChromecastManager()
 
+  public var hasActiveSession: Bool {
+    GCKCastContext.sharedInstance().sessionManager.currentSession?.connectionState == .connected
+  }
+
   public func initialize(with receiverAppID: String) {
     let criteria = GCKDiscoveryCriteria(applicationID: receiverAppID)
     let options = GCKCastOptions(discoveryCriteria: criteria)
