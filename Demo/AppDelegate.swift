@@ -12,10 +12,12 @@ import AVKit
 
 import Dioptra
 
-import GoogleCast
+//import GoogleCast
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GCKLoggerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate
+//                   , GCKLoggerDelegate
+{
 
   var window: UIWindow?
   let kReceiverAppID = "0CAF644C"
@@ -29,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKLoggerDelegate {
       print("ttt error \(error)")
     }
 
-    ChromecastManager.shared.initialize(with: kReceiverAppID)
+    //ChromecastManager.shared.initialize(with: kReceiverAppID)
 
     let controller = VideosInListViewController()
     let navigation = UINavigationController(rootViewController: controller)

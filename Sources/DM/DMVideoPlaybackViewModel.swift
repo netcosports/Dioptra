@@ -162,6 +162,8 @@ extension DMVideoPlaybackViewModel: DMPlayerViewControllerDelegate {
         playerStateRelay.accept(.loading)
       default: break
       }
+    case .errorEvent(let error):
+      playerStateRelay.accept(.error(error: .playback(error: error)))
     }
   }
 

@@ -94,6 +94,8 @@ extension DMPlayerDemo: DMPlayerViewControllerDelegate {
         playerStateClosure?(.loading)
       default: break
       }
+    case .errorEvent(error: let error):
+      playerStateClosure?(.error(error: .playback(error: error)))
     }
   }
 
