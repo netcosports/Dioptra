@@ -15,6 +15,8 @@ Pod::Spec.new do |s|
 
   s.swift_versions = ['5.0', '5.1']
 
+  s.static_framework = true
+
   s.subspec 'Core' do |sub|
     sub.source_files = 'Sources/Core/**/*.swift'
     sub.dependency 'RxSwift', '~> 5'
@@ -22,11 +24,11 @@ Pod::Spec.new do |s|
     sub.dependency 'RxGesture', '~> 3'
   end
 
-  # s.subspec 'Chromecast' do |sub|
-  #   sub.source_files = 'Sources/Chromecast/**/*.swift'
-  #   sub.dependency 'Dioptra/Core'
-  #   sub.dependency 'google-cast-sdk'
-  # end
+  s.subspec 'Chromecast' do |sub|
+    sub.source_files = 'Sources/Chromecast/**/*.swift'
+    sub.dependency 'Dioptra/Core'
+    sub.dependency 'google-cast-sdk'
+  end
 
   s.subspec 'AV' do |sub|
     sub.source_files = 'Sources/AV/**/*.swift'

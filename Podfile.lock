@@ -8,6 +8,9 @@ PODS:
   - Dioptra/AV (5.1.11):
     - Dioptra/Core
     - RxReachability
+  - Dioptra/Chromecast (5.1.11):
+    - Dioptra/Core
+    - google-cast-sdk
   - Dioptra/Core (5.1.11):
     - RxCocoa (~> 5)
     - RxGesture (~> 3)
@@ -24,8 +27,17 @@ PODS:
     - Dioptra/Core
     - RxReachability
     - youtube-ios-player-helper
+  - google-cast-sdk (4.5.3):
+    - google-cast-sdk/Core (= 4.5.3)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.13)
+  - google-cast-sdk/Core (4.5.3):
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.13)
+  - GTMSessionFetcher/Core (1.5.0)
   - Kingfisher (4.10.1)
   - Nimble (7.3.4)
+  - Protobuf (3.15.8)
   - Quick (2.2.0)
   - ReachabilitySwift (5.0.0)
   - RxBlocking (5.0.1):
@@ -51,6 +63,7 @@ PODS:
 DEPENDENCIES:
   - Astrolabe
   - Dioptra/AV (from `.`)
+  - Dioptra/Chromecast (from `.`)
   - Dioptra/DM (from `.`)
   - Dioptra/Presentation (from `.`)
   - Dioptra/YT (from `.`)
@@ -65,8 +78,11 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Astrolabe
     - DailymotionPlayerSDK
+    - google-cast-sdk
+    - GTMSessionFetcher
     - Kingfisher
     - Nimble
+    - Protobuf
     - Quick
     - ReachabilitySwift
     - RxBlocking
@@ -86,9 +102,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Astrolabe: 4da23a9da1a934fd8854765e79f53674c4ac19dd
   DailymotionPlayerSDK: 75f5d8d20f646fab64ecaf92a73ff62983f0efc3
-  Dioptra: b452ebab33cdcb70b21333b7cb6cb8b602b60354
+  Dioptra: 94ef3baeb25a271bc4162b8d2fb8c3c446f10a8d
+  google-cast-sdk: f94c5df87564f71d4342400b8487665e9bed27c6
+  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
+  Protobuf: adb85cd18a15bd1a777c158af9fd6e612a0e6d69
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   RxBlocking: c5e090f42d046df8b0e7752742510f349963710f
@@ -101,6 +120,6 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: 9067d828c094b6f6ef262055313e238d8f2f8e19
+PODFILE CHECKSUM: 71b5c6e34e69daca770511961d74fd05ddd75d12
 
 COCOAPODS: 1.8.4

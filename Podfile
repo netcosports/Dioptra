@@ -18,7 +18,7 @@ target 'Demo' do
   pod 'Dioptra/DM', :path => '.'
   pod 'Dioptra/YT', :path => '.'
 
-  #pod 'Dioptra/Chromecast', :path => '.'
+  pod 'Dioptra/Chromecast', :path => '.'
 
   pod 'Dioptra/Presentation', :path => '.'
 
@@ -36,6 +36,5 @@ target 'iOSTests' do
 end
 
 pre_install do |installer|
-  # workaround for https://github.com/CocoaPods/CocoaPods/issues/3289
-  Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+    def installer.verify_no_static_framework_transitive_dependencies; end
 end
