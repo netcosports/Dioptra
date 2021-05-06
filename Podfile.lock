@@ -5,22 +5,22 @@ PODS:
     - RxCocoa (~> 5)
     - RxSwift (~> 5)
   - DailymotionPlayerSDK (3.8.0)
-  - Dioptra/AV (5.1.12):
+  - Dioptra/AV (5.1.13):
     - Dioptra/Core
     - RxReachability
-  - Dioptra/Core (5.1.12):
+  - Dioptra/Core (5.1.13):
     - RxCocoa (~> 5)
     - RxGesture (~> 3)
     - RxSwift (~> 5)
-  - Dioptra/DM (5.1.12):
+  - Dioptra/DM (5.1.13):
     - DailymotionPlayerSDK
     - Dioptra/Core
     - RxReachability
-  - Dioptra/Presentation (5.1.12):
+  - Dioptra/Presentation (5.1.13):
     - RxCocoa (~> 5)
     - RxGesture (~> 3)
     - RxSwift (~> 5)
-  - Dioptra/YT (5.1.12):
+  - Dioptra/YT (5.1.13):
     - Dioptra/Core
     - RxReachability
     - youtube-ios-player-helper
@@ -104,7 +104,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Astrolabe: 4da23a9da1a934fd8854765e79f53674c4ac19dd
   DailymotionPlayerSDK: 75f5d8d20f646fab64ecaf92a73ff62983f0efc3
-  Dioptra: db3d3434c28371cff1dea2f526a182f9ccfb34a0
+  Dioptra: 79cc7c92ce92c5d236c636ad23302ec0806a7736
   Dioptra_Chromecast: 88a5c630cccadf000850cee3148941cd801f83b8
   google-cast-sdk: f94c5df87564f71d4342400b8487665e9bed27c6
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
