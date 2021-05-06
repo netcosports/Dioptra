@@ -11,6 +11,7 @@ import UIKit
 import AVKit
 
 import Dioptra
+import Dioptra_Chromecast
 
 import GoogleCast
 

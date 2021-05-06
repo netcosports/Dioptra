@@ -10,6 +10,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+import Dioptra
+
 import GoogleCast
 
 open class ChromecastPlaybackViewModel: NSObject, VideoPlayback {
