@@ -96,7 +96,7 @@ open class BufferedSlider: UISlider {
       thumWidth = result.width
     }
     centerView.frame.origin.x = result.origin.x + thumWidth / 2.0 - centerView.frame.width / 2.0
-    result.origin.y = 0.5 * (frame.height - result.height)
+    result.origin.y = 0.5 * (frame.height - result.height) + 1.0// shadow
     return result
   }
 
