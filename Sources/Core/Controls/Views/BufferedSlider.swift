@@ -91,11 +91,12 @@ open class BufferedSlider: UISlider {
   }
   
   open override func thumbRect(forBounds bounds: CGRect, trackRect rect: CGRect, value: Float) -> CGRect {
-    let result = super.thumbRect(forBounds: bounds, trackRect: rect, value: value)
+    var result = super.thumbRect(forBounds: bounds, trackRect: rect, value: value)
     if result.width > 0.0 {
       thumWidth = result.width
     }
     centerView.frame.origin.x = result.origin.x + thumWidth / 2.0 - centerView.frame.width / 2.0
+    result.origin.y = 0.5 * (frame.height - result.height)
     return result
   }
 
