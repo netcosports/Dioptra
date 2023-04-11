@@ -1,11 +1,3 @@
-//
-//  LandscapeTransition.swift
-//  Dioptra
-//
-//  Created by Sergei Mikhan on 11/9/17.
-//  Copyright © 2017 Netcosports. All rights reserved.
-//
-
 import UIKit
 import RxSwift
 import RxCocoa
@@ -43,11 +35,19 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
     guard let toVC = transitionContext.viewController(forKey: .to) else { return }
     guard let presentingView = presentingView, let dismissTarget = dismissTarget else { return }
 
+    let transition = TransitionOrientation.current()
+    let screenBounds = UIScreen.main.bounds
+    var correctBounds = screenBounds
+    if screenBounds.height > screenBounds.width && presentation {
+      correctBounds.size = CGSize(width: screenBounds.height, height: screenBounds.width)
+    } else if screenBounds.height < screenBounds.width && !presentation {
+      correctBounds.size = CGSize(width: screenBounds.height, height: screenBounds.width)
+    }
+
     let containerView = transitionContext.containerView
     let startFrame = dismissTarget.convert(presentingView.frame, to: fromVC.view)
-    let finalFrame = UIScreen.main.bounds
-    var targetFrame = UIScreen.main.bounds
-    let transition = TransitionOrientation.current()
+    let finalFrame = correctBounds
+    var targetFrame = correctBounds
     let midX: CGFloat
     let midY: CGFloat
     let angle: CGFloat
@@ -70,20 +70,20 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
         midY = startFrame.midX
       case .right:
         angle = CGFloat.pi * 0.5
-        midX = UIScreen.main.bounds.width - startFrame.midY
+        midX = correctBounds.width - startFrame.midY
         midY = startFrame.midX
       default:
         angle = -CGFloat.pi * 0.5
         midX = startFrame.midY
         midY = startFrame.midX
       }
-      let invertedSize = CGSize(width: UIScreen.main.bounds.height, height: UIScreen.main.bounds.width)
+      let invertedSize = CGSize(width: correctBounds.height, height: correctBounds.width)
       fromVC.view.transform = CGAffineTransform.identity
       fromVC.view.bounds = CGRect(origin: .zero, size: invertedSize)
       fromVC.view.transform = CGAffineTransform(rotationAngle: angle)
     } else {
-      midX = UIScreen.main.bounds.width * 0.5
-      midY = UIScreen.main.bounds.height * 0.5
+      midX = correctBounds.width * 0.5
+      midY = correctBounds.height * 0.5
       targetView = dismissTarget
       targetFrame = dismissTargetFrame
       switch transition {
