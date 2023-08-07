@@ -19,9 +19,9 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |sub|
     sub.source_files = 'Sources/Core/**/*.swift'
-    sub.dependency 'RxSwift', '~> 5'
-    sub.dependency 'RxCocoa', '~> 5'
-    sub.dependency 'RxGesture', '~> 3'
+    sub.dependency 'RxSwift', '~> 6'
+    sub.dependency 'RxCocoa', '~> 6'
+    sub.dependency 'RxGesture', '~> 4'
   end
 
   s.subspec 'AV' do |sub|
