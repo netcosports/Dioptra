@@ -41,7 +41,7 @@ open class BCVideoPlaybackViewModel: AVVideoPlaybackManagableViewModel, BCOVPlay
     }
     service.findVideo(withVideoID: stream, parameters: [:]) { [weak self] (video, params, error) in
       guard let video = video else {
-				self?.stateRelay.accept(.error(error: .playback(error: error)))
+				self?.stateRelay.accept(.error(error: error))
         return
       }
       self?.playback?.setVideos([video] as NSFastEnumeration)
