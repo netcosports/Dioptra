@@ -47,8 +47,8 @@ Pod::Spec.new do |s|
   #FIXME: need to put this into separated pod
   s.subspec 'Presentation' do |sub|
     sub.source_files = 'Sources/Presentation/**/*.swift'
-    sub.dependency 'RxSwift', '~> 5'
-    sub.dependency 'RxCocoa', '~> 5'
+    sub.dependency 'RxSwift', '~> 6'
+    sub.dependency 'RxCocoa', '~> 6'
     sub.dependency 'RxGesture', '~> 4'
   end
 
