@@ -49,7 +49,7 @@ Pod::Spec.new do |s|
     sub.source_files = 'Sources/Presentation/**/*.swift'
     sub.dependency 'RxSwift', '~> 5'
     sub.dependency 'RxCocoa', '~> 5'
-    sub.dependency 'RxGesture', '~> 3'
+    sub.dependency 'RxGesture', '~> 4'
   end
 
 end
