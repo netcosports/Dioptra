@@ -82,6 +82,7 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
       fromVC.view.bounds = CGRect(origin: .zero, size: invertedSize)
       fromVC.view.transform = CGAffineTransform(rotationAngle: angle)
     } else {
+      toVC.view.transform = CGAffineTransform.identity
       midX = UIScreen.main.bounds.width * 0.5
       midY = UIScreen.main.bounds.height * 0.5
       targetView = dismissTarget
