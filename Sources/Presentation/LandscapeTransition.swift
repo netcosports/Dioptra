@@ -45,8 +45,8 @@ public class LandscapeTransition: NSObject, UIViewControllerAnimatedTransitionin
 
     let containerView = transitionContext.containerView
     let startFrame = dismissTarget.convert(presentingView.frame, to: fromVC.view)
-    let finalFrame = UIScreen.main.bounds
-    var targetFrame = UIScreen.main.bounds
+    let finalFrame = transitionContext.finalFrame(for: toVC)
+    var targetFrame = transitionContext.finalFrame(for: toVC)
     let transition = TransitionOrientation.current()
     let midX: CGFloat
     let midY: CGFloat
