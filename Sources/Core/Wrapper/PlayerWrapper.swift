@@ -5,6 +5,8 @@
 //  Created by Sergei Mikhan on 12/24/19.
 //
 
+import UIKit
+
 public typealias WrapperVoidClosure = () -> Void
 public typealias WrapperProgressClosure = (ProgressEvent) -> Void
 public typealias WrapperPlayerStateClosure = (PlayerState) -> Void

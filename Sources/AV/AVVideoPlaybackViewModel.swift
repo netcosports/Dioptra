@@ -6,6 +6,7 @@
 //  Copyright © 2018 Sergei Mikhan. All rights reserved.
 //
 
+import UIKit
 import AVKit
 import RxSwift
 import RxCocoa
