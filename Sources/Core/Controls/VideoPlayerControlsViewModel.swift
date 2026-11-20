@@ -6,6 +6,7 @@
 //  Copyright © 2018 Sergei Mikhan. All rights reserved.
 //
 
+import Dispatch
 import RxSwift
 import RxCocoa
 
